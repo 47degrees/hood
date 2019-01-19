@@ -8,19 +8,23 @@ repositories {
 }
 
 dependencies {
+  implementation(kotlin("stdlib-jdk8", "1.3.11"))
   val arrow_version = "0.8.2"
   implementation("org.apache.commons:commons-csv:1.5")
   implementation("io.arrow-kt:arrow-core:$arrow_version")
+  implementation("io.arrow-kt:arrow-data:$arrow_version")
   implementation("io.arrow-kt:arrow-syntax:$arrow_version")
   implementation("io.arrow-kt:arrow-typeclasses:$arrow_version")
   implementation("io.arrow-kt:arrow-effects:$arrow_version")
+  implementation("io.arrow-kt:arrow-effects-instances:$arrow_version")
+  implementation("io.arrow-kt:arrow-data-instances-effects:$arrow_version")
 }
 
 gradlePlugin {
   plugins {
     register("hood-plugin") {
       id = "com.adrianrafo.hood"
-      implementationClass = "com.adrianrafo.hood.GreetPlugin"
+      implementationClass = "com.adrianrafo.hood.HoodPlugin"
     }
   }
 }

@@ -1,4 +1,4 @@
-import com.adrianrafo.hood.Greeting
+import com.adrianrafo.hood.CompareBenchmark
 
 plugins {
   kotlin("jvm") version "1.3.11"
@@ -13,9 +13,10 @@ group = "com.adrianrafo"
 version = "0.0.1-SNAPSHOT"
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8"))
+  implementation(kotlin("stdlib-jdk8", "1.3.11"))
 }
 
-tasks.getByName<Greeting>("greet") {
-  message = "Kotlin"
+tasks.getByName<CompareBenchmark>("compareBenchmark") {
+  previousBenchmarkPath = "./buildSrc/src/main/resources/master_benchmark.csv"
+  currentBenchmarkPath = "./buildSrc/src/main/resources/current_benchmark.csv"
 }

@@ -5,16 +5,16 @@ import org.gradle.api.Project
 
 import org.gradle.kotlin.dsl.*
 
-open class GreetPlugin : Plugin<Project> {
+open class HoodPlugin : Plugin<Project> {
 
   override fun apply(project: Project): Unit = project.run {
     group = Settings.group
     tasks{
-      register("greet", Greeting::class)
+      register("compareBenchmark", CompareBenchmark::class)
     }
   }
 
   object Settings {
-    val group = "com.adrianrafo.kotlin_dsl_hello"
+    val group = "com.adrianrafo.hood"
   }
 }
