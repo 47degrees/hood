@@ -26,40 +26,33 @@ open class CompareBenchmark : DefaultTask() {
 
   @TaskAction
   fun compareBenchmark(): Unit {
-    IO.monad().binding {
+
+    fun compare(previous: Benchmark, current: Benchmark): BenchmarkResult =
+      when {
+        previous.score <= current.score             -> BenchmarkResult.OK(current.name)
+        previous.score - current.score <= threshold -> BenchmarkResult.WARN(current.name)
+        else                                        -> BenchmarkResult.FAILED(current.name)
+      }
+
+    val result: List<BenchmarkResult> = IO.monad().binding<List<BenchmarkResult>> {
+
       val previousBenchmarks: List<Benchmark> =
         BenchmarkReader.read(previousBenchmarkPath, keyColumnName, compareColumnName).bind()
       val currentBenchmarks: List<Benchmark> =
         BenchmarkReader.read(currentBenchmarkPath, keyColumnName, compareColumnName).bind()
-
       if (previousBenchmarks.forAll { prev -> currentBenchmarks.exists { it.name == prev.name } })
         previousBenchmarks.flatMap { previous ->
-          currentBenchmarks.map { current ->
+          currentBenchmarks.flatMap { current ->
             if (previous.name == current.name)
-              compare(previous, current)
+              listOf(compare(previous, current))
+            else listOf<BenchmarkResult>()
           }
         }
-      else IO.raiseError<List<Unit>>(BenchmarkInconsistencyError).bind()
-
+      else listOf<BenchmarkResult>(BenchmarkResult.ERROR(BenchmarkInconsistencyError))
     }.fix().handleError {
-      println("Error: ${it.message}")
-      listOf(BenchmarkResult.ERROR)
+      listOf(BenchmarkResult.ERROR(it))
     }.unsafeRunSync()
+    println(result)
   }
 
-  private fun compare(previous: Benchmark, current: Benchmark): BenchmarkResult =
-    when {
-      previous.score <= current.score             -> {
-        println("*** ${current.name} looks good ***")
-        BenchmarkResult.OK
-      }
-      previous.score - current.score <= threshold -> {
-        println("*** ${current.name} is slightly worst, but it's ok ***")
-        BenchmarkResult.WARN
-      }
-      else                                        -> {
-        println("*** ${current.name} doesn't look good, nice try ***")
-        BenchmarkResult.ERROR
-      }
-    }
 }
