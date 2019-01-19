@@ -5,7 +5,6 @@
 
 # Log file
 *.log
-git rm --cached --force
 # Package Files #
 *.jar
 

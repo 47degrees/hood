@@ -8,7 +8,6 @@ repositories {
 }
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.3.11"))
   val arrow_version = "0.8.2"
   implementation("org.apache.commons:commons-csv:1.5")
   implementation("io.arrow-kt:arrow-core:$arrow_version")

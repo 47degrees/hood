@@ -13,7 +13,7 @@ group = "com.adrianrafo"
 version = "0.0.1-SNAPSHOT"
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.3.11"))
+  implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks.getByName<CompareBenchmark>("compareBenchmark") {

@@ -8,3 +8,5 @@ data class Benchmark(
 enum class BenchmarkResult {
   IMPROVED, WARN, ERROR
 }
+
+object BenchmarkInconsistencyError :Throwable("Benchmarks have differents formats and cannot be compared")
