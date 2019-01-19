@@ -43,14 +43,23 @@ open class CompareBenchmark : DefaultTask() {
 
     }.fix().handleError {
       println("Error: ${it.message}")
-      listOf()
+      listOf(BenchmarkResult.ERROR)
     }.unsafeRunSync()
   }
 
-  private fun compare(previous:Benchmark, current:Benchmark) =
+  private fun compare(previous: Benchmark, current: Benchmark): BenchmarkResult =
     when {
-      previous.score <= current.score             -> println("*** ${current.name} looks good ***")
-      previous.score - current.score <= threshold -> println("*** ${current.name} is slightly worst, but it's ok ***")
-      else                                        -> println("*** ${current.name} doesn't look good, nice try ***")
+      previous.score <= current.score             -> {
+        println("*** ${current.name} looks good ***")
+        BenchmarkResult.OK
+      }
+      previous.score - current.score <= threshold -> {
+        println("*** ${current.name} is slightly worst, but it's ok ***")
+        BenchmarkResult.WARN
+      }
+      else                                        -> {
+        println("*** ${current.name} doesn't look good, nice try ***")
+        BenchmarkResult.ERROR
+      }
     }
 }
