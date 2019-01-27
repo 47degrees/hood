@@ -8,15 +8,19 @@ repositories {
 }
 
 dependencies {
-  val arrow_version = "0.8.2"
+  val arrowVersion = "0.8.2"
+  val http4kVersion = "3.107.0"
   implementation("org.apache.commons:commons-csv:1.5")
-  implementation("io.arrow-kt:arrow-core:$arrow_version")
-  implementation("io.arrow-kt:arrow-data:$arrow_version")
-  implementation("io.arrow-kt:arrow-syntax:$arrow_version")
-  implementation("io.arrow-kt:arrow-typeclasses:$arrow_version")
-  implementation("io.arrow-kt:arrow-effects:$arrow_version")
-  implementation("io.arrow-kt:arrow-effects-instances:$arrow_version")
-  implementation("io.arrow-kt:arrow-data-instances-effects:$arrow_version")
+  implementation("io.arrow-kt:arrow-core:$arrowVersion")
+  implementation("io.arrow-kt:arrow-data:$arrowVersion")
+  implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
+  implementation("io.arrow-kt:arrow-typeclasses:$arrowVersion")
+  implementation("io.arrow-kt:arrow-effects:$arrowVersion")
+  implementation("io.arrow-kt:arrow-effects-instances:$arrowVersion")
+  implementation("io.arrow-kt:arrow-data-instances-effects:$arrowVersion")
+
+  implementation("org.http4k:http4k-core:$http4kVersion")
+  implementation("org.http4k:http4k-client-apache-async:$http4kVersion")
 }
 
 gradlePlugin {
