@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
   val arrowVersion = "0.8.2"
-  val http4kVersion = "3.107.0"
+  val http4kVersion = "3.108.0"
   implementation("org.apache.commons:commons-csv:1.5")
   implementation("io.arrow-kt:arrow-core:$arrowVersion")
   implementation("io.arrow-kt:arrow-data:$arrowVersion")
@@ -20,7 +20,7 @@ dependencies {
   implementation("io.arrow-kt:arrow-data-instances-effects:$arrowVersion")
 
   implementation("org.http4k:http4k-core:$http4kVersion")
-  implementation("org.http4k:http4k-client-apache-async:$http4kVersion")
+  implementation("org.http4k:http4k-client-okhttp:$http4kVersion")
 }
 
 gradlePlugin {

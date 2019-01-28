@@ -23,7 +23,12 @@ sealed class BenchmarkResult {
   data class ERROR(val error: Throwable) : BenchmarkResult() {
     override fun message() = "***Error: ${error.message} ***"
   }
+
+  override fun toString(): String = "${this::class.simpleName}: ${this.message()}"
+
 }
+
+fun List<BenchmarkResult>.prettyPrintResult(): String = this.joinToString(separator = "\n", transform = {it.toString()})
 
 object BenchmarkInconsistencyError :
   Throwable("Benchmarks have differents formats and cannot be compared")
