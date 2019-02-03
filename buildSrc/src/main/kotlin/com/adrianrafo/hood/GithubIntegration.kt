@@ -55,4 +55,14 @@ object GithubIntegration {
     deleteComment()
   }
 
+
+  fun setStatus(): () -> Unit = {
+    val request =
+      Request(Method.POST, "/repos/:owner/:repo/statuses/:sha")
+
+    client(request) {
+      println(it)
+    }
+  }
+
 }

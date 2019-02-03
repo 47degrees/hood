@@ -16,8 +16,8 @@ sealed class BenchmarkResult {
     override fun message() = "*** $key is slightly worst, but it's ok ***"
   }
 
-  data class FAILED(val name: String) : BenchmarkResult() {
-    override fun message() = "*** $name doesn't look good, nice try ***"
+  data class FAILED(val key: String) : BenchmarkResult() {
+    override fun message() = "*** $key doesn't look good, nice try ***"
   }
 
   data class ERROR(val error: Throwable) : BenchmarkResult() {
@@ -32,3 +32,7 @@ fun List<BenchmarkResult>.prettyPrintResult(): String = this.joinToString(separa
 
 object BenchmarkInconsistencyError :
   Throwable("Benchmarks have differents formats and cannot be compared")
+
+data class ghStatus()
+
+data class ghComment()
