@@ -1,68 +1,62 @@
 package com.adrianrafo.hood
 
-import org.http4k.client.AsyncHttpClient
+import arrow.effects.IO
+import org.http4k.client.DualSyncAsyncHttpHandler
 import org.http4k.client.OkHttp
 import org.http4k.core.Method
 import org.http4k.core.Request
+import org.http4k.format.Jackson
 
 object GithubIntegration {
 
-  val client: AsyncHttpClient = OkHttp()
+  val client: DualSyncAsyncHttpHandler = OkHttp()
 
-  //https://developer.github.com/v3/pulls/comments/
-  private fun getPreviousComment(): () -> Unit = {
-    val request = Request(Method.GET, "https://api.github.com/repos/:owner/:repo/pulls/comments")
+  val commentIntro = "***Hood benchmark comparison:***"
+  val commonHeaders: String = TODO()
 
-    client(request) {
-      println(it)
-    }
-    //TODO filter by author
+  private fun getPreviousComment(info: GhInfo) {
+    val request = Request(
+      Method.GET,
+      "https://api.github.com/repos/${info.owner}/${info.repo}/issues/${info.pull}/comments"
+    )
+
+    IO { client(request) }.map { Jackson.run { it.bodyString().asJsonObject() } }
+    // TODO decode to ghComment
+    //body.startsWith(commentIntro)
   }
 
-  private fun createComment(): () -> Unit = {
+  private fun createComment(info: GhInfo): IO<Boolean> {
     val request =
-      Request(Method.POST, "https://api.github.com/repos/:owner/:repo/pulls/:number/comments")
+      Request(
+        Method.POST,
+        "https://api.github.com/repos/${info.owner}/${info.repo}/issues/${info.pull}/comments"
+      )
 
-    client(request) {
-      println(it)
-    }
-    //TODO check in reply to param to create a top comment
+    //TODO set request body
+
+    return IO { client(request) }.map { it.status.code == 201 }
   }
 
-  //TODO edit or delete and create a new one?
-  private fun editComment(): () -> Unit = {
+  private fun deleteComment(info: GhInfo, id: Long): IO<Boolean> {
     val request =
-      Request(Method.PATCH, "https://api.github.com/repos/:owner/:repo/pulls/comments/:comment_id")
+      Request(
+        Method.DELETE,
+        "https://api.github.com/repos/${info.owner}/${info.repo}/issues/comments/$id"
+      )
 
-    client(request) {
-      println(it)
-    }
+    return IO { client(request) }.map { it.status.code == 204 }
   }
 
-  private fun deleteComment(): () -> Unit = {
+  fun setCommentResult(info: GhInfo, result: List<BenchmarkResult>) :IO<Boolean> = TODO()
+
+  fun setStatus(info: GhInfo, commitSha: String, status: GhStatus): IO<Boolean> {
     val request =
-      Request(Method.DELETE, "https://api.github.com/repos/:owner/:repo/pulls/comments/:comment_id")
-
-    client(request) {
-      println(it)
-    }
-  }
-
-  fun setCommentResult(result: List<BenchmarkResult>) {
-    getPreviousComment()
-    createComment()
-    editComment()
-    deleteComment()
-  }
-
-
-  fun setStatus(): () -> Unit = {
-    val request =
-      Request(Method.POST, "/repos/:owner/:repo/statuses/:sha")
-
-    client(request) {
-      println(it)
-    }
+      Request(
+        Method.POST,
+        "https://api.github.com//repos/${info.owner}/${info.repo}/statuses/$commitSha"
+      )
+    //TODO set body
+    return IO { client(request) }.map { it.status.code == 201 }
   }
 
 }

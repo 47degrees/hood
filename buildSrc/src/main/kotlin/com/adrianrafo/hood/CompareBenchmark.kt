@@ -28,12 +28,14 @@ open class CompareBenchmark : DefaultTask() {
       threshold,
       keyColumnName,
       compareColumnName
-    )
+    ).unsafeRunSync()
     println(result.prettyPrintResult())
   }
 
   @TaskAction
   fun compareBenchmarkCI() {
+
+    //GithubIntegration.setStatus()
 
     fun getWrongResults(result: List<BenchmarkResult>): List<BenchmarkResult> =
       result.filter { it::class == BenchmarkResult.ERROR::class || it::class == BenchmarkResult.FAILED::class }
@@ -44,9 +46,10 @@ open class CompareBenchmark : DefaultTask() {
       threshold,
       keyColumnName,
       compareColumnName
-    )
+    ).unsafeRunSync()
     println(result.prettyPrintResult())
-    GithubIntegration.setCommentResult(result)
+    //GithubIntegration.setCommentResult(result)
+    //GithubIntegration.setStatus()
     val errors = getWrongResults(result)
     if (errors.nonEmpty())
       throw GradleException(errors.prettyPrintResult())

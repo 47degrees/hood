@@ -28,11 +28,20 @@ sealed class BenchmarkResult {
 
 }
 
-fun List<BenchmarkResult>.prettyPrintResult(): String = this.joinToString(separator = "\n", transform = {it.toString()})
+fun List<BenchmarkResult>.prettyPrintResult(): String =
+  this.joinToString(separator = "\n", transform = { it.toString() })
 
 object BenchmarkInconsistencyError :
   Throwable("Benchmarks have differents formats and cannot be compared")
 
-data class ghStatus()
+enum class GhStatusState {
+  Succeed, Pending, Failed
+}
 
-data class ghComment()
+//Github
+
+data class GhInfo(val owner: String, val repo: String, val pull: Int)
+
+data class GhStatus(val state: GhStatusState, val description: String, val context: String = "benchmark-ci/hood")
+
+data class GhComment(val body: String)

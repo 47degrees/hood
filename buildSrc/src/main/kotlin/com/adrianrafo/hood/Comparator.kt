@@ -15,7 +15,7 @@ object Comparator {
     threshold: Int,
     keyColumnName: String,
     compareColumnName: String
-  ): List<BenchmarkResult> {
+  ): IO<List<BenchmarkResult>> {
 
     fun compare(previous: Benchmark, current: Benchmark): BenchmarkResult =
       when {
@@ -41,6 +41,6 @@ object Comparator {
         }
       else listOf<BenchmarkResult>(BenchmarkResult.ERROR(BenchmarkInconsistencyError))
 
-    }.fix().handleError { listOf(BenchmarkResult.ERROR(it)) }.unsafeRunSync()
+    }.fix().handleError { listOf(BenchmarkResult.ERROR(it)) }
   }
 }
