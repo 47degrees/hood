@@ -11,6 +11,7 @@ open class HoodPlugin : Plugin<Project> {
     group = Settings.group
     tasks{
       register("compareBenchmark", CompareBenchmark::class)
+      register("compareBenchmarkCI", CompareBenchmarkCI::class)
     }
   }
 

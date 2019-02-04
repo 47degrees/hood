@@ -44,4 +44,6 @@ data class GhInfo(val owner: String, val repo: String, val pull: Int)
 
 data class GhStatus(val state: GhStatusState, val description: String, val context: String = "benchmark-ci/hood")
 
-data class GhComment(val body: String)
+data class GhUser(val login:String)
+
+data class GhComment(val id:Int, val user:GhUser, val body: String)

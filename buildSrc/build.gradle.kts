@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
   val arrowVersion = "0.8.2"
-  val http4kVersion = "3.108.0"
+  val http4kVersion = "3.112.0"
   implementation("io.arrow-kt:arrow-core:$arrowVersion")
   implementation("io.arrow-kt:arrow-data:$arrowVersion")
   implementation("io.arrow-kt:arrow-syntax:$arrowVersion")

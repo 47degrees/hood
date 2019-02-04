@@ -1,6 +1,9 @@
 package com.adrianrafo.hood
 
+import arrow.core.Option
 import arrow.effects.IO
+import arrow.instances.list.foldable.forAll
+import arrow.syntax.collections.firstOption
 import org.http4k.client.DualSyncAsyncHttpHandler
 import org.http4k.client.OkHttp
 import org.http4k.core.Method
@@ -14,15 +17,14 @@ object GithubIntegration {
   val commentIntro = "***Hood benchmark comparison:***"
   val commonHeaders: String = TODO()
 
-  private fun getPreviousComment(info: GhInfo) {
+  private fun getPreviousComment(ciName: String, info: GhInfo): IO<Option<GhComment>> {
     val request = Request(
       Method.GET,
       "https://api.github.com/repos/${info.owner}/${info.repo}/issues/${info.pull}/comments"
     )
 
-    IO { client(request) }.map { Jackson.run { it.bodyString().asJsonObject() } }
-    // TODO decode to ghComment
-    //body.startsWith(commentIntro)
+    return IO { client(request) }.map { Jackson.asA(it.bodyString(), Array<GhComment>::class) }
+      .map { list -> list.filter { it.user.login.contains(ciName) && it.body.startsWith(commentIntro) }.firstOption() }
   }
 
   private fun createComment(info: GhInfo): IO<Boolean> {
@@ -47,7 +49,7 @@ object GithubIntegration {
     return IO { client(request) }.map { it.status.code == 204 }
   }
 
-  fun setCommentResult(info: GhInfo, result: List<BenchmarkResult>) :IO<Boolean> = TODO()
+  fun setCommentResult(info: GhInfo, result: List<BenchmarkResult>): IO<Boolean> = TODO()
 
   fun setStatus(info: GhInfo, commitSha: String, status: GhStatus): IO<Boolean> {
     val request =
