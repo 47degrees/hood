@@ -1,5 +1,8 @@
 package com.adrianrafo.hood
 
+import arrow.effects.IO
+import arrow.effects.fix
+import arrow.effects.instances.io.monad.monad
 import arrow.instances.list.foldable.nonEmpty
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -20,13 +23,20 @@ open class CompareBenchmarkCI : DefaultTask() {
   @get:Input
   var threshold: Int = project.objects.property<Int>().getOrElse(50)
 
+  fun getWrongResults(result: List<BenchmarkResult>): List<BenchmarkResult> =
+    result.filter { it::class == BenchmarkResult.ERROR::class || it::class == BenchmarkResult.FAILED::class }
+
+  @Suppress("UNREACHABLE_CODE")
   @TaskAction
-  fun compareBenchmarkCI() {
+  fun compareBenchmarkCI() = IO.monad().binding {
+    val info: GhInfo = TODO()
+    val commitSha : String = TODO()
 
-    //GithubIntegration.setStatus()
-
-    fun getWrongResults(result: List<BenchmarkResult>): List<BenchmarkResult> =
-      result.filter { it::class == BenchmarkResult.ERROR::class || it::class == BenchmarkResult.FAILED::class }
+    GithubIntegration.setStatus(
+      info,
+      commitSha,
+      GhStatus(GhStatusState.Pending, "Comparing Benchmarks")
+    ).bind()
 
     val result: List<BenchmarkResult> = Comparator.compareCsv(
       previousBenchmarkPath,
@@ -34,13 +44,16 @@ open class CompareBenchmarkCI : DefaultTask() {
       threshold,
       keyColumnName,
       compareColumnName
-    ).unsafeRunSync()
+    ).bind()
+
     println(result.prettyPrintResult())
-    //GithubIntegration.setCommentResult(result)
-    //GithubIntegration.setStatus()
+    GithubIntegration.setCommentResult(info, result).bind()
     val errors = getWrongResults(result)
-    if (errors.nonEmpty())
-      throw GradleException(errors.prettyPrintResult())
-  }
+    if (errors.nonEmpty()) {
+      GithubIntegration.setStatus(info, commitSha, GhStatus(GhStatusState.Failed, "Benchmarks comparison failed")).bind()
+      IO.raiseError(throw GradleException(errors.prettyPrintResult())).bind()
+    } else
+      GithubIntegration.setStatus(info, commitSha, GhStatus(GhStatusState.Succeed, "Benchmarks comparison passed")).bind()
+  }.fix().unsafeRunSync()
 
 }

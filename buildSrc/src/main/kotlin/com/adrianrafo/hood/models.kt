@@ -34,8 +34,8 @@ fun List<BenchmarkResult>.prettyPrintResult(): String =
 object BenchmarkInconsistencyError :
   Throwable("Benchmarks have differents formats and cannot be compared")
 
-enum class GhStatusState {
-  Succeed, Pending, Failed
+enum class GhStatusState(val value: String) {
+  Succeed("success"), Pending("pending"), Failed("failure")
 }
 
 //Github
@@ -46,4 +46,4 @@ data class GhStatus(val state: GhStatusState, val description: String, val conte
 
 data class GhUser(val login:String)
 
-data class GhComment(val id:Int, val user:GhUser, val body: String)
+data class GhComment(val id:Long, val user:GhUser, val body: String)
