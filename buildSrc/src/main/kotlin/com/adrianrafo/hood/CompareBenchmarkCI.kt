@@ -23,12 +23,12 @@ open class CompareBenchmarkCI : DefaultTask() {
   @get:Input
   var threshold: Int = project.objects.property<Int>().getOrElse(50)
 
-  fun getWrongResults(result: List<BenchmarkResult>): List<BenchmarkResult> =
+  private fun getWrongResults(result: List<BenchmarkResult>): List<BenchmarkResult> =
     result.filter { it::class == BenchmarkResult.ERROR::class || it::class == BenchmarkResult.FAILED::class }
 
   @Suppress("UNREACHABLE_CODE")
   @TaskAction
-  fun compareBenchmarkCI() = IO.monad().binding {
+  fun compareBenchmarkCI():Unit = IO.monad().binding {
     val info: GhInfo = TODO()
     val commitSha : String = TODO()
 
@@ -51,7 +51,7 @@ open class CompareBenchmarkCI : DefaultTask() {
     val errors = getWrongResults(result)
     if (errors.nonEmpty()) {
       GithubIntegration.setStatus(info, commitSha, GhStatus(GhStatusState.Failed, "Benchmarks comparison failed")).bind()
-      IO.raiseError(throw GradleException(errors.prettyPrintResult())).bind()
+      IO.raiseError<Unit>(GradleException(errors.prettyPrintResult())).bind()
     } else
       GithubIntegration.setStatus(info, commitSha, GhStatus(GhStatusState.Succeed, "Benchmarks comparison passed")).bind()
   }.fix().unsafeRunSync()

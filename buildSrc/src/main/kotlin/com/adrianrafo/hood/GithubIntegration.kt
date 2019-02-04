@@ -5,6 +5,7 @@ import arrow.effects.IO
 import arrow.effects.fix
 import arrow.effects.instances.io.monad.monad
 import arrow.syntax.collections.firstOption
+import org.gradle.api.GradleException
 import org.http4k.client.DualSyncAsyncHttpHandler
 import org.http4k.client.OkHttp
 import org.http4k.core.Body
@@ -18,8 +19,10 @@ object GithubIntegration {
 
   val client: DualSyncAsyncHttpHandler = OkHttp()
 
-  val commentIntro = "***Hood benchmark comparison:***"
-  val commonHeaders: String = TODO()
+  private const val error: String = "Error accessing Github Api"
+  private const val commentIntro: String = "***Hood benchmark comparison:***"
+
+  private val commonHeaders: String = TODO()
 
   private fun getPreviousComment(info: GhInfo, ciName: String): IO<Option<GhComment>> {
     val request = Request(
@@ -61,17 +64,17 @@ object GithubIntegration {
     return IO { client(request) }.map { it.status.code == 204 }
   }
 
-  fun setCommentResult(info: GhInfo, result: List<BenchmarkResult>): IO<Boolean> =
+  fun setCommentResult(info: GhInfo, result: List<BenchmarkResult>): IO<Unit> =
     IO.monad().binding {
       val previousComment = getPreviousComment(info, "travis").bind()
       val cleanResult = previousComment.fold { IO { true } }{ deleteComment(info, it.id) }.bind()
-      if (cleanResult)
-        createComment(info, result).bind()
+      if (cleanResult && createComment(info, result).bind())
+        IO.unit.bind()
       else
-        IO { false }.bind()
+        IO.raiseError<Unit>(GradleException("$error: Error creating the comment")).bind()
     }.fix()
 
-  fun setStatus(info: GhInfo, commitSha: String, status: GhStatus): IO<Boolean> {
+  fun setStatus(info: GhInfo, commitSha: String, status: GhStatus): IO<Unit> {
 
     val body = Jackson {
       obj(
@@ -87,7 +90,12 @@ object GithubIntegration {
         "https://api.github.com//repos/${info.owner}/${info.repo}/statuses/$commitSha"
       ).with(Body.json().toLens() of body)
 
-    return IO { client(request) }.map { it.status.code == 201 }
+    return IO { client(request) }.map { it.status.code == 201 }.flatMap {
+      if (it)
+        IO.unit
+      else
+        IO.raiseError(GradleException("$error: Error creating the status"))
+    }
   }
 
 }
