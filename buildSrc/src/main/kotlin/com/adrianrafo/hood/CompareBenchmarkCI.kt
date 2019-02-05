@@ -26,34 +26,53 @@ open class CompareBenchmarkCI : DefaultTask() {
   private fun getWrongResults(result: List<BenchmarkResult>): List<BenchmarkResult> =
     result.filter { it::class == BenchmarkResult.ERROR::class || it::class == BenchmarkResult.FAILED::class }
 
-  @Suppress("UNREACHABLE_CODE")
   @TaskAction
-  fun compareBenchmarkCI():Unit = IO.monad().binding {
-    val info: GhInfo = TODO()
-    val commitSha : String = TODO()
+  fun compareBenchmarkCI(): Unit = IO.monad().binding {
+    val pr: String = IO { System.getenv("TRAVIS_PULL_REQUEST") }.bind()
 
-    GithubIntegration.setStatus(
-      info,
-      commitSha,
-      GhStatus(GhStatusState.Pending, "Comparing Benchmarks")
-    ).bind()
+    if (!pr.contains("false")) {
+      val slug = IO { System.getenv("TRAVIS_REPO_SLUG").split('/') }.bind()
+      if (slug.size < 2)
+        IO.raiseError<Unit>(GradleException("Error reading env var: TRAVIS_REPO_SLUG")).bind()
+      val owner: String = slug.first()
+      val repo: String = slug.last()
 
-    val result: List<BenchmarkResult> = Comparator.compareCsv(
-      previousBenchmarkPath,
-      currentBenchmarkPath,
-      threshold,
-      keyColumnName,
-      compareColumnName
-    ).bind()
+      val info = GhInfo(owner, repo, pr.toInt())
+      val commitSha: String = IO { System.getenv("TRAVIS_PULL_REQUEST_SHA") }.bind()
 
-    println(result.prettyPrintResult())
-    GithubIntegration.setCommentResult(info, result).bind()
-    val errors = getWrongResults(result)
-    if (errors.nonEmpty()) {
-      GithubIntegration.setStatus(info, commitSha, GhStatus(GhStatusState.Failed, "Benchmarks comparison failed")).bind()
-      IO.raiseError<Unit>(GradleException(errors.prettyPrintResult())).bind()
-    } else
-      GithubIntegration.setStatus(info, commitSha, GhStatus(GhStatusState.Succeed, "Benchmarks comparison passed")).bind()
+      GithubIntegration.setStatus(
+        info,
+        commitSha,
+        GhStatus(GhStatusState.Pending, "Comparing Benchmarks")
+      ).bind()
+
+      val result: List<BenchmarkResult> = Comparator.compareCsv(
+        previousBenchmarkPath,
+        currentBenchmarkPath,
+        threshold,
+        keyColumnName,
+        compareColumnName
+      ).bind()
+
+      GithubIntegration.setCommentResult(info, "travis", result).bind()
+      val errors = getWrongResults(result)
+
+      if (errors.nonEmpty()) {
+        GithubIntegration.setStatus(
+          info,
+          commitSha,
+          GhStatus(GhStatusState.Failed, "Benchmarks comparison failed")
+        ).bind()
+        IO.raiseError<Unit>(GradleException(errors.prettyPrintResult())).bind()
+      } else
+        GithubIntegration.setStatus(
+          info,
+          commitSha,
+          GhStatus(GhStatusState.Succeed, "Benchmarks comparison passed")
+        ).bind()
+
+    } else IO.unit.bind()
+
   }.fix().unsafeRunSync()
 
 }

@@ -64,9 +64,9 @@ object GithubIntegration {
     return IO { client(request) }.map { it.status.code == 204 }
   }
 
-  fun setCommentResult(info: GhInfo, result: List<BenchmarkResult>): IO<Unit> =
+  fun setCommentResult(info: GhInfo, ciName: String, result: List<BenchmarkResult>): IO<Unit> =
     IO.monad().binding {
-      val previousComment = getPreviousComment(info, "travis").bind()
+      val previousComment = getPreviousComment(info, ciName).bind()
       val cleanResult = previousComment.fold { IO { true } }{ deleteComment(info, it.id) }.bind()
       if (cleanResult && createComment(info, result).bind())
         IO.unit.bind()
