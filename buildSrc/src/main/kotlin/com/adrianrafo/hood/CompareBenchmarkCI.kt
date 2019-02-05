@@ -1,5 +1,7 @@
 package com.adrianrafo.hood
 
+import arrow.core.Option
+import arrow.core.toOption
 import arrow.effects.IO
 import arrow.effects.fix
 import arrow.effects.instances.io.monad.monad
@@ -22,6 +24,8 @@ open class CompareBenchmarkCI : DefaultTask() {
   var compareColumnName: String = project.objects.property<String>().getOrElse("Score")
   @get:Input
   var threshold: Int = project.objects.property<Int>().getOrElse(50)
+  @get:Input
+  var token: Option<String> = project.objects.property<String>().orNull.toOption()
 
   private val ciName: String = "travis"
 
@@ -33,13 +37,18 @@ open class CompareBenchmarkCI : DefaultTask() {
     val pr: String = IO { System.getenv("TRAVIS_PULL_REQUEST") }.bind()
 
     if (!pr.contains("false")) {
+
       val slug = IO { System.getenv("TRAVIS_REPO_SLUG").split('/') }.bind()
       if (slug.size < 2)
         IO.raiseError<Unit>(GradleException("Error reading env var: TRAVIS_REPO_SLUG")).bind()
       val owner: String = slug.first()
       val repo: String = slug.last()
 
-      val info = GhInfo(owner, repo, pr.toInt())
+      val token: String =
+        token.fold({ IO.raiseError(GradleException("Error getting Github token")) }) { IO { it } }
+          .bind()
+
+      val info = GhInfo(owner, repo, pr.toInt(), token)
       val commitSha: String = IO { System.getenv("TRAVIS_PULL_REQUEST_SHA") }.bind()
 
       GithubIntegration.setStatus(

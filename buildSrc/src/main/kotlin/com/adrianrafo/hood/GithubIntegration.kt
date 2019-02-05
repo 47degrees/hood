@@ -2,8 +2,6 @@ package com.adrianrafo.hood
 
 import arrow.core.Option
 import arrow.effects.IO
-import arrow.effects.fix
-import arrow.effects.instances.io.monad.monad
 import arrow.syntax.collections.firstOption
 import org.gradle.api.GradleException
 import org.http4k.client.DualSyncAsyncHttpHandler
@@ -21,16 +19,24 @@ object GithubIntegration {
 
   private const val commentIntro: String = "***Hood benchmark comparison:***"
 
-  private val commonHeaders: String = TODO()
+  private fun buildRequest(method: Method, info: GhInfo, url: String): Request {
+    val commonHeaders: List<Pair<String, String>> = listOf(
+      Pair("Accept", "application/vnd.github.v3+json"),
+      Pair("Authorization", "token ${info.token}"),
+      Pair("Content-Type", "application/json")
+    )
 
-  fun raiseError(error :String): IO<Unit> =
+    return Request(
+      method,
+      "https://api.github.com/repos/${info.owner}/${info.repo}/$url"
+    ).headers(commonHeaders)
+  }
+
+  fun raiseError(error: String): IO<Unit> =
     IO.raiseError(GradleException("Error accessing Github Api: $error"))
 
   fun getPreviousCommentId(info: GhInfo, ciName: String): IO<Option<Long>> {
-    val request = Request(
-      Method.GET,
-      "https://api.github.com/repos/${info.owner}/${info.repo}/issues/${info.pull}/comments"
-    )
+    val request = buildRequest(Method.GET, info, "issues/${info.pull}/comments")
 
     return IO { client(request) }.map { Jackson.asA(it.bodyString(), Array<GhComment>::class) }
       .map { list ->
@@ -47,22 +53,17 @@ object GithubIntegration {
       obj("body" to string(content))
     }
 
-    val request =
-      Request(
-        Method.POST,
-        "https://api.github.com/repos/${info.owner}/${info.repo}/issues/${info.pull}/comments"
-      ).with(Body.json().toLens() of body)
+    val request = buildRequest(
+      Method.POST,
+      info,
+      "issues/${info.pull}/comments"
+    ).with(Body.json().toLens() of body)
 
     return IO { client(request) }.map { it.status.code == 201 }
   }
 
   fun deleteComment(info: GhInfo, id: Long): IO<Boolean> {
-    val request =
-      Request(
-        Method.DELETE,
-        "https://api.github.com/repos/${info.owner}/${info.repo}/issues/comments/$id"
-      )
-
+    val request = buildRequest(Method.DELETE, info, "issues/comments/$id")
     return IO { client(request) }.map { it.status.code == 204 }
   }
 
@@ -77,10 +78,7 @@ object GithubIntegration {
     }
 
     val request =
-      Request(
-        Method.POST,
-        "https://api.github.com//repos/${info.owner}/${info.repo}/statuses/$commitSha"
-      ).with(Body.json().toLens() of body)
+      buildRequest(Method.POST, info, "statuses/$commitSha").with(Body.json().toLens() of body)
 
     return IO { client(request) }.map { it.status.code == 201 }.flatMap {
       if (it)

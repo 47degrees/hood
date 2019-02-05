@@ -40,7 +40,7 @@ enum class GhStatusState(val value: String) {
 
 //Github
 
-data class GhInfo(val owner: String, val repo: String, val pull: Int)
+data class GhInfo(val owner: String, val repo: String, val pull: Int, val token : String)
 
 data class GhStatus(val state: GhStatusState, val description: String, val context: String = "benchmark-ci/hood")
 
