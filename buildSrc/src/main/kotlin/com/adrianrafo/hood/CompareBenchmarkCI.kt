@@ -23,6 +23,8 @@ open class CompareBenchmarkCI : DefaultTask() {
   @get:Input
   var threshold: Int = project.objects.property<Int>().getOrElse(50)
 
+  private val ciName: String = "travis"
+
   private fun getWrongResults(result: List<BenchmarkResult>): List<BenchmarkResult> =
     result.filter { it::class == BenchmarkResult.ERROR::class || it::class == BenchmarkResult.FAILED::class }
 
@@ -54,8 +56,15 @@ open class CompareBenchmarkCI : DefaultTask() {
         compareColumnName
       ).bind()
 
-      GithubIntegration.setCommentResult(info, "travis", result).bind()
-      val errors = getWrongResults(result)
+      val previousComment = GithubIntegration.getPreviousCommentId(info, ciName).bind()
+      val cleanResult =
+        previousComment.fold({ IO { true } }) { GithubIntegration.deleteComment(info, it) }.bind()
+
+      GithubIntegration.createComment(info, result)
+        .flatMap { if (it && cleanResult) IO.unit else GithubIntegration.raiseError("Error creating the comment") }
+        .bind()
+
+      val errors: List<BenchmarkResult> = getWrongResults(result)
 
       if (errors.nonEmpty()) {
         GithubIntegration.setStatus(

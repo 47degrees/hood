@@ -19,12 +19,14 @@ object GithubIntegration {
 
   val client: DualSyncAsyncHttpHandler = OkHttp()
 
-  private const val error: String = "Error accessing Github Api"
   private const val commentIntro: String = "***Hood benchmark comparison:***"
 
   private val commonHeaders: String = TODO()
 
-  private fun getPreviousComment(info: GhInfo, ciName: String): IO<Option<GhComment>> {
+  fun raiseError(error :String): IO<Unit> =
+    IO.raiseError(GradleException("Error accessing Github Api: $error"))
+
+  fun getPreviousCommentId(info: GhInfo, ciName: String): IO<Option<Long>> {
     val request = Request(
       Method.GET,
       "https://api.github.com/repos/${info.owner}/${info.repo}/issues/${info.pull}/comments"
@@ -33,11 +35,11 @@ object GithubIntegration {
     return IO { client(request) }.map { Jackson.asA(it.bodyString(), Array<GhComment>::class) }
       .map { list ->
         list.filter { it.user.login.contains(ciName) && it.body.startsWith(commentIntro) }
-          .firstOption()
+          .firstOption().map { it.id }
       }
   }
 
-  private fun createComment(info: GhInfo, result: List<BenchmarkResult>): IO<Boolean> {
+  fun createComment(info: GhInfo, result: List<BenchmarkResult>): IO<Boolean> {
 
     val content = "$commentIntro\n${result.prettyPrintResult()}"
 
@@ -54,7 +56,7 @@ object GithubIntegration {
     return IO { client(request) }.map { it.status.code == 201 }
   }
 
-  private fun deleteComment(info: GhInfo, id: Long): IO<Boolean> {
+  fun deleteComment(info: GhInfo, id: Long): IO<Boolean> {
     val request =
       Request(
         Method.DELETE,
@@ -63,16 +65,6 @@ object GithubIntegration {
 
     return IO { client(request) }.map { it.status.code == 204 }
   }
-
-  fun setCommentResult(info: GhInfo, ciName: String, result: List<BenchmarkResult>): IO<Unit> =
-    IO.monad().binding {
-      val previousComment = getPreviousComment(info, ciName).bind()
-      val cleanResult = previousComment.fold { IO { true } }{ deleteComment(info, it.id) }.bind()
-      if (cleanResult && createComment(info, result).bind())
-        IO.unit.bind()
-      else
-        IO.raiseError<Unit>(GradleException("$error: Error creating the comment")).bind()
-    }.fix()
 
   fun setStatus(info: GhInfo, commitSha: String, status: GhStatus): IO<Unit> {
 
@@ -94,7 +86,7 @@ object GithubIntegration {
       if (it)
         IO.unit
       else
-        IO.raiseError(GradleException("$error: Error creating the status"))
+        raiseError("Error creating the status")
     }
   }
 
