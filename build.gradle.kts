@@ -1,15 +1,15 @@
-import com.adrianrafo.hood.CompareBenchmark
+import com.fortysevendeg.hood.CompareBenchmark
 
 plugins {
   kotlin("jvm") version "1.3.20"
-  id("com.adrianrafo.hood")
+  id("com.fortysevendeg.hood")
 }
 
 repositories {
   mavenCentral()
 }
 
-group = "com.adrianrafo"
+group = "com.fortysevendeg"
 version = "0.0.1-SNAPSHOT"
 
 dependencies {

@@ -1,4 +1,4 @@
-package com.adrianrafo.hood
+package com.fortysevendeg.hood
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -16,6 +16,6 @@ open class HoodPlugin : Plugin<Project> {
   }
 
   object Settings {
-    val group = "com.adrianrafo.hood"
+    val group = "com.fortysevendeg.hood"
   }
 }
