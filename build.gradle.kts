@@ -1,9 +1,9 @@
-import com.adrianrafo.hood.CompareBenchmark
+import com.fortysevendeg.hood.CompareBenchmark
 import com.jfrog.bintray.gradle.BintrayExtension
 
 plugins {
   kotlin("jvm") version "1.3.20"
-  id("com.adrianrafo.hood")
+  id("com.fortysevendeg.hood")
   id("com.jfrog.bintray") version "1.8.4"
 }
 
@@ -13,7 +13,7 @@ repositories {
   maven("https://plugins.gradle.org/m2/")
 }
 
-group = "com.adrianrafo"
+group = "com.fortysevendeg"
 version = "0.0.1-SNAPSHOT"
 
 dependencies {

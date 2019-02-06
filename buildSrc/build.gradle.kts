@@ -28,8 +28,8 @@ dependencies {
 gradlePlugin {
   plugins {
     register("hood-plugin") {
-      id = "com.adrianrafo.hood"
-      implementationClass = "com.adrianrafo.hood.HoodPlugin"
+      id = "com.fortysevendeg.hood"
+      implementationClass = "com.fortysevendeg.hood.HoodPlugin"
     }
   }
 }

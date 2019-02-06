@@ -1,4 +1,4 @@
-package com.adrianrafo.hood
+package com.fortysevendeg.hood
 
 import arrow.core.Option
 import arrow.effects.IO

@@ -1,4 +1,4 @@
-package com.adrianrafo.hood
+package com.fortysevendeg.hood
 
 data class Benchmark(
   val name: String,

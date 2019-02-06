@@ -1,4 +1,4 @@
-package com.adrianrafo.hood
+package com.fortysevendeg.hood
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
