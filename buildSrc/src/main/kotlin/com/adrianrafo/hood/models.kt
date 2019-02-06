@@ -9,19 +9,19 @@ sealed class BenchmarkResult {
   abstract fun message(): String
 
   data class OK(val key: String) : BenchmarkResult() {
-    override fun message() = "*** $key looks good ***"
+    override fun message(): String = "*** $key looks good ***"
   }
 
   data class WARN(val key: String) : BenchmarkResult() {
-    override fun message() = "*** $key is slightly worst, but it's ok ***"
+    override fun message(): String = "*** $key is slightly worst, but it's ok ***"
   }
 
   data class FAILED(val key: String) : BenchmarkResult() {
-    override fun message() = "*** $key doesn't look good, nice try ***"
+    override fun message(): String = "*** $key doesn't look good, nice try ***"
   }
 
   data class ERROR(val error: Throwable) : BenchmarkResult() {
-    override fun message() = "***Error: ${error.message} ***"
+    override fun message(): String = "***Error: ${error.message} ***"
   }
 
   override fun toString(): String = "${this::class.simpleName}: ${this.message()}"
@@ -40,7 +40,7 @@ enum class GhStatusState(val value: String) {
 
 //Github
 
-data class GhInfo(val owner: String, val repo: String, val pull: Int, val token : String)
+data class GhInfo(val owner: String, val repo: String, val token : String)
 
 data class GhStatus(val state: GhStatusState, val description: String, val context: String = "benchmark-ci/hood")
 

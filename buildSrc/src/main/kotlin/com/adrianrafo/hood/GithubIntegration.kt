@@ -35,8 +35,8 @@ object GithubIntegration {
   fun raiseError(error: String): IO<Unit> =
     IO.raiseError(GradleException("Error accessing Github Api: $error"))
 
-  fun getPreviousCommentId(info: GhInfo, ciName: String): IO<Option<Long>> {
-    val request = buildRequest(Method.GET, info, "issues/${info.pull}/comments")
+  fun getPreviousCommentId(info: GhInfo, ciName: String, pull: Int): IO<Option<Long>> {
+    val request = buildRequest(Method.GET, info, "issues/$pull/comments")
 
     return IO { client(request) }.map { Jackson.asA(it.bodyString(), Array<GhComment>::class) }
       .map { list ->
@@ -45,7 +45,7 @@ object GithubIntegration {
       }
   }
 
-  fun createComment(info: GhInfo, result: List<BenchmarkResult>): IO<Boolean> {
+  fun createComment(info: GhInfo, pull: Int, result: List<BenchmarkResult>): IO<Boolean> {
 
     val content = "$commentIntro\n${result.prettyPrintResult()}"
 
@@ -56,7 +56,7 @@ object GithubIntegration {
     val request = buildRequest(
       Method.POST,
       info,
-      "issues/${info.pull}/comments"
+      "issues/$pull/comments"
     ).with(Body.json().toLens() of body)
 
     return IO { client(request) }.map { it.status.code == 201 }

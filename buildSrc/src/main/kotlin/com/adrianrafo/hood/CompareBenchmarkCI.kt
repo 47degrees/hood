@@ -48,7 +48,7 @@ open class CompareBenchmarkCI : DefaultTask() {
         token.fold({ IO.raiseError(GradleException("Error getting Github token")) }) { IO { it } }
           .bind()
 
-      val info = GhInfo(owner, repo, pr.toInt(), token)
+      val info = GhInfo(owner, repo, token)
       val commitSha: String = IO { System.getenv("TRAVIS_PULL_REQUEST_SHA") }.bind()
 
       GithubIntegration.setStatus(
@@ -65,11 +65,11 @@ open class CompareBenchmarkCI : DefaultTask() {
         compareColumnName
       ).bind()
 
-      val previousComment = GithubIntegration.getPreviousCommentId(info, ciName).bind()
+      val previousComment = GithubIntegration.getPreviousCommentId(info, ciName, pr.toInt()).bind()
       val cleanResult =
         previousComment.fold({ IO { true } }) { GithubIntegration.deleteComment(info, it) }.bind()
 
-      GithubIntegration.createComment(info, result)
+      GithubIntegration.createComment(info, pr.toInt(), result)
         .flatMap { if (it && cleanResult) IO.unit else GithubIntegration.raiseError("Error creating the comment") }
         .bind()
 
