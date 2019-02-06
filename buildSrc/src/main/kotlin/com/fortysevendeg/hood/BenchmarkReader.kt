@@ -28,6 +28,12 @@ object BenchmarkReader {
   private fun List<CSVRecord>.getColumnIndex(columnName: String): Option<Int> =
     this.firstOrNone().map { it.indexOf(columnName) }
 
+  private fun <A, B> Map<A, List<Pair<A, List<B>>>>.mapValuesToSecond(): Map<A, List<B>> =
+    this.mapValues { it.value.flatMap { it.second } }
+
+  private fun ListK<Pair<String, ListK<Benchmark>>>.groupByBenchmarkKey(): Map<String, List<Benchmark>> =
+    this.groupBy { it.first }.mapValuesToSecond()
+
   private fun readCSV(
     file: FileReader,
     keyColumn: String,
@@ -69,5 +75,5 @@ object BenchmarkReader {
           compareColumn
         ).map { file.nameWithoutExtension to it }
       }
-    }.fix().map { it.fix().groupBy { it.first }.mapValues { it.value.flatMap { it.second } } }
+    }.fix().map { it.fix().groupByBenchmarkKey() }
 }
