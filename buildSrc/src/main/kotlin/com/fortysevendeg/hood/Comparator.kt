@@ -17,6 +17,28 @@ object Comparator {
       else                                        -> BenchmarkResult.FAILED(current.key)
     }
 
+  private fun getCompareResults(
+    currentBenchmarks: Map<String, List<Benchmark>>,
+    prev: Benchmark,
+    threshold: Int
+  ): List<Pair<List<Benchmark>, BenchmarkResult>> =
+    currentBenchmarks.mapValues {
+      it.value.filter { current -> prev.key == current.key }
+    }.flatMap {
+      val currentWithName: List<Benchmark> =
+        it.value.map { current -> Benchmark(it.key, current.score) }
+      it.value.map { current -> Pair(currentWithName, compare(prev, current, threshold)) }
+    }
+
+  private fun buildBenchmarkComparison(
+    key: String,
+    previous: Benchmark,
+    result: Pair<List<Benchmark>, BenchmarkResult>
+  ): BenchmarkComparison {
+    val benchmarksWithName = result.first.plus(previous).reversed()
+    return BenchmarkComparison(key, benchmarksWithName, result.second)
+  }
+
   fun compareCsv(
     previousBenchmarkFile: File,
     currentBenchmarkFiles: List<File>,
@@ -27,10 +49,15 @@ object Comparator {
     //List of BenchmarkComparison
 
     val previousBenchmarks: Pair<String, List<Benchmark>> =
-      BenchmarkReader.readFiles(keyColumnName, compareColumnName, previousBenchmarkFile).bind().entries.first().toPair()
+      BenchmarkReader.readFiles(keyColumnName, compareColumnName, previousBenchmarkFile).bind()
+        .entries.first().toPair()
 
     val currentBenchmarks: Map<String, List<Benchmark>> =
-      BenchmarkReader.readFiles(keyColumnName, compareColumnName, *currentBenchmarkFiles.toTypedArray()).bind()
+      BenchmarkReader.readFiles(
+        keyColumnName,
+        compareColumnName,
+        *currentBenchmarkFiles.toTypedArray()
+      ).bind()
 
     val isConsistent = previousBenchmarks.second.forAll { prev ->
       currentBenchmarks.values.toList()
@@ -45,18 +72,8 @@ object Comparator {
       previousBenchmarks.second.flatMap { prev ->
         val previousWithName = Benchmark(previousBenchmarks.first, prev.score)
 
-        val results: List<Pair<List<Benchmark>, BenchmarkResult>> =
-          currentBenchmarks.mapValues {
-            it.value.filter { current ->              prev.key == current.key            }
-          }.flatMap {
-            val currentWithName: List<Benchmark> =
-              it.value.map { current -> Benchmark(it.key, current.score) }
-            it.value.map { current -> Pair(currentWithName, compare(prev, current, threshold)) }
-          }
-
-        results.map {
-          val benchmarkWithName = it.first.plus(previousWithName).reversed()
-          BenchmarkComparison(prev.key, benchmarkWithName, it.second)
+        getCompareResults(currentBenchmarks, prev, threshold).map {
+          buildBenchmarkComparison(prev.key, previousWithName, it)
         }
       }
     else listOf(

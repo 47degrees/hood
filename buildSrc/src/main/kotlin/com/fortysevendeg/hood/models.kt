@@ -26,7 +26,11 @@ sealed class BenchmarkResult {
 
 }
 
-data class BenchmarkComparison(val key : String, val benchmark: List<Benchmark>, val result: BenchmarkResult)
+data class BenchmarkComparison(
+  val key: String,
+  val benchmark: List<Benchmark>,
+  val result: BenchmarkResult
+)
 
 /**
  * Expected format
@@ -37,11 +41,13 @@ data class BenchmarkComparison(val key : String, val benchmark: List<Benchmark>,
  * result
  */
 fun List<BenchmarkComparison>.prettyPrintResult(): String =
-  this.joinToString(separator = "\n\n"){ comp -> """
+  this.joinToString(separator = "\n\n") { comp ->
+    """
     |`${comp.key.capitalize()}`
-    |${comp.benchmark.joinToString(separator = "\n"){"${it.key} | ${it.score}"}}
+    |${comp.benchmark.joinToString(separator = "\n") { "${it.key} | ${it.score}" }}
     |${comp.result.message()}
-  """.trimMargin() }
+  """.trimMargin()
+  }
 
 object BenchmarkInconsistencyError :
   Throwable("Benchmarks have differents formats and cannot be compared")
@@ -52,10 +58,14 @@ enum class GhStatusState(val value: String) {
 
 //Github
 
-data class GhInfo(val owner: String, val repo: String, val token : String)
+data class GhInfo(val owner: String, val repo: String, val token: String)
 
-data class GhStatus(val state: GhStatusState, val description: String, val context: String = "benchmark-ci/hood")
+data class GhStatus(
+  val state: GhStatusState,
+  val description: String,
+  val context: String = "benchmark-ci/hood"
+)
 
-data class GhUser(val login:String)
+data class GhUser(val login: String)
 
-data class GhComment(val id:Long, val user:GhUser, val body: String)
+data class GhComment(val id: Long, val user: GhUser, val body: String)
