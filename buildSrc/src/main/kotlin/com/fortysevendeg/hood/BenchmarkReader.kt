@@ -54,22 +54,12 @@ object BenchmarkReader {
       }
     }
 
-  fun readPath(
-    path: String,
-    keyColumn: String,
-    compareColumn: String
-  ): IO<Pair<String, List<Benchmark>>> =
-    IO { File(path) }.flatMap { file ->
-      IO { FileReader(file) }.flatMap { readCSV(it, keyColumn, compareColumn) }
-        .map { file.nameWithoutExtension to it }
-    }
-
   fun readFiles(
-    files: List<File>,
     keyColumn: String,
-    compareColumn: String
+    compareColumn: String,
+    vararg files: File
   ): IO<Map<String, List<Benchmark>>> =
-    files.traverse(
+    files.toList().traverse(
       IO.applicative()
     ) { file ->
       IO { FileReader(file) }.flatMap {

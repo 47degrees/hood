@@ -12,13 +12,14 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.property
+import java.io.File
 
 open class CompareBenchmarkCI : DefaultTask() {
 
   @get:Input
-  var previousBenchmarkPath: String = project.objects.property<String>().getOrElse("master.csv")
+  var previousBenchmarkPath: File = project.objects.property<File>().getOrElse(File("master.csv"))
   @get:Input
-  var currentBenchmarkPath: List<String> = project.objects.listProperty<String>().getOrElse(listOf("current.csv"))
+  var currentBenchmarkPath: List<File> = project.objects.listProperty<File>().getOrElse(emptyList())
   @get:Input
   var keyColumnName: String = project.objects.property<String>().getOrElse("Benchmark")
   @get:Input

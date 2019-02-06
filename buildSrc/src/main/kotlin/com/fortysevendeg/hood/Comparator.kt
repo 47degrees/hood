@@ -18,8 +18,8 @@ object Comparator {
     }
 
   fun compareCsv(
-    previousBenchmarkPath: String,
-    currentBenchmarkPaths: List<String>,
+    previousBenchmarkFile: File,
+    currentBenchmarkFiles: List<File>,
     threshold: Int,
     keyColumnName: String,
     compareColumnName: String
@@ -27,11 +27,10 @@ object Comparator {
     //List of BenchmarkComparison
 
     val previousBenchmarks: Pair<String, List<Benchmark>> =
-      BenchmarkReader.readPath(previousBenchmarkPath, keyColumnName, compareColumnName).bind()
+      BenchmarkReader.readFiles(keyColumnName, compareColumnName, previousBenchmarkFile).bind().entries.first().toPair()
 
-    val currentBenchmarkFiles: List<File> = IO { currentBenchmarkPaths.map { File(it) } }.bind()
     val currentBenchmarks: Map<String, List<Benchmark>> =
-      BenchmarkReader.readFiles(currentBenchmarkFiles, keyColumnName, compareColumnName).bind()
+      BenchmarkReader.readFiles(keyColumnName, compareColumnName, *currentBenchmarkFiles.toTypedArray()).bind()
 
     val isConsistent = previousBenchmarks.second.forAll { prev ->
       currentBenchmarks.values.toList()
