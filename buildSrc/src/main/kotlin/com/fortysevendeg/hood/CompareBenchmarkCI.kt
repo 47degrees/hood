@@ -9,6 +9,8 @@ import arrow.instances.list.foldable.nonEmpty
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.property
@@ -16,9 +18,9 @@ import java.io.File
 
 open class CompareBenchmarkCI : DefaultTask() {
 
-  @get:Input
+  @get:InputFile
   var previousBenchmarkPath: File = project.objects.property<File>().getOrElse(File("master.csv"))
-  @get:Input
+  @get:InputFiles
   var currentBenchmarkPath: List<File> = project.objects.listProperty<File>().getOrElse(emptyList())
   @get:Input
   var keyColumnName: String = project.objects.property<String>().getOrElse("Benchmark")
