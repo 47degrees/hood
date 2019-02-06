@@ -17,6 +17,6 @@ dependencies {
 }
 
 tasks.getByName<CompareBenchmark>("compareBenchmark") {
-  previousBenchmarkPath = "./buildSrc/src/main/resources/master_benchmark.csv"
-  currentBenchmarkPath = "./buildSrc/src/main/resources/current_benchmark.csv"
+  previousBenchmarkPath = file("./buildSrc/src/main/resources/master_benchmark.csv")
+  currentBenchmarkPath = listOf(file("./buildSrc/src/main/resources/current_benchmark.csv"))
 }

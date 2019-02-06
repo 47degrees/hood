@@ -9,8 +9,8 @@
  - `compareBenchmarksCI`: Compare two benchmarks and upload a `Github` status for a `Pull Request`.
  
  Both tasks have common parameters:
-  - previousBenchmarkPath: Path to the previous or master benchmark location.
-  - currentBenchmarkPath: Path to the current or pull request benchmark location.
+  - previousBenchmarkPath: File with previous or master benchmark location.
+  - currentBenchmarkPath: List of files with current or pull request benchmark location.
   - keyColumnName: Column name to distinct each benchmark on the comparison.
   - compareColumnName: Column name of the column to compare(the values must to be a Double).
   - threshold: Maximum differentiation for negative result.

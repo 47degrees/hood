@@ -9,15 +9,19 @@ import arrow.instances.list.foldable.nonEmpty
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.TaskAction
+import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.property
+import java.io.File
 
 open class CompareBenchmarkCI : DefaultTask() {
 
-  @get:Input
-  var previousBenchmarkPath: String = project.objects.property<String>().getOrElse("master.csv")
-  @get:Input
-  var currentBenchmarkPath: String = project.objects.property<String>().getOrElse("current.csv")
+  @get:InputFile
+  var previousBenchmarkPath: File = project.objects.property<File>().getOrElse(File("master.csv"))
+  @get:InputFiles
+  var currentBenchmarkPath: List<File> = project.objects.listProperty<File>().getOrElse(emptyList())
   @get:Input
   var keyColumnName: String = project.objects.property<String>().getOrElse("Benchmark")
   @get:Input
@@ -29,8 +33,8 @@ open class CompareBenchmarkCI : DefaultTask() {
 
   private val ciName: String = "travis"
 
-  private fun getWrongResults(result: List<BenchmarkResult>): List<BenchmarkResult> =
-    result.filter { it::class == BenchmarkResult.ERROR::class || it::class == BenchmarkResult.FAILED::class }
+  private fun getWrongResults(result: List<BenchmarkComparison>): List<BenchmarkComparison> =
+    result.filter { it.result::class == BenchmarkResult.ERROR::class || it.result::class == BenchmarkResult.FAILED::class }
 
   @TaskAction
   fun compareBenchmarkCI(): Unit = IO.monad().binding {
@@ -57,7 +61,7 @@ open class CompareBenchmarkCI : DefaultTask() {
         GhStatus(GhStatusState.Pending, "Comparing Benchmarks")
       ).bind()
 
-      val result: List<BenchmarkResult> = Comparator.compareCsv(
+      val result: List<BenchmarkComparison> = Comparator.compareCsv(
         previousBenchmarkPath,
         currentBenchmarkPath,
         threshold,
@@ -73,7 +77,7 @@ open class CompareBenchmarkCI : DefaultTask() {
         .flatMap { if (it && cleanResult) IO.unit else GithubIntegration.raiseError("Error creating the comment") }
         .bind()
 
-      val errors: List<BenchmarkResult> = getWrongResults(result)
+      val errors: List<BenchmarkComparison> = getWrongResults(result)
 
       if (errors.nonEmpty()) {
         GithubIntegration.setStatus(
