@@ -45,7 +45,7 @@ object GithubIntegration {
       }
   }
 
-  fun createComment(info: GhInfo, pull: Int, result: List<BenchmarkResult>): IO<Boolean> {
+  fun createComment(info: GhInfo, pull: Int, result: List<BenchmarkComparison>): IO<Boolean> {
 
     val content = "$commentIntro\n${result.prettyPrintResult()}"
 

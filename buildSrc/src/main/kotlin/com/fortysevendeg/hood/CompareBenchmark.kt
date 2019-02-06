@@ -3,6 +3,7 @@ package com.fortysevendeg.hood
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
+import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.property
 
 open class CompareBenchmark : DefaultTask() {
@@ -10,7 +11,7 @@ open class CompareBenchmark : DefaultTask() {
   @get:Input
   var previousBenchmarkPath: String = project.objects.property<String>().getOrElse("master.csv")
   @get:Input
-  var currentBenchmarkPath: String = project.objects.property<String>().getOrElse("current.csv")
+  var currentBenchmarkPath: List<String> = project.objects.listProperty<String>().getOrElse(listOf("current.csv"))
   @get:Input
   var keyColumnName: String = project.objects.property<String>().getOrElse("Benchmark")
   @get:Input
@@ -20,7 +21,7 @@ open class CompareBenchmark : DefaultTask() {
 
   @TaskAction
   fun compareBenchmark() {
-    val result: List<BenchmarkResult> = Comparator.compareCsv(
+    val result: List<BenchmarkComparison> = Comparator.compareCsv(
       previousBenchmarkPath,
       currentBenchmarkPath,
       threshold,
