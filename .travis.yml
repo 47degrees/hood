@@ -1,0 +1,21 @@
+language: kotlin
+sudo: required
+dist: trusty
+
+jdk:
+  - oraclejdk8
+
+stages:
+  - name: build
+    if: branch = master
+  - name: deploy
+    if: branch = master AND type != pull_request
+
+jobs:
+  include:
+    - stage: build
+      script:
+        - ./gradlew clean build
+    - stage: deploy
+      script:
+        - ./deploy-scripts/deploy.sh
