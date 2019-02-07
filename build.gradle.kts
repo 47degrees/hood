@@ -13,9 +13,6 @@ repositories {
   maven("https://plugins.gradle.org/m2/")
 }
 
-group = "com.fortysevendeg"
-version = "0.0.1-SNAPSHOT"
-
 dependencies {
   implementation(kotlin("stdlib-jdk8"))
 }
