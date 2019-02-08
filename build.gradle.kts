@@ -34,6 +34,6 @@ bintray {
     userOrg = System.getenv("POM_DEVELOPER_ID")
     setConfigurations("archives")
     setLicenses("Apache-2.0")
-    vcsUrl = "https://github.com/47deg/Hood.git"
+    vcsUrl = "https://github.com/47deg/hood.git"
   })
 }
