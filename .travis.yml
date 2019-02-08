@@ -7,7 +7,7 @@ jdk:
 
 stages:
   - name: build
-    if: branch = master
+    if: type = pull_request
   - name: deploy
     if: branch = master AND type != pull_request
 
