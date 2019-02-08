@@ -1,6 +1,8 @@
 import com.fortysevendeg.hood.CompareBenchmark
 import com.jfrog.bintray.gradle.BintrayExtension
 
+apply(from = rootProject.file("gradle/gradle-mvn-push.gradle"))
+
 plugins {
   kotlin("jvm") version "1.3.20"
   id("com.fortysevendeg.hood")
