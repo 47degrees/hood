@@ -5,7 +5,7 @@ apply(from = rootProject.file("gradle/gradle-mvn-push.gradle"))
 
 plugins {
   kotlin("jvm") version "1.3.20"
-  id("com.fortysevendeg.hood")
+  id("com.47deg.hood")
   id("com.jfrog.bintray") version "1.8.4"
 }
 
