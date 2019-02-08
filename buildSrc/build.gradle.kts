@@ -28,7 +28,7 @@ dependencies {
 gradlePlugin {
   plugins {
     register("hood-plugin") {
-      id = "com.fortysevendeg.hood"
+      id = "com.47deg.hood"
       implementationClass = "com.fortysevendeg.hood.HoodPlugin"
     }
   }
