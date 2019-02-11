@@ -55,7 +55,7 @@ object BenchmarkReader {
           records.tail().map { benchmarkFromCSV(it, key, column) }
         }.fix()
       }.flatMap {
-        it.fold({ IO.raiseError(BenchmarkInconsistencyError) },
+        it.fold({ IO.raiseError<ListK<Benchmark>>(BenchmarkInconsistencyError) },
           { IO { it.k() } })
       }
     }
