@@ -53,7 +53,7 @@ open class CompareBenchmarkCI : DefaultTask() {
       val info = GhInfo(owner, repo, token)
       val commitSha: String = IO { System.getenv("TRAVIS_PULL_REQUEST_SHA") }.bind()
 
-      GithubIntegration.setStatus(
+      GithubCommentIntegration.setStatus(
         info,
         commitSha,
         GhStatus(GhStatusState.Pending, "Comparing Benchmarks")
@@ -67,25 +67,25 @@ open class CompareBenchmarkCI : DefaultTask() {
         compareColumnName
       ).bind()
 
-      val previousComment = GithubIntegration.getPreviousCommentId(info, ciName, pr.toInt()).bind()
+      val previousComment = GithubCommentIntegration.getPreviousCommentId(info, ciName, pr.toInt()).bind()
       val cleanResult =
-        previousComment.fold({ IO { true } }) { GithubIntegration.deleteComment(info, it) }.bind()
+        previousComment.fold({ IO { true } }) { GithubCommentIntegration.deleteComment(info, it) }.bind()
 
-      GithubIntegration.createComment(info, pr.toInt(), result)
-        .flatMap { if (it && cleanResult) IO.unit else GithubIntegration.raiseError("Error creating the comment") }
+      GithubCommentIntegration.createComment(info, pr.toInt(), result.prettyPrintResult())
+        .flatMap { if (it && cleanResult) IO.unit else GithubCommentIntegration.raiseError("Error creating the comment") }
         .bind()
 
       val errors: List<BenchmarkComparison> = getWrongResults(result)
 
       if (errors.nonEmpty()) {
-        GithubIntegration.setStatus(
+        GithubCommentIntegration.setStatus(
           info,
           commitSha,
           GhStatus(GhStatusState.Failed, "Benchmarks comparison failed")
         ).bind()
         IO.raiseError<Unit>(GradleException(errors.prettyPrintResult())).bind()
       } else
-        GithubIntegration.setStatus(
+        GithubCommentIntegration.setStatus(
           info,
           commitSha,
           GhStatus(GhStatusState.Succeed, "Benchmarks comparison passed")

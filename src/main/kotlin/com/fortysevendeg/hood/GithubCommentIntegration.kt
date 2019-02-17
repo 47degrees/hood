@@ -13,7 +13,7 @@ import org.http4k.core.with
 import org.http4k.format.Jackson
 import org.http4k.format.Jackson.json
 
-object GithubIntegration {
+object GithubCommentIntegration {
 
   val client: DualSyncAsyncHttpHandler = OkHttp()
 
@@ -33,7 +33,7 @@ object GithubIntegration {
   }
 
   fun raiseError(error: String): IO<Unit> =
-    IO.raiseError(GradleException("Error accessing Github Api: $error"))
+    IO.raiseError(GradleException("Error accessing Github Comment Api: $error"))
 
   fun getPreviousCommentId(info: GhInfo, ciName: String, pull: Int): IO<Option<Long>> {
     val request = buildRequest(Method.GET, info, "issues/$pull/comments")
@@ -45,9 +45,9 @@ object GithubIntegration {
       }
   }
 
-  fun createComment(info: GhInfo, pull: Int, result: List<BenchmarkComparison>): IO<Boolean> {
+  fun createComment(info: GhInfo, pull: Int, body: String): IO<Boolean> {
 
-    val content = "$commentIntro\n${result.prettyPrintResult()}"
+    val content = "$commentIntro\n$body"
 
     val body = Jackson {
       obj("body" to string(content))
