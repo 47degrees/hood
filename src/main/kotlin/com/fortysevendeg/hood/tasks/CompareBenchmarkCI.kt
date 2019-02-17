@@ -1,4 +1,4 @@
-package com.fortysevendeg.hood
+package com.fortysevendeg.hood.tasks
 
 import arrow.core.Option
 import arrow.core.toOption
@@ -6,6 +6,8 @@ import arrow.effects.IO
 import arrow.effects.fix
 import arrow.effects.instances.io.monad.monad
 import arrow.instances.list.foldable.nonEmpty
+import com.fortysevendeg.hood.*
+import com.fortysevendeg.hood.github.GithubCommentIntegration
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
@@ -17,9 +19,11 @@ import java.io.File
 open class CompareBenchmarkCI : DefaultTask() {
 
   @get:InputFile
-  var previousBenchmarkPath: File = project.objects.property(File::class.java).getOrElse(File("master.csv"))
+  var previousBenchmarkPath: File =
+    project.objects.property(File::class.java).getOrElse(File("master.csv"))
   @get:InputFiles
-  var currentBenchmarkPath: List<File> = project.objects.listProperty(File::class.java).getOrElse(emptyList())
+  var currentBenchmarkPath: List<File> =
+    project.objects.listProperty(File::class.java).getOrElse(emptyList())
   @get:Input
   var keyColumnName: String = project.objects.property(String::class.java).getOrElse("Benchmark")
   @get:Input
@@ -56,7 +60,10 @@ open class CompareBenchmarkCI : DefaultTask() {
       GithubCommentIntegration.setStatus(
         info,
         commitSha,
-        GhStatus(GhStatusState.Pending, "Comparing Benchmarks")
+        GhStatus(
+          GhStatusState.Pending,
+          "Comparing Benchmarks"
+        )
       ).bind()
 
       val result: List<BenchmarkComparison> = Comparator.compareCsv(
@@ -67,11 +74,13 @@ open class CompareBenchmarkCI : DefaultTask() {
         compareColumnName
       ).bind()
 
-      val previousComment = GithubCommentIntegration.getPreviousCommentId(info, ciName, pr.toInt()).bind()
+      val previousComment =
+        GithubCommentIntegration.getPreviousCommentId(info, ciName, pr.toInt()).bind()
       val cleanResult =
-        previousComment.fold({ IO { true } }) { GithubCommentIntegration.deleteComment(info, it) }.bind()
+        previousComment.fold({ IO { true } }) { GithubCommentIntegration.deleteComment(info, it) }
+          .bind()
 
-      GithubCommentIntegration.createComment(info, pr.toInt(), result.prettyPrintResult())
+      GithubCommentIntegration.createComment(info, pr.toInt(), result)
         .flatMap { if (it && cleanResult) IO.unit else GithubCommentIntegration.raiseError("Error creating the comment") }
         .bind()
 
@@ -81,14 +90,20 @@ open class CompareBenchmarkCI : DefaultTask() {
         GithubCommentIntegration.setStatus(
           info,
           commitSha,
-          GhStatus(GhStatusState.Failed, "Benchmarks comparison failed")
+          GhStatus(
+            GhStatusState.Failed,
+            "Benchmarks comparison failed"
+          )
         ).bind()
         IO.raiseError<Unit>(GradleException(errors.prettyPrintResult())).bind()
       } else
         GithubCommentIntegration.setStatus(
           info,
           commitSha,
-          GhStatus(GhStatusState.Succeed, "Benchmarks comparison passed")
+          GhStatus(
+            GhStatusState.Succeed,
+            "Benchmarks comparison passed"
+          )
         ).bind()
 
     } else IO.unit.bind()

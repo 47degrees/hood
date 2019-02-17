@@ -49,11 +49,12 @@ object Comparator {
     //List of BenchmarkComparison
 
     val previousBenchmarks: Pair<String, List<Benchmark>> =
-      BenchmarkReader.readFiles(keyColumnName, compareColumnName, previousBenchmarkFile).bind()
+      BenchmarkReader.readFilesToBenchmark(keyColumnName, compareColumnName, previousBenchmarkFile)
+        .bind()
         .entries.first().toPair()
 
     val currentBenchmarks: Map<String, List<Benchmark>> =
-      BenchmarkReader.readFiles(
+      BenchmarkReader.readFilesToBenchmark(
         keyColumnName,
         compareColumnName,
         *currentBenchmarkFiles.toTypedArray()

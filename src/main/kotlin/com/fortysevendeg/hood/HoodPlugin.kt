@@ -1,5 +1,8 @@
 package com.fortysevendeg.hood
 
+import com.fortysevendeg.hood.tasks.CompareBenchmark
+import com.fortysevendeg.hood.tasks.CompareBenchmarkCI
+import com.fortysevendeg.hood.tasks.UploadBenchmark
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

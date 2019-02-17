@@ -69,3 +69,14 @@ data class GhStatus(
 data class GhUser(val login: String)
 
 data class GhComment(val id: Long, val user: GhUser, val body: String)
+
+data class GhFileSha(val sha: String)
+
+data class GhCreateCommit(val message: String, val content: String, val branch: String)
+
+data class GhUpdateCommit(
+  val message: String,
+  val content: String,
+  val sha: String,
+  val branch: String
+)

@@ -1,21 +1,19 @@
-package com.fortysevendeg.hood
+package com.fortysevendeg.hood.github
 
 import arrow.core.Option
 import arrow.effects.IO
 import arrow.syntax.collections.firstOption
+import com.fortysevendeg.hood.*
 import org.gradle.api.GradleException
 import org.http4k.client.DualSyncAsyncHttpHandler
 import org.http4k.client.OkHttp
-import org.http4k.core.Body
-import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.with
+import org.http4k.core.*
 import org.http4k.format.Jackson
 import org.http4k.format.Jackson.json
 
 object GithubCommentIntegration {
 
-  val client: DualSyncAsyncHttpHandler = OkHttp()
+  private val client: DualSyncAsyncHttpHandler = OkHttp()
 
   private const val commentIntro: String = "***Hood benchmark comparison:***"
 
@@ -36,7 +34,11 @@ object GithubCommentIntegration {
     IO.raiseError(GradleException("Error accessing Github Comment Api: $error"))
 
   fun getPreviousCommentId(info: GhInfo, ciName: String, pull: Int): IO<Option<Long>> {
-    val request = buildRequest(Method.GET, info, "issues/$pull/comments")
+    val request = buildRequest(
+      Method.GET,
+      info,
+      "issues/$pull/comments"
+    )
 
     return IO { client(request) }.map { Jackson.asA(it.bodyString(), Array<GhComment>::class) }
       .map { list ->
@@ -45,9 +47,9 @@ object GithubCommentIntegration {
       }
   }
 
-  fun createComment(info: GhInfo, pull: Int, body: String): IO<Boolean> {
+  fun createComment(info: GhInfo, pull: Int, results: List<BenchmarkComparison>): IO<Boolean> {
 
-    val content = "$commentIntro\n$body"
+    val content = "$commentIntro\n${results.prettyPrintResult()}"
 
     val body = Jackson {
       obj("body" to string(content))
@@ -59,12 +61,16 @@ object GithubCommentIntegration {
       "issues/$pull/comments"
     ).with(Body.json().toLens() of body)
 
-    return IO { client(request) }.map { it.status.code == 201 }
+    return IO { client(request) }.map { it.status == Status.CREATED }
   }
 
   fun deleteComment(info: GhInfo, id: Long): IO<Boolean> {
-    val request = buildRequest(Method.DELETE, info, "issues/comments/$id")
-    return IO { client(request) }.map { it.status.code == 204 }
+    val request = buildRequest(
+      Method.DELETE,
+      info,
+      "issues/comments/$id"
+    )
+    return IO { client(request) }.map { it.status == Status.NO_CONTENT }
   }
 
   fun setStatus(info: GhInfo, commitSha: String, status: GhStatus): IO<Unit> {
@@ -78,13 +84,17 @@ object GithubCommentIntegration {
     }
 
     val request =
-      buildRequest(Method.POST, info, "statuses/$commitSha").with(Body.json().toLens() of body)
+      buildRequest(
+        Method.POST,
+        info,
+        "statuses/$commitSha"
+      ).with(Body.json().toLens() of body)
 
-    return IO { client(request) }.map { it.status.code == 201 }.flatMap {
-      if (it)
+    return IO { client(request) }.flatMap {
+      if (it.status == Status.CREATED)
         IO.unit
       else
-        raiseError("Error creating the status")
+        raiseError("Error creating the status ${it.status}")
     }
   }
 

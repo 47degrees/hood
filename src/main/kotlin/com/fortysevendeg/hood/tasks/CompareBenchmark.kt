@@ -1,5 +1,8 @@
-package com.fortysevendeg.hood
+package com.fortysevendeg.hood.tasks
 
+import com.fortysevendeg.hood.BenchmarkComparison
+import com.fortysevendeg.hood.Comparator
+import com.fortysevendeg.hood.prettyPrintResult
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
@@ -10,9 +13,11 @@ import java.io.File
 open class CompareBenchmark : DefaultTask() {
 
   @get:InputFile
-  var previousBenchmarkPath: File = project.objects.property(File::class.java).getOrElse(File("master.csv"))
+  var previousBenchmarkPath: File =
+    project.objects.property(File::class.java).getOrElse(File("master.csv"))
   @get:InputFiles
-  var currentBenchmarkPath: List<File> = project.objects.listProperty(File::class.java).getOrElse(emptyList())
+  var currentBenchmarkPath: List<File> =
+    project.objects.listProperty(File::class.java).getOrElse(emptyList())
   @get:Input
   var keyColumnName: String = project.objects.property(String::class.java).getOrElse("Benchmark")
   @get:Input

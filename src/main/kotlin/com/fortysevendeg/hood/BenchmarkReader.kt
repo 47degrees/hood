@@ -60,7 +60,7 @@ object BenchmarkReader {
       }
     }
 
-  fun readFiles(
+  fun readFilesToBenchmark(
     keyColumn: String,
     compareColumn: String,
     vararg files: File
@@ -76,4 +76,10 @@ object BenchmarkReader {
         ).map { file.nameWithoutExtension to it }
       }
     }.fix().map { it.fix().groupByBenchmarkKey() }
+
+  fun readFiletoBase64(file: File): IO<String> {
+    fun toBase64(text: String): IO<String> = TODO()
+    return IO { FileReader(file) }.bracket({ IO { it.close() } }, { toBase64(it.readText()) })
+  }
+
 }
