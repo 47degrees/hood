@@ -1,6 +1,5 @@
 package com.fortysevendeg.hood.tasks
 
-import arrow.core.Option
 import arrow.core.toOption
 import arrow.effects.IO
 import arrow.effects.fix
@@ -31,7 +30,7 @@ open class CompareBenchmarkCI : DefaultTask() {
   @get:Input
   var threshold: Int = project.objects.property(Int::class.java).getOrElse(50)
   @get:Input
-  var token: Option<String> = project.objects.property(String::class.java).orNull.toOption()
+  var token: String? = project.objects.property(String::class.java).orNull
 
   private val ciName: String = "travis"
 
@@ -51,7 +50,8 @@ open class CompareBenchmarkCI : DefaultTask() {
       val repo: String = slug.last()
 
       val token: String =
-        token.fold({ IO.raiseError<String>(GradleException("Error getting Github token")) }) { IO { it } }
+        token.toOption()
+          .fold({ IO.raiseError<String>(GradleException("Error getting Github token")) }) { IO { it } }
           .bind()
 
       val info = GhInfo(owner, repo, token)
