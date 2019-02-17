@@ -21,6 +21,9 @@ open class UploadBenchmark : DefaultTask() {
   @get:Input
   var benchmarkFile: File = project.objects.property(File::class.java).getOrElse(File("master.csv"))
   @get:Input
+  var benchmarkDestinationFromProjectRoot: String =
+    project.objects.property(String::class.java).getOrElse("master.csv")
+  @get:Input
   var commitMessage: String =
     project.objects.property(String::class.java).getOrElse("Upload benchmark")
   @get:Input
@@ -30,8 +33,6 @@ open class UploadBenchmark : DefaultTask() {
 
   @TaskAction
   fun uploadBenchmark(): Unit = IO.monad().binding {
-    val benchmarkAbsolutePath = benchmarkFile.absolutePath
-
     val branch: String = IO { System.getenv("TRAVIS_BRANCH") }.bind()
 
     val slug = IO { System.getenv("TRAVIS_REPO_SLUG").split('/') }.bind()
@@ -46,17 +47,26 @@ open class UploadBenchmark : DefaultTask() {
 
     val info = GhInfo(owner, repo, token)
 
-    val fileSha = GithubCommitIntegration.getFileSha(info, branch, benchmarkAbsolutePath).bind()
+    val fileSha =
+      GithubCommitIntegration.getFileSha(info, branch, benchmarkDestinationFromProjectRoot).bind()
 
     val content = BenchmarkReader.readFileToBase64(benchmarkFile).bind()
 
     fileSha.fold({
       val createCommit = GhCreateCommit(commitMessage, content, branch)
-      GithubCommitIntegration.createFileCommit(info, benchmarkAbsolutePath, createCommit)
+      GithubCommitIntegration.createFileCommit(
+        info,
+        benchmarkDestinationFromProjectRoot,
+        createCommit
+      )
     }, {
       val updateCommit =
         GhUpdateCommit(commitMessage, content, it.sha, branch)
-      GithubCommitIntegration.updateFileCommit(info, benchmarkAbsolutePath, updateCommit)
+      GithubCommitIntegration.updateFileCommit(
+        info,
+        benchmarkDestinationFromProjectRoot,
+        updateCommit
+      )
     }).bind()
 
   }.fix().unsafeRunSync()
