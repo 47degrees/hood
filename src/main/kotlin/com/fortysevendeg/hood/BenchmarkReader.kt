@@ -17,6 +17,7 @@ import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
 import java.io.File
 import java.io.FileReader
+import java.util.Base64
 
 object BenchmarkReader {
 
@@ -77,9 +78,7 @@ object BenchmarkReader {
       }
     }.fix().map { it.fix().groupByBenchmarkKey() }
 
-  fun readFiletoBase64(file: File): IO<String> {
-    fun toBase64(text: String): IO<String> = TODO()
-    return IO { FileReader(file) }.bracket({ IO { it.close() } }, { toBase64(it.readText()) })
-  }
+  fun readFileToBase64(file: File): IO<String> =
+    IO { Base64.getEncoder().encodeToString(file.readBytes()) }
 
 }

@@ -48,7 +48,7 @@ open class UploadBenchmark : DefaultTask() {
 
     val fileSha = GithubCommitIntegration.getFileSha(info, branch, benchmarkAbsolutePath).bind()
 
-    val content = BenchmarkReader.readFiletoBase64(benchmarkFile).bind()
+    val content = BenchmarkReader.readFileToBase64(benchmarkFile).bind()
 
     fileSha.fold({
       val createCommit = GhCreateCommit(commitMessage, content, branch)
