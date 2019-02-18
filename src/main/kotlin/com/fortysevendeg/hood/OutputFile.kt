@@ -11,16 +11,28 @@ import java.io.FileWriter
 
 object OutputFile {
 
+  private fun createFile(file: File): IO<Boolean> =
+    IO { file.parentFile.mkdirs() }.map { file.createNewFile() }
+
   private fun writeOutputFile(
     path: String,
     result: List<BenchmarkComparison>,
     format: FileFormat
   ): IO<Unit> = IO.monad().binding {
+
     val file = IO { File("$path.$format") }.bind()
-    val writer = IO { FileWriter(file) }.bind()
-    IO { writer.write(result.prettyPrintResult(format)) }.bind()
-    IO { writer.flush() }.bind()
-    IO { writer.close() }.bind()
+    val exists = IO { file.exists() }.bind()
+
+    if (exists || createFile(file).bind()) {
+
+      val writer = IO { FileWriter(file) }.bind()
+
+      IO { writer.write(result.prettyPrintResult(format)) }.bind()
+      IO { writer.flush() }.bind()
+      IO { writer.close() }.bind()
+
+    } else IO.raiseError<Unit>(GradleException("Cannot create the file")).bind()
+
   }.fix()
 
   fun sendOutputToFile(

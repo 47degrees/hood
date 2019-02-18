@@ -50,7 +50,7 @@ object GithubCommentIntegration {
 
   fun createComment(info: GhInfo, pull: Int, results: List<BenchmarkComparison>): IO<Boolean> {
 
-    val content = "$commentIntro\n${results.prettyPrintResult()}"
+    val content = "$commentIntro\n${results.prettyPrintResult(FileFormat.MD)}"
 
     val body = Jackson {
       obj("body" to string(content))

@@ -12,13 +12,19 @@ object syntax {
    *
    * Benchmark | Value
    * file name | benchmark.score
-   * file name | benchmark.score   <- Table
+   * file name | benchmark.score
    * file name | benchmark.score
    *
    * result
    */
   fun List<BenchmarkComparison>.prettyPrintResult(): String =
-    this.printMDFormat()
+    this.joinToString(separator = "\n\n") { comp ->
+      """
+      |`${comp.key.capitalize()}`
+      |${comp.benchmark.joinToString(separator = "\n") { "${it.key} | ${it.score}" }}
+      |${comp.result.message()}
+      |""".trimMargin()
+    }
 
   private fun List<BenchmarkComparison>.printMDFormat(): String =
     this.joinToString(separator = "\n\n") { comp ->

@@ -28,7 +28,7 @@ open class CompareBenchmark : DefaultTask() {
   var outputToFile: Boolean = project.objects.property(Boolean::class.java).getOrElse(false)
   @get:Input
   var outputPath: String =
-    project.objects.property(String::class.java).getOrElse("hood/comparison")
+    project.objects.property(String::class.java).getOrElse("./hood/comparison")
   @get:Input
   var outputFormat: String =
     project.objects.property(String::class.java).getOrElse("md")
