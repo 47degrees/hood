@@ -34,7 +34,7 @@ object GithubCommentIntegration {
   fun raiseError(error: String): IO<Unit> =
     IO.raiseError(GradleException("Error accessing Github Comment Api: $error"))
 
-  fun getPreviousCommentId(info: GhInfo, ciName: String, pull: Int): IO<Option<Long>> {
+  fun getPreviousCommentId(info: GhInfo, pull: Int): IO<Option<Long>> {
     val request = buildRequest(
       Method.GET,
       info,
@@ -43,7 +43,7 @@ object GithubCommentIntegration {
 
     return IO { client(request) }.map { Jackson.asA(it.bodyString(), Array<GhComment>::class) }
       .map { list ->
-        list.filter { it.user.login.contains(ciName) && it.body.startsWith(commentIntro) }
+        list.filter { it.body.startsWith(commentIntro) }
           .firstOption().map { it.id }
       }
   }
@@ -78,7 +78,7 @@ object GithubCommentIntegration {
 
     val body = Jackson {
       obj(
-        "value" to string(status.state.value),
+        "state" to string(status.state.value),
         "description" to string(status.description),
         "context" to string(status.context)
       )
@@ -95,7 +95,7 @@ object GithubCommentIntegration {
       if (it.status == Status.CREATED)
         IO.unit
       else
-        raiseError("Error creating the status ${it.status}")
+        raiseError("Error creating the status (${it.status})")
     }
   }
 

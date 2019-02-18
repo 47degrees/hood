@@ -12,13 +12,14 @@ import com.fortysevendeg.hood.github.GithubCommitIntegration
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 open class UploadBenchmark : DefaultTask() {
 
-  @get:Input
-  var benchmarkFile: File = project.objects.property(File::class.java).getOrElse(File("master.csv"))
+  @get:InputFile
+  var benchmarkFile: File = project.objects.fileProperty().asFile.getOrElse(File("master.csv"))
   @get:Input
   var benchmarkDestinationFromProjectRoot: String =
     project.objects.property(String::class.java).getOrElse("master.csv")

@@ -21,7 +21,7 @@ open class CompareBenchmarkCI : DefaultTask() {
 
   @get:InputFile
   var previousBenchmarkPath: File =
-    project.objects.property(File::class.java).getOrElse(File("master.csv"))
+    project.objects.fileProperty().asFile.getOrElse(File("master.csv"))
   @get:InputFiles
   var currentBenchmarkPath: List<File> =
     project.objects.listProperty(File::class.java).getOrElse(emptyList())
@@ -42,8 +42,6 @@ open class CompareBenchmarkCI : DefaultTask() {
   var outputFormat: String =
     project.objects.property(String::class.java).getOrElse("md")
 
-  private val ciName: String = "travis"
-
   private fun getWrongResults(result: List<BenchmarkComparison>): List<BenchmarkComparison> =
     result.filter { it.result::class == BenchmarkResult.ERROR::class || it.result::class == BenchmarkResult.FAILED::class }
 
@@ -63,7 +61,7 @@ open class CompareBenchmarkCI : DefaultTask() {
     ).bind()
 
     val previousComment =
-      GithubCommentIntegration.getPreviousCommentId(info, ciName, pr).bind()
+      GithubCommentIntegration.getPreviousCommentId(info, pr).bind()
     val cleanResult =
       previousComment.fold({ IO { true } }) { GithubCommentIntegration.deleteComment(info, it) }
         .bind()

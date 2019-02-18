@@ -14,7 +14,7 @@ open class CompareBenchmark : DefaultTask() {
 
   @get:InputFile
   var previousBenchmarkPath: File =
-    project.objects.property(File::class.java).getOrElse(File("master.csv"))
+    project.objects.fileProperty().asFile.getOrElse(File("master.csv"))
   @get:InputFiles
   var currentBenchmarkPath: List<File> =
     project.objects.listProperty(File::class.java).getOrElse(emptyList())

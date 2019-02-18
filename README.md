@@ -24,7 +24,7 @@
  Both task can send the result to a file, just need to fulfill the following parameters:
   - **outputToFile**: If send the output to a file. By default: `false`
   - **outputPath**: The path to the output file. By default: `hood/comparison`
-  - **outputFormat**: The output file format, two possible values `md` or `json`. By default: `md`
+  - **outputFormat**: The output file format, currently we just support `md`. By default: `md`
  
  ## Upload benchmarks
  
