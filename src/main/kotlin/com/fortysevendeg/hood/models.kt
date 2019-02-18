@@ -6,24 +6,37 @@ data class Benchmark(
 )
 
 sealed class BenchmarkResult {
-  abstract fun message(): String
+  abstract fun symbol(): String
+  abstract fun icon(): String
 
-  data class OK(val key: String) : BenchmarkResult() {
-    override fun message(): String = "*** $key looks good ***"
+  object OK : BenchmarkResult() {
+    override fun symbol(): String = "✓"
+    override fun icon(): String = ":heavy_check_mark:"
   }
 
-  data class WARN(val key: String) : BenchmarkResult() {
-    override fun message(): String = "*** $key is slightly worst, but it's ok ***"
+  object WARN : BenchmarkResult() {
+    override fun symbol(): String = "⚠"
+    override fun icon(): String = ":warning:"
   }
 
-  data class FAILED(val key: String) : BenchmarkResult() {
-    override fun message(): String = "*** $key doesn't look good, nice try ***"
+  object FAILED : BenchmarkResult() {
+    override fun symbol(): String = "✗"
+    override fun icon(): String = ":red_circle:"
   }
 
   data class ERROR(val error: Throwable) : BenchmarkResult() {
-    override fun message(): String = "*** Error: ${error.message} ***"
+    override fun symbol(): String = "☠"
+    override fun icon(): String = ":skull_and_crossbones:"
   }
 
+}
+
+enum class FileFormat {
+  MD, JSON;
+
+  override fun toString(): String {
+    return super.toString().toLowerCase()
+  }
 }
 
 data class BenchmarkComparison(
@@ -31,23 +44,6 @@ data class BenchmarkComparison(
   val benchmark: List<Benchmark>,
   val result: BenchmarkResult
 )
-
-/**
- * Expected format
- * `benchmark key`
- * file name | benchmark.score
- * file name | benchmark.score
- * file name | benchmark.score
- * result
- */
-fun List<BenchmarkComparison>.prettyPrintResult(): String =
-  this.joinToString(separator = "\n\n") { comp ->
-    """
-    |`${comp.key.capitalize()}`
-    |${comp.benchmark.joinToString(separator = "\n") { "${it.key} | ${it.score}" }}
-    |${comp.result.message()}
-  """.trimMargin()
-  }
 
 object BenchmarkInconsistencyError :
   Throwable("Benchmarks have differents formats and cannot be compared")

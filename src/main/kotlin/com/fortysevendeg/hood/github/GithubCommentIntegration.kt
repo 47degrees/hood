@@ -4,6 +4,7 @@ import arrow.core.Option
 import arrow.effects.IO
 import arrow.syntax.collections.firstOption
 import com.fortysevendeg.hood.*
+import com.fortysevendeg.hood.syntax.prettyPrintResult
 import org.gradle.api.GradleException
 import org.http4k.client.DualSyncAsyncHttpHandler
 import org.http4k.client.OkHttp
@@ -33,7 +34,7 @@ object GithubCommentIntegration {
   fun raiseError(error: String): IO<Unit> =
     IO.raiseError(GradleException("Error accessing Github Comment Api: $error"))
 
-  fun getPreviousCommentId(info: GhInfo, ciName: String, pull: Int): IO<Option<Long>> {
+  fun getPreviousCommentId(info: GhInfo, pull: Int): IO<Option<Long>> {
     val request = buildRequest(
       Method.GET,
       info,
@@ -42,14 +43,14 @@ object GithubCommentIntegration {
 
     return IO { client(request) }.map { Jackson.asA(it.bodyString(), Array<GhComment>::class) }
       .map { list ->
-        list.filter { it.user.login.contains(ciName) && it.body.startsWith(commentIntro) }
+        list.filter { it.body.startsWith(commentIntro) }
           .firstOption().map { it.id }
       }
   }
 
   fun createComment(info: GhInfo, pull: Int, results: List<BenchmarkComparison>): IO<Boolean> {
 
-    val content = "$commentIntro\n${results.prettyPrintResult()}"
+    val content = "$commentIntro\n${results.prettyPrintResult(FileFormat.MD)}"
 
     val body = Jackson {
       obj("body" to string(content))
@@ -73,11 +74,11 @@ object GithubCommentIntegration {
     return IO { client(request) }.map { it.status == Status.NO_CONTENT }
   }
 
-  fun setStatus(info: GhInfo, commitSha: String, status: GhStatus): IO<Unit> {
+  private fun setStatus(info: GhInfo, commitSha: String, status: GhStatus): IO<Unit> {
 
     val body = Jackson {
       obj(
-        "value" to string(status.state.value),
+        "state" to string(status.state.value),
         "description" to string(status.description),
         "context" to string(status.context)
       )
@@ -94,8 +95,32 @@ object GithubCommentIntegration {
       if (it.status == Status.CREATED)
         IO.unit
       else
-        raiseError("Error creating the status ${it.status}")
+        raiseError("Error creating the status (${it.status})")
     }
   }
+
+  fun setPendingStatus(info: GhInfo, commitSha: String) = setStatus(
+    info, commitSha,
+    GhStatus(
+      GhStatusState.Pending,
+      "Comparing Benchmarks"
+    )
+  )
+
+  fun setSuccessStatus(info: GhInfo, commitSha: String) = setStatus(
+    info, commitSha,
+    GhStatus(
+      GhStatusState.Succeed,
+      "Benchmarks comparison passed"
+    )
+  )
+
+  fun setFailedStatus(info: GhInfo, commitSha: String) = setStatus(
+    info, commitSha,
+    GhStatus(
+      GhStatusState.Failed,
+      "Benchmarks comparison failed"
+    )
+  )
 
 }
