@@ -26,28 +26,19 @@ sealed class BenchmarkResult {
 
 }
 
+enum class FileFormat {
+  MD, JSON;
+
+  override fun toString(): String {
+    return super.toString().toLowerCase()
+  }
+}
+
 data class BenchmarkComparison(
   val key: String,
   val benchmark: List<Benchmark>,
   val result: BenchmarkResult
 )
-
-/**
- * Expected format
- * `benchmark key`
- * file name | benchmark.score
- * file name | benchmark.score
- * file name | benchmark.score
- * result
- */
-fun List<BenchmarkComparison>.prettyPrintResult(): String =
-  this.joinToString(separator = "\n\n") { comp ->
-    """
-    |`${comp.key.capitalize()}`
-    |${comp.benchmark.joinToString(separator = "\n") { "${it.key} | ${it.score}" }}
-    |${comp.result.message()}
-  """.trimMargin()
-  }
 
 object BenchmarkInconsistencyError :
   Throwable("Benchmarks have differents formats and cannot be compared")

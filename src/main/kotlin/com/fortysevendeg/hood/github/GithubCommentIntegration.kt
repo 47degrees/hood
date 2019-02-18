@@ -4,6 +4,7 @@ import arrow.core.Option
 import arrow.effects.IO
 import arrow.syntax.collections.firstOption
 import com.fortysevendeg.hood.*
+import com.fortysevendeg.hood.syntax.prettyPrintResult
 import org.gradle.api.GradleException
 import org.http4k.client.DualSyncAsyncHttpHandler
 import org.http4k.client.OkHttp
@@ -73,7 +74,7 @@ object GithubCommentIntegration {
     return IO { client(request) }.map { it.status == Status.NO_CONTENT }
   }
 
-  fun setStatus(info: GhInfo, commitSha: String, status: GhStatus): IO<Unit> {
+  private fun setStatus(info: GhInfo, commitSha: String, status: GhStatus): IO<Unit> {
 
     val body = Jackson {
       obj(
@@ -97,5 +98,29 @@ object GithubCommentIntegration {
         raiseError("Error creating the status ${it.status}")
     }
   }
+
+  fun setPendingStatus(info: GhInfo, commitSha: String) = setStatus(
+    info, commitSha,
+    GhStatus(
+      GhStatusState.Pending,
+      "Comparing Benchmarks"
+    )
+  )
+
+  fun setSuccessStatus(info: GhInfo, commitSha: String) = setStatus(
+    info, commitSha,
+    GhStatus(
+      GhStatusState.Succeed,
+      "Benchmarks comparison passed"
+    )
+  )
+
+  fun setFailedStatus(info: GhInfo, commitSha: String) = setStatus(
+    info, commitSha,
+    GhStatus(
+      GhStatusState.Failed,
+      "Benchmarks comparison failed"
+    )
+  )
 
 }

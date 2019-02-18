@@ -13,12 +13,18 @@
   - **currentBenchmarkPath**: List of files with current or pull request benchmark location.
   - **keyColumnName**: Column name to distinct each benchmark on the comparison.
   - **compareColumnName**: Column name of the column to compare(the values must to be a `Double`).
-  - **threshold**: Maximum differentiation for negative result.
+  - **threshold**: Maximum differentiation for negative result. By default: `50`
   
  The `compareBenchmarksCI` task also needs an extra parameter, **token**, the `Github` access token. 
  This task only works with `travis-ci`.
  
  ***Note***: Currently **Hood** only supports `csv` based benchmarks.
+ 
+ ### Send output to a file
+ Both task can send the result to a file, just need to fulfill the following parameters:
+  - **outputToFile**: If send the output to a file. By default: `false`
+  - **outputPath**: The path to the output file. By default: `hood/comparison`
+  - **outputFormat**: The output file format, two possible values `md` or `json`. By default: `md`
  
  ## Upload benchmarks
  
