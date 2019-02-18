@@ -12,9 +12,9 @@ object Comparator {
 
   private fun compare(previous: Benchmark, current: Benchmark, threshold: Int): BenchmarkResult =
     when {
-      previous.score <= current.score             -> BenchmarkResult.OK(current.key)
-      previous.score - current.score <= threshold -> BenchmarkResult.WARN(current.key)
-      else                                        -> BenchmarkResult.FAILED(current.key)
+      previous.score <= current.score             -> BenchmarkResult.OK
+      previous.score - current.score <= threshold -> BenchmarkResult.WARN
+      else                                        -> BenchmarkResult.FAILED
     }
 
   private fun getCompareResults(

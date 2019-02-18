@@ -6,6 +6,8 @@ import arrow.core.some
 
 object syntax {
 
+  fun List<Benchmark>.mkString() = this.joinToString(separator = "\n") { "${it.key} | ${it.score}" }
+
   /**
    * Expected format
    * `benchmark key`
@@ -19,24 +21,35 @@ object syntax {
    */
   fun List<BenchmarkComparison>.prettyPrintResult(): String =
     this.joinToString(separator = "\n\n") { comp ->
-      """
-      |`${comp.key.capitalize()}`
-      |${comp.benchmark.joinToString(separator = "\n") { "${it.key} | ${it.score}" }}
-      |${comp.result.message()}
-      |""".trimMargin()
+      val header = "${comp.result.symbol()} `${comp.key.capitalize()}`"
+      if (comp.result is BenchmarkResult.ERROR)
+        """
+        |$header
+        |Error: ${comp.result.error.message}
+        |""".trimMargin()
+      else
+        """
+        |$header
+        |${comp.benchmark.mkString()}
+        |""".trimMargin()
     }
 
   private fun List<BenchmarkComparison>.printMDFormat(): String =
     this.joinToString(separator = "\n\n") { comp ->
-      """
-      |`${comp.key.capitalize()}`
-      |
-      |Benchmark | Value
-      ||--|--|
-      |${comp.benchmark.joinToString(separator = "\n") { "${it.key} | ${it.score}" }}
-      |
-      |${comp.result.message()}
-      |""".trimMargin()
+      val header = "${comp.result.icon()} `${comp.key.capitalize()}`"
+      if (comp.result is BenchmarkResult.ERROR)
+        """
+        |$header
+        |Error: ${comp.result.error.message}
+        |""".trimMargin()
+      else
+        """
+        |$header
+        |
+        |Benchmark | Value
+        ||--|--|
+        |${comp.benchmark.mkString()}
+        |""".trimMargin()
     }
 
   private fun List<BenchmarkComparison>.printJSONFormat(): String = TODO()
