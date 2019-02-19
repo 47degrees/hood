@@ -100,12 +100,11 @@ object GithubCommentIntegration {
     )
   )
 
-  fun setFailedStatus(info: GhInfo, commitSha: String) = setStatus(
-    info, commitSha,
-    GhStatus(
-      GhStatusState.Failed,
-      "Benchmarks comparison failed"
+  fun setFailedStatus(info: GhInfo, commitSha: String, comment: String) =
+    setStatus(
+      info,
+      commitSha,
+      GhStatus(GhStatusState.Failed, "Benchmarks comparison failed: $comment")
     )
-  )
 
 }
