@@ -16,7 +16,7 @@
   - **threshold**: Maximum differentiation for negative result. By default: `50`
   
  The `compareBenchmarksCI` task also needs an extra parameter, **token**, the `Github` access token. 
- This task only works with `travis-ci`.
+ At this moment, only `travis-ci` is supported.
  
  ***Note***: Currently **Hood** only supports `csv` based benchmarks.
  
