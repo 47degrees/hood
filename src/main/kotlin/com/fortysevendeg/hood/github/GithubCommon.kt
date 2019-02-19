@@ -14,9 +14,9 @@ object GithubCommon {
 
   fun buildRequest(method: Method, info: GhInfo, url: String): Request {
     val commonHeaders: List<Pair<String, String>> = listOf(
-      Pair("Accept", "application/vnd.github.v3+json"),
-      Pair("Authorization", "token ${info.token}"),
-      Pair("Content-Type", "application/json")
+      "Accept" to "application/vnd.github.v3+json",
+      "Authorization" to "token ${info.token}",
+      "Content-Type" to "application/json"
     )
 
     return Request(
