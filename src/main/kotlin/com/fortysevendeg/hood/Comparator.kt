@@ -12,9 +12,9 @@ object Comparator {
 
   private fun compare(previous: Benchmark, current: Benchmark, threshold: Int): BenchmarkResult =
     when {
-      previous.score <= current.score             -> BenchmarkResult.OK(current.key)
-      previous.score - current.score <= threshold -> BenchmarkResult.WARN(current.key)
-      else                                        -> BenchmarkResult.FAILED(current.key)
+      previous.score <= current.score             -> BenchmarkResult.OK
+      previous.score - current.score <= threshold -> BenchmarkResult.WARN
+      else                                        -> BenchmarkResult.FAILED
     }
 
   private fun getCompareResults(
@@ -49,11 +49,12 @@ object Comparator {
     //List of BenchmarkComparison
 
     val previousBenchmarks: Pair<String, List<Benchmark>> =
-      BenchmarkReader.readFiles(keyColumnName, compareColumnName, previousBenchmarkFile).bind()
+      BenchmarkReader.readFilesToBenchmark(keyColumnName, compareColumnName, previousBenchmarkFile)
+        .bind()
         .entries.first().toPair()
 
     val currentBenchmarks: Map<String, List<Benchmark>> =
-      BenchmarkReader.readFiles(
+      BenchmarkReader.readFilesToBenchmark(
         keyColumnName,
         compareColumnName,
         *currentBenchmarkFiles.toTypedArray()

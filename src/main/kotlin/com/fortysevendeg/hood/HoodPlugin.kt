@@ -1,5 +1,8 @@
 package com.fortysevendeg.hood
 
+import com.fortysevendeg.hood.tasks.CompareBenchmark
+import com.fortysevendeg.hood.tasks.CompareBenchmarkCI
+import com.fortysevendeg.hood.tasks.UploadBenchmark
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -9,9 +12,10 @@ open class HoodPlugin : Plugin<Project> {
     group = Settings.group
     tasks.register("compareBenchmark", CompareBenchmark::class.java)
     tasks.register("compareBenchmarkCI", CompareBenchmarkCI::class.java)
+    tasks.register("uploadBenchmark", UploadBenchmark::class.java)
   }
 
   object Settings {
-    val group = "com.fortysevendeg.hood"
+    const val group = "com.fortysevendeg.hood"
   }
 }
