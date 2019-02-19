@@ -20,7 +20,7 @@ object GithubCommentIntegration {
 
   private fun buildRequest(method: Method, info: GhInfo, url: String): Request {
     val commonHeaders: List<Pair<String, String>> = listOf(
-      Pair("Accept", "application/vnd.github.v3+json"),
+      "Accept" to "application/vnd.github.v3+json",
       Pair("Authorization", "token ${info.token}"),
       Pair("Content-Type", "application/json")
     )
