@@ -62,13 +62,12 @@ open class CompareBenchmarkCI : DefaultTask() {
 
     val previousComment =
       GithubCommentIntegration.getPreviousCommentId(info, pr).bind()
-    val cleanResult =
-      previousComment.fold({ IO { true } }) { GithubCommentIntegration.deleteComment(info, it) }
-        .bind()
 
-    val commentResult = GithubCommentIntegration.createComment(info, pr, result).bind()
+    val commentResult = previousComment.fold({
+      GithubCommentIntegration.createComment(info, pr, result)
+    }) { GithubCommentIntegration.updateComment(info, it, result) }.bind()
 
-    if (commentResult && cleanResult) IO.unit.bind()
+    if (commentResult) IO.unit.bind()
     else GithubCommon.raiseError("Error creating the comment").bind()
 
     OutputFile.sendOutputToFile(outputToFile, outputPath, result, outputFormat).bind()
