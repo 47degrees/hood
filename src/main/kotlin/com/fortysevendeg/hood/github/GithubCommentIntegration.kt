@@ -22,7 +22,7 @@ object GithubCommentIntegration {
     val commonHeaders: List<Pair<String, String>> = listOf(
       "Accept" to "application/vnd.github.v3+json",
       Pair("Authorization", "token ${info.token}"),
-      Pair("Content-Type", "application/json")
+      "Content-Type" to "application/json"
     )
 
     return Request(
