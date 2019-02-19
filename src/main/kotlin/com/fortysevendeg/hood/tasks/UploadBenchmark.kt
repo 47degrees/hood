@@ -23,7 +23,7 @@ open class UploadBenchmark : DefaultTask() {
     project.objects.fileProperty().asFile.getOrElse(File("benchmarks/master_benchmark.csv"))
   @get:Input
   var benchmarkDestinationFromProjectRoot: String =
-    project.objects.property(String::class.java).getOrElse("hood/master_benchmark.csv")
+    project.objects.property(String::class.java).getOrElse("benchmarks/master_benchmark.csv")
   @get:Input
   var commitMessage: String =
     project.objects.property(String::class.java).getOrElse("Upload benchmark")
