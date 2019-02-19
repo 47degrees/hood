@@ -8,33 +8,18 @@ import com.fortysevendeg.hood.GhCreateCommit
 import com.fortysevendeg.hood.GhFileSha
 import com.fortysevendeg.hood.GhInfo
 import com.fortysevendeg.hood.GhUpdateCommit
-import org.gradle.api.GradleException
-import org.http4k.client.DualSyncAsyncHttpHandler
-import org.http4k.client.OkHttp
-import org.http4k.core.*
+import com.fortysevendeg.hood.github.GithubCommon.buildRequest
+import com.fortysevendeg.hood.github.GithubCommon.client
+import com.fortysevendeg.hood.github.GithubCommon.raiseError
+import org.http4k.core.Body
+import org.http4k.core.Method
+import org.http4k.core.Status
+import org.http4k.core.with
 import org.http4k.format.Jackson
 import org.http4k.format.Jackson.auto
 import org.http4k.format.Jackson.json
 
 object GithubCommitIntegration {
-
-  private val client: DualSyncAsyncHttpHandler = OkHttp()
-
-  private fun buildRequest(method: Method, info: GhInfo, url: String): Request {
-    val commonHeaders: List<Pair<String, String>> = listOf(
-      Pair("Accept", "application/vnd.github.v3+json"),
-      Pair("Authorization", "token ${info.token}"),
-      Pair("Content-Type", "application/json")
-    )
-
-    return Request(
-      method,
-      "https://api.github.com/repos/${info.owner}/${info.repo}/$url"
-    ).headers(commonHeaders)
-  }
-
-  private fun raiseError(error: String): IO<Unit> =
-    IO.raiseError(GradleException("Error accessing Github Commit Api: $error"))
 
   fun getFileSha(info: GhInfo, branch: String, path: String): IO<Option<GhFileSha>> {
 

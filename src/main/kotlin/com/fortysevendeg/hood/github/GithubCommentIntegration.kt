@@ -4,35 +4,20 @@ import arrow.core.Option
 import arrow.effects.IO
 import arrow.syntax.collections.firstOption
 import com.fortysevendeg.hood.*
+import com.fortysevendeg.hood.github.GithubCommon.buildRequest
+import com.fortysevendeg.hood.github.GithubCommon.client
+import com.fortysevendeg.hood.github.GithubCommon.raiseError
 import com.fortysevendeg.hood.syntax.prettyPrintResult
-import org.gradle.api.GradleException
-import org.http4k.client.DualSyncAsyncHttpHandler
-import org.http4k.client.OkHttp
-import org.http4k.core.*
+import org.http4k.core.Body
+import org.http4k.core.Method
+import org.http4k.core.Status
+import org.http4k.core.with
 import org.http4k.format.Jackson
 import org.http4k.format.Jackson.json
 
 object GithubCommentIntegration {
 
-  private val client: DualSyncAsyncHttpHandler = OkHttp()
-
   private const val commentIntro: String = "***Hood benchmark comparison:***"
-
-  private fun buildRequest(method: Method, info: GhInfo, url: String): Request {
-    val commonHeaders: List<Pair<String, String>> = listOf(
-      "Accept" to "application/vnd.github.v3+json",
-      "Authorization" to "token ${info.token}",
-      "Content-Type" to "application/json"
-    )
-
-    return Request(
-      method,
-      "https://api.github.com/repos/${info.owner}/${info.repo}/$url"
-    ).headers(commonHeaders)
-  }
-
-  fun raiseError(error: String): IO<Unit> =
-    IO.raiseError(GradleException("Error accessing Github Comment Api: $error"))
 
   fun getPreviousCommentId(info: GhInfo, pull: Int): IO<Option<Long>> {
     val request = buildRequest(

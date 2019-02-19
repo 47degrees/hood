@@ -8,6 +8,7 @@ import arrow.effects.instances.io.monad.monad
 import arrow.instances.list.foldable.nonEmpty
 import com.fortysevendeg.hood.*
 import com.fortysevendeg.hood.github.GithubCommentIntegration
+import com.fortysevendeg.hood.github.GithubCommon
 import com.fortysevendeg.hood.syntax.prettyPrintResult
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -69,7 +70,7 @@ open class CompareBenchmarkCI : DefaultTask() {
     val commentResult = GithubCommentIntegration.createComment(info, pr, result).bind()
 
     if (commentResult && cleanResult) IO.unit.bind()
-    else GithubCommentIntegration.raiseError("Error creating the comment").bind()
+    else GithubCommon.raiseError("Error creating the comment").bind()
 
     OutputFile.sendOutputToFile(outputToFile, outputPath, result, outputFormat).bind()
 
