@@ -19,17 +19,16 @@ import java.io.File
 open class UploadBenchmark : DefaultTask() {
 
   @get:InputFile
-  var benchmarkFile: File = project.objects.fileProperty().asFile.getOrElse(File("master.csv"))
+  var benchmarkFile: File =
+    project.objects.fileProperty().asFile.getOrElse(File("benchmarks/master_benchmark.csv"))
   @get:Input
   var benchmarkDestinationFromProjectRoot: String =
-    project.objects.property(String::class.java).getOrElse("master.csv")
+    project.objects.property(String::class.java).getOrElse("benchmarks/master_benchmark.csv")
   @get:Input
   var commitMessage: String =
     project.objects.property(String::class.java).getOrElse("Upload benchmark")
   @get:Input
   var token: String? = project.objects.property(String::class.java).orNull
-
-  private val ciName: String = "travis"
 
   @TaskAction
   fun uploadBenchmark(): Unit = IO.monad().binding {

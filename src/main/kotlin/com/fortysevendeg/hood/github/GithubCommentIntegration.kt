@@ -3,6 +3,7 @@ package com.fortysevendeg.hood.github
 import arrow.core.Option
 import arrow.effects.IO
 import arrow.syntax.collections.firstOption
+import com.fasterxml.jackson.databind.JsonNode
 import com.fortysevendeg.hood.*
 import com.fortysevendeg.hood.github.GithubCommon.buildRequest
 import com.fortysevendeg.hood.github.GithubCommon.client
@@ -18,6 +19,14 @@ import org.http4k.format.Jackson.json
 object GithubCommentIntegration {
 
   private const val commentIntro: String = "***Hood benchmark comparison:***"
+
+  private fun generateCommentBody(results: List<BenchmarkComparison>): JsonNode {
+    val content = "$commentIntro\n${results.prettyPrintResult(FileFormat.MD)}"
+
+    return Jackson {
+      obj("body" to string(content))
+    }
+  }
 
   fun getPreviousCommentId(info: GhInfo, pull: Int): IO<Option<Long>> {
     val request = buildRequest(
@@ -35,28 +44,24 @@ object GithubCommentIntegration {
 
   fun createComment(info: GhInfo, pull: Int, results: List<BenchmarkComparison>): IO<Boolean> {
 
-    val content = "$commentIntro\n${results.prettyPrintResult(FileFormat.MD)}"
-
-    val body = Jackson {
-      obj("body" to string(content))
-    }
-
     val request = buildRequest(
       Method.POST,
       info,
       "issues/$pull/comments"
-    ).with(Body.json().toLens() of body)
+    ).with(Body.json().toLens() of generateCommentBody(results))
 
     return IO { client(request) }.map { it.status == Status.CREATED }
   }
 
-  fun deleteComment(info: GhInfo, id: Long): IO<Boolean> {
+  fun updateComment(info: GhInfo, id: Long, results: List<BenchmarkComparison>): IO<Boolean> {
+
     val request = buildRequest(
-      Method.DELETE,
+      Method.PATCH,
       info,
       "issues/comments/$id"
-    )
-    return IO { client(request) }.map { it.status == Status.NO_CONTENT }
+    ).with(Body.json().toLens() of generateCommentBody(results))
+
+    return IO { client(request) }.map { it.status == Status.OK }
   }
 
   private fun setStatus(info: GhInfo, commitSha: String, status: GhStatus): IO<Unit> {
@@ -100,12 +105,11 @@ object GithubCommentIntegration {
     )
   )
 
-  fun setFailedStatus(info: GhInfo, commitSha: String) = setStatus(
-    info, commitSha,
-    GhStatus(
-      GhStatusState.Failed,
-      "Benchmarks comparison failed"
+  fun setFailedStatus(info: GhInfo, commitSha: String, comment: String) =
+    setStatus(
+      info,
+      commitSha,
+      GhStatus(GhStatusState.Failed, "Benchmarks comparison failed: $comment")
     )
-  )
 
 }

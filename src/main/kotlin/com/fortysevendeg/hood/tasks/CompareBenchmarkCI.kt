@@ -9,7 +9,6 @@ import arrow.instances.list.foldable.nonEmpty
 import com.fortysevendeg.hood.*
 import com.fortysevendeg.hood.github.GithubCommentIntegration
 import com.fortysevendeg.hood.github.GithubCommon
-import com.fortysevendeg.hood.syntax.prettyPrintResult
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
@@ -63,13 +62,12 @@ open class CompareBenchmarkCI : DefaultTask() {
 
     val previousComment =
       GithubCommentIntegration.getPreviousCommentId(info, pr).bind()
-    val cleanResult =
-      previousComment.fold({ IO { true } }) { GithubCommentIntegration.deleteComment(info, it) }
-        .bind()
 
-    val commentResult = GithubCommentIntegration.createComment(info, pr, result).bind()
+    val commentResult = previousComment.fold({
+      GithubCommentIntegration.createComment(info, pr, result)
+    }) { GithubCommentIntegration.updateComment(info, it, result) }.bind()
 
-    if (commentResult && cleanResult) IO.unit.bind()
+    if (commentResult) IO.unit.bind()
     else GithubCommon.raiseError("Error creating the comment").bind()
 
     OutputFile.sendOutputToFile(outputToFile, outputPath, result, outputFormat).bind()
@@ -77,7 +75,11 @@ open class CompareBenchmarkCI : DefaultTask() {
     val errors: List<BenchmarkComparison> = getWrongResults(result)
 
     if (errors.nonEmpty()) {
-      IO.raiseError<Unit>(GradleException(errors.prettyPrintResult())).bind()
+      GithubCommentIntegration.setFailedStatus(
+        info,
+        commitSha,
+        errors.joinToString { it.key }
+      ).bind()
     } else
       GithubCommentIntegration.setSuccessStatus(
         info,
@@ -87,7 +89,8 @@ open class CompareBenchmarkCI : DefaultTask() {
   }.fix().handleErrorWith {
     GithubCommentIntegration.setFailedStatus(
       info,
-      commitSha
+      commitSha,
+      it.localizedMessage
     )
   }
 
