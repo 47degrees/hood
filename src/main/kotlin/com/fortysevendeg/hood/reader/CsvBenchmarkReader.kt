@@ -32,7 +32,6 @@ object CsvBenchmarkReader : BenchmarkReader {
   private fun List<CSVRecord>.getColumnIndex(columnName: String): Option<Int> =
     this.firstOrNone().map { it.indexOf(columnName) }
 
-
   private fun readCSV(
     file: FileReader,
     keyColumn: String,
