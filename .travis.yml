@@ -15,7 +15,7 @@ jobs:
   include:
     - stage: build
       script:
-        - ./gradlew clean build
+        - ./gradlew clean build test
     - stage: deploy
       script:
         - ./deploy-scripts/deploy.sh

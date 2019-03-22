@@ -2,7 +2,8 @@ package com.fortysevendeg.hood
 
 data class Benchmark(
   val key: String,
-  val score: Double
+  val score: Double,
+  val scoreError: Double
 )
 
 sealed class BenchmarkResult {
@@ -75,4 +76,27 @@ data class GhUpdateCommit(
   val content: String,
   val sha: String,
   val branch: String
+)
+
+//Json benchmarks
+
+data class JsonPrimaryMetric(
+  val score: Double,
+  val scoreError: Double,
+  val scoreUnit: String,
+  val rawData: List<List<Double>>
+)
+
+data class JsonSecondaryMetric(
+  val score: Double?,
+  val scoreError: Double?,
+  val scoreUnit: String?,
+  val rawData: List<List<Double>>?
+)
+
+data class JsonBenchmark(
+  val benchmark: String,
+  val mode: String,
+  val primaryMetric: JsonPrimaryMetric,
+  val secondaryMetrics: JsonSecondaryMetric
 )

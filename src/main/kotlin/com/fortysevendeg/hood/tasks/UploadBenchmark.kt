@@ -7,8 +7,8 @@ import arrow.effects.instances.io.monad.monad
 import com.fortysevendeg.hood.GhCreateCommit
 import com.fortysevendeg.hood.GhInfo
 import com.fortysevendeg.hood.GhUpdateCommit
+import com.fortysevendeg.hood.OutputFile
 import com.fortysevendeg.hood.github.GithubCommitIntegration
-import com.fortysevendeg.hood.reader.CsvBenchmarkReader
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
@@ -50,7 +50,7 @@ open class UploadBenchmark : DefaultTask() {
     val fileSha =
       GithubCommitIntegration.getFileSha(info, branch, benchmarkDestinationFromProjectRoot).bind()
 
-    val content = CsvBenchmarkReader.readFileToBase64(benchmarkFile).bind()
+    val content = OutputFile.readFileToBase64(benchmarkFile).bind()
 
     fileSha.fold({
       val createCommit = GhCreateCommit(commitMessage, content, branch)

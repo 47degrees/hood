@@ -1,5 +1,7 @@
 package com.fortysevendeg.hood
 
+import arrow.core.Option
+import arrow.core.getOrElse
 import arrow.effects.IO
 import arrow.effects.fix
 import arrow.effects.instances.io.applicativeError.handleError
@@ -11,7 +13,7 @@ import java.io.File
 
 object Comparator {
 
-  private fun compare(previous: Benchmark, current: Benchmark, threshold: Int): BenchmarkResult =
+  private fun compare(previous: Benchmark, current: Benchmark, threshold: Double): BenchmarkResult =
     when {
       previous.score <= current.score             -> BenchmarkResult.OK
       previous.score - current.score <= threshold -> BenchmarkResult.WARN
@@ -21,13 +23,13 @@ object Comparator {
   private fun getCompareResults(
     currentBenchmarks: Map<String, List<Benchmark>>,
     prev: Benchmark,
-    threshold: Int
+    threshold: Double
   ): List<Pair<List<Benchmark>, BenchmarkResult>> =
     currentBenchmarks.mapValues {
       it.value.filter { current -> prev.key == current.key }
     }.flatMap {
       val currentWithName: List<Benchmark> =
-        it.value.map { current -> Benchmark(it.key, current.score) }
+        it.value.map { current -> Benchmark(it.key, current.score, current.scoreError) }
       it.value.map { current -> Pair(currentWithName, compare(prev, current, threshold)) }
     }
 
@@ -43,9 +45,10 @@ object Comparator {
   fun compareCsv(
     previousBenchmarkFile: File,
     currentBenchmarkFiles: List<File>,
-    threshold: Int,
     keyColumnName: String,
-    compareColumnName: String
+    compareColumnName: String,
+    thresholdColumnName: String,
+    maybeThreshold: Option<Double>
   ): IO<List<BenchmarkComparison>> = IO.monad().binding {
     //List of BenchmarkComparison
 
@@ -53,6 +56,7 @@ object Comparator {
       CsvBenchmarkReader.readFilesToBenchmark(
         keyColumnName,
         compareColumnName,
+        thresholdColumnName,
         previousBenchmarkFile
       )
         .bind()
@@ -62,6 +66,7 @@ object Comparator {
       CsvBenchmarkReader.readFilesToBenchmark(
         keyColumnName,
         compareColumnName,
+        thresholdColumnName,
         *currentBenchmarkFiles.toTypedArray()
       ).bind()
 
@@ -76,9 +81,12 @@ object Comparator {
 
     if (isConsistent)
       previousBenchmarks.second.flatMap { prev ->
-        val previousWithName = Benchmark(previousBenchmarks.first, prev.score)
+        val previousWithName = Benchmark(previousBenchmarks.first, prev.score, prev.scoreError)
 
-        getCompareResults(currentBenchmarks, prev, threshold).map {
+        getCompareResults(
+          currentBenchmarks,
+          prev,
+          maybeThreshold.getOrElse { prev.scoreError }).map {
           buildBenchmarkComparison(prev.key, previousWithName, it)
         }
       }

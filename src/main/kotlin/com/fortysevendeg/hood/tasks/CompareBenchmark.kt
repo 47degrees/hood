@@ -1,5 +1,6 @@
 package com.fortysevendeg.hood.tasks
 
+import arrow.core.toOption
 import com.fortysevendeg.hood.Comparator
 import com.fortysevendeg.hood.OutputFile
 import com.fortysevendeg.hood.syntax.prettyPrintResult
@@ -23,7 +24,10 @@ open class CompareBenchmark : DefaultTask() {
   @get:Input
   var compareColumnName: String = project.objects.property(String::class.java).getOrElse("Score")
   @get:Input
-  var threshold: Int = project.objects.property(Int::class.java).getOrElse(50)
+  var thresholdColumnName: String =
+    project.objects.property(String::class.java).getOrElse("Score Error (99.9%)")
+  @get:Input
+  var threshold: Double? = project.objects.property(Double::class.java).orNull
   @get:Input
   var outputToFile: Boolean = project.objects.property(Boolean::class.java).getOrElse(false)
   @get:Input
@@ -38,9 +42,10 @@ open class CompareBenchmark : DefaultTask() {
     Comparator.compareCsv(
       previousBenchmarkPath,
       currentBenchmarkPath,
-      threshold,
       keyColumnName,
-      compareColumnName
+      compareColumnName,
+      thresholdColumnName,
+      threshold.toOption()
     ).flatMap {
       println(it.prettyPrintResult())
       OutputFile.sendOutputToFile(outputToFile, outputPath, it, outputFormat)

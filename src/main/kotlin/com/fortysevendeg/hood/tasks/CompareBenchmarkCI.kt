@@ -30,7 +30,10 @@ open class CompareBenchmarkCI : DefaultTask() {
   @get:Input
   var compareColumnName: String = project.objects.property(String::class.java).getOrElse("Score")
   @get:Input
-  var threshold: Int = project.objects.property(Int::class.java).getOrElse(50)
+  var thresholdColumnName: String =
+    project.objects.property(String::class.java).getOrElse("Score Error (99.9%)")
+  @get:Input
+  var threshold: Double? = project.objects.property(Double::class.java).orNull
   @get:Input
   var token: String? = project.objects.property(String::class.java).orNull
   @get:Input
@@ -55,9 +58,10 @@ open class CompareBenchmarkCI : DefaultTask() {
     val result: List<BenchmarkComparison> = Comparator.compareCsv(
       previousBenchmarkPath,
       currentBenchmarkPath,
-      threshold,
       keyColumnName,
-      compareColumnName
+      compareColumnName,
+      thresholdColumnName,
+      threshold.toOption()
     ).bind()
 
     val previousComment =

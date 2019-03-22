@@ -19,29 +19,25 @@ import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
 import java.io.File
 import java.io.FileReader
-import java.util.Base64
 
-object CsvBenchmarkReader {
+object CsvBenchmarkReader : BenchmarkReader {
 
-  private fun benchmarkFromCSV(row: CSVRecord, key: Int, column: Int): Benchmark =
+  private fun benchmarkFromCSV(row: CSVRecord, key: Int, column: Int, threshold: Int): Benchmark =
     Benchmark(
       row[key].substringAfterLast('.'),
-      row[column].toDouble()
+      row[column].toDouble(),
+      row[threshold].toDouble()
     )
 
   private fun List<CSVRecord>.getColumnIndex(columnName: String): Option<Int> =
     this.firstOrNone().map { it.indexOf(columnName) }
 
-  private fun <A, B> Map<A, List<Pair<A, List<B>>>>.mapValuesToSecond(): Map<A, List<B>> =
-    this.mapValues { it.value.flatMap { it.second } }
-
-  private fun ListK<Pair<String, ListK<Benchmark>>>.groupByBenchmarkKey(): Map<String, List<Benchmark>> =
-    this.groupBy { it.first }.mapValuesToSecond()
 
   private fun readCSV(
     file: FileReader,
     keyColumn: String,
-    compareColumn: String
+    compareColumn: String,
+    thresholdColumn: String
   ): IO<ListK<Benchmark>> =
     IO {
       CSVParser(
@@ -52,15 +48,16 @@ object CsvBenchmarkReader {
       IO {
         val records: List<CSVRecord> = csvParser.records
         Option.monad().binding {
-          val key =
-            records.getColumnIndex(keyColumn).bind()
-          val column =
-            records.getColumnIndex(compareColumn).bind()
+          val key = records.getColumnIndex(keyColumn).bind()
+          val column = records.getColumnIndex(compareColumn).bind()
+          val threshold = records.getColumnIndex(thresholdColumn).bind()
+
           records.tail().map {
             benchmarkFromCSV(
               it,
               key,
-              column
+              column,
+              threshold
             )
           }
         }.fix()
@@ -73,21 +70,20 @@ object CsvBenchmarkReader {
   fun readFilesToBenchmark(
     keyColumn: String,
     compareColumn: String,
+    thresholdColumn: String,
     vararg files: File
   ): IO<Map<String, List<Benchmark>>> =
     files.toList().traverse(
       IO.applicative()
     ) { file ->
-      IO { FileReader(file) }.flatMap {
+      IO { FileReader(file) }.flatMap { fileReader ->
         readCSV(
-          it,
+          fileReader,
           keyColumn,
-          compareColumn
+          compareColumn,
+          thresholdColumn
         ).map { file.nameWithoutExtension to it }
       }
     }.fix().map { it.fix().groupByBenchmarkKey() }
-
-  fun readFileToBase64(file: File): IO<String> =
-    IO { Base64.getEncoder().encodeToString(file.readBytes()) }
 
 }

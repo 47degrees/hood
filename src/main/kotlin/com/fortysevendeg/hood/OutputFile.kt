@@ -8,6 +8,7 @@ import com.fortysevendeg.hood.syntax.toFileFormat
 import org.gradle.api.GradleException
 import java.io.File
 import java.io.FileWriter
+import java.util.Base64
 
 object OutputFile {
 
@@ -49,5 +50,8 @@ object OutputFile {
 
     } else IO.unit.bind()
   }.fix()
+
+  fun readFileToBase64(file: File): IO<String> =
+    IO { Base64.getEncoder().encodeToString(file.readBytes()) }
 
 }
