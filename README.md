@@ -18,13 +18,15 @@
  The `compareBenchmarksCI` task also needs an extra parameter, **token**, the `Github` access token. 
  At this moment, only `travis-ci` is supported.
  
- ***Note***: Currently **Hood** only supports `csv` based benchmarks.
+ ***Note***: Currently **Hood** only supports `csv` and `json` based benchmarks with cross comparison available.
  
  ### Send output to a file
  Both task can send the result to a file, just need to fulfill the following parameters:
   - **outputToFile**: If send the output to a file. By default: `false`
   - **outputPath**: The path to the output file. By default: `hood/comparison`
-  - **outputFormat**: The output file format, currently we just support `md`. By default: `md`
+  - **outputFormat**: The output file format, we support two formats `md` and `json`. By default: `md`
+ 
+ ***Note***: In order to print a `JSON` output all the benchmarks must to be in `JSON` format.
  
  ## Upload benchmarks
  
