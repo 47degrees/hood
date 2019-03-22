@@ -1,6 +1,6 @@
 package com.fortysevendeg.hood.jsonsupport
 
-object jsonSample {
+object JsonSample {
   val benchmarkJson =
     """{
     |  "benchmark" : "helios.benchmarks.HeliosBenchmark.decoding",

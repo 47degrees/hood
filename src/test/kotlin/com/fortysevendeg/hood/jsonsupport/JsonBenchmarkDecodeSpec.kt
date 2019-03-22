@@ -4,7 +4,7 @@ import arrow.effects.IO
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fortysevendeg.hood.JsonBenchmark
 import com.fortysevendeg.hood.JsonSupport
-import com.fortysevendeg.hood.jsonsupport.jsonSample.benchmarkJson
+import com.fortysevendeg.hood.jsonsupport.JsonSample.benchmarkJson
 import io.kotlintest.assertions.arrow.either.shouldBeRight
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec

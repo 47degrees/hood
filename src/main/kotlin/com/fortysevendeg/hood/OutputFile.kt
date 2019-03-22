@@ -3,8 +3,8 @@ package com.fortysevendeg.hood
 import arrow.effects.IO
 import arrow.effects.fix
 import arrow.effects.instances.io.monad.monad
-import com.fortysevendeg.hood.syntax.prettyPrintResult
-import com.fortysevendeg.hood.syntax.toFileFormat
+import com.fortysevendeg.hood.Printer.prettyPrintResult
+import com.fortysevendeg.hood.Printer.toFileFormat
 import org.gradle.api.GradleException
 import java.io.File
 import java.io.FileWriter

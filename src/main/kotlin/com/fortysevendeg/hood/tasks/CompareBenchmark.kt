@@ -3,7 +3,7 @@ package com.fortysevendeg.hood.tasks
 import arrow.core.toOption
 import com.fortysevendeg.hood.Comparator
 import com.fortysevendeg.hood.OutputFile
-import com.fortysevendeg.hood.syntax.prettyPrintResult
+import com.fortysevendeg.hood.Printer.prettyPrintResult
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile

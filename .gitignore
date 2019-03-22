@@ -1,8 +1,5 @@
 ### Kotlin
 
-# Compiled class file
-*.class
-
 # Log file
 *.log
 # Package Files #
@@ -15,7 +12,3 @@ build/
 
 # IntelliJ project files
 .idea
-*.iml
-
-Benchmarks
-*.csv

@@ -6,6 +6,7 @@ import com.fortysevendeg.hood.tasks.UploadBenchmark
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+@Suppress("unused")
 open class HoodPlugin : Plugin<Project> {
 
   override fun apply(project: Project): Unit = project.run {

@@ -5,10 +5,10 @@ import arrow.effects.IO
 import arrow.syntax.collections.firstOption
 import com.fasterxml.jackson.databind.JsonNode
 import com.fortysevendeg.hood.*
+import com.fortysevendeg.hood.Printer.prettyPrintResult
 import com.fortysevendeg.hood.github.GithubCommon.buildRequest
 import com.fortysevendeg.hood.github.GithubCommon.client
 import com.fortysevendeg.hood.github.GithubCommon.raiseError
-import com.fortysevendeg.hood.syntax.prettyPrintResult
 import org.http4k.core.Body
 import org.http4k.core.Method
 import org.http4k.core.Status

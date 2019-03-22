@@ -4,7 +4,7 @@ import arrow.core.None
 import arrow.core.Option
 import arrow.core.some
 
-object syntax {
+object Printer {
 
   private fun List<Benchmark>.mkString() =
     this.joinToString(separator = "\n") { "${it.key} | ${it.score}" }
