@@ -6,6 +6,7 @@ import arrow.effects.instances.io.applicativeError.handleError
 import arrow.effects.instances.io.monad.monad
 import arrow.instances.list.foldable.exists
 import arrow.instances.list.foldable.forAll
+import com.fortysevendeg.hood.reader.CsvBenchmarkReader
 import java.io.File
 
 object Comparator {
@@ -49,12 +50,16 @@ object Comparator {
     //List of BenchmarkComparison
 
     val previousBenchmarks: Pair<String, List<Benchmark>> =
-      BenchmarkReader.readFilesToBenchmark(keyColumnName, compareColumnName, previousBenchmarkFile)
+      CsvBenchmarkReader.readFilesToBenchmark(
+        keyColumnName,
+        compareColumnName,
+        previousBenchmarkFile
+      )
         .bind()
         .entries.first().toPair()
 
     val currentBenchmarks: Map<String, List<Benchmark>> =
-      BenchmarkReader.readFilesToBenchmark(
+      CsvBenchmarkReader.readFilesToBenchmark(
         keyColumnName,
         compareColumnName,
         *currentBenchmarkFiles.toTypedArray()

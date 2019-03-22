@@ -6,7 +6,8 @@ import arrow.core.some
 
 object syntax {
 
-  fun List<Benchmark>.mkString() = this.joinToString(separator = "\n") { "${it.key} | ${it.score}" }
+  private fun List<Benchmark>.mkString() =
+    this.joinToString(separator = "\n") { "${it.key} | ${it.score}" }
 
   /**
    * Expected format
