@@ -19,12 +19,15 @@ import java.io.File
 
 open class CompareBenchmarkCI : DefaultTask() {
 
+  //Benchmarks paths
   @get:InputFile
   var previousBenchmarkPath: File =
     project.objects.fileProperty().asFile.getOrElse(File("master.csv"))
   @get:InputFiles
   var currentBenchmarkPath: List<File> =
     project.objects.listProperty(File::class.java).getOrElse(emptyList())
+
+  //CSV columns
   @get:Input
   var keyColumnName: String = project.objects.property(String::class.java).getOrElse("Benchmark")
   @get:Input
@@ -32,10 +35,8 @@ open class CompareBenchmarkCI : DefaultTask() {
   @get:Input
   var thresholdColumnName: String =
     project.objects.property(String::class.java).getOrElse("Score Error (99.9%)")
-  @get:Input
-  var threshold: Double? = project.objects.property(Double::class.java).orNull
-  @get:Input
-  var token: String? = project.objects.property(String::class.java).orNull
+
+  //Output
   @get:Input
   var outputToFile: Boolean = project.objects.property(Boolean::class.java).getOrElse(false)
   @get:Input
@@ -44,6 +45,12 @@ open class CompareBenchmarkCI : DefaultTask() {
   @get:Input
   var outputFormat: String =
     project.objects.property(String::class.java).getOrElse("md")
+
+  //Extra
+  @get:Input
+  var threshold: Double? = project.objects.property(Double::class.java).orNull
+  @get:Input
+  var token: String? = project.objects.property(String::class.java).orNull
 
   private fun getWrongResults(result: List<BenchmarkComparison>): List<BenchmarkComparison> =
     result.filter { it.result::class == BenchmarkResult.ERROR::class || it.result::class == BenchmarkResult.FAILED::class }
