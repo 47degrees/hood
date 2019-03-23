@@ -19,7 +19,7 @@ object JsonSupport {
     prt
   }
 
-  //json with indentation and ignoring null values
+  //Json with indentation and ignoring null values
   val mapper: ObjectMapper = jacksonObjectMapper().enable(SerializationFeature.INDENT_OUTPUT)
     .setSerializationInclusion(JsonInclude.Include.NON_NULL).setDefaultPrettyPrinter(printer)
 
