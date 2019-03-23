@@ -62,7 +62,7 @@ open class CompareBenchmarkCI : DefaultTask() {
       commitSha
     )
 
-    val result: List<BenchmarkComparison> = !Comparator.compareCsv(
+    val result: List<BenchmarkComparison> = !Comparator.compareBenchmarks(
       previousBenchmarkPath,
       currentBenchmarkPath,
       keyColumnName,

@@ -5,12 +5,6 @@ import arrow.core.Option
 import arrow.core.some
 import java.io.File
 
-data class Benchmark(
-  val key: String,
-  val score: Double,
-  val scoreError: Double
-)
-
 sealed class BenchmarkResult {
   abstract fun symbol(): String
   abstract fun icon(): String
@@ -54,12 +48,6 @@ enum class FileFormat {
     }
   }
 }
-
-data class BenchmarkComparison(
-  val key: String,
-  val benchmark: List<Benchmark>,
-  val result: BenchmarkResult
-)
 
 object BenchmarkInconsistencyError :
   Throwable("Benchmarks have differents formats and cannot be compared")
@@ -109,9 +97,35 @@ data class JsonSecondaryMetric(
   val rawData: List<List<Double>>?
 )
 
+abstract class Benchmark(
+  open val key: String,
+  open val score: Double,
+  open val scoreError: Double
+)
+
+data class CsvBenchmark(
+  override val key: String,
+  override val score: Double,
+  override val scoreError: Double
+) : Benchmark(
+  key,
+  score,
+  scoreError
+)
+
 data class JsonBenchmark(
   val benchmark: String,
   val mode: String,
   val primaryMetric: JsonPrimaryMetric,
   val secondaryMetrics: JsonSecondaryMetric
+) : Benchmark(
+  benchmark,
+  primaryMetric.score,
+  primaryMetric.scoreError
+)
+
+data class BenchmarkComparison(
+  val key: String,
+  val benchmark: List<Benchmark>,
+  val result: BenchmarkResult
 )

@@ -12,8 +12,8 @@ import arrow.effects.IO
 import arrow.effects.extensions.io.applicative.applicative
 import arrow.effects.fix
 import arrow.syntax.collections.tail
-import com.fortysevendeg.hood.Benchmark
 import com.fortysevendeg.hood.BenchmarkInconsistencyError
+import com.fortysevendeg.hood.CsvBenchmark
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
@@ -22,8 +22,13 @@ import java.io.FileReader
 
 object CsvBenchmarkReader : BenchmarkReader {
 
-  private fun benchmarkFromCSV(row: CSVRecord, key: Int, column: Int, threshold: Int): Benchmark =
-    Benchmark(
+  private fun benchmarkFromCSV(
+    row: CSVRecord,
+    key: Int,
+    column: Int,
+    threshold: Int
+  ): CsvBenchmark =
+    CsvBenchmark(
       row[key].substringAfterLast('.'),
       row[column].toDouble(),
       row[threshold].toDouble()
@@ -33,14 +38,14 @@ object CsvBenchmarkReader : BenchmarkReader {
     this.firstOrNone().map { it.indexOf(columnName) }
 
   private fun readCSV(
-    file: FileReader,
+    reader: FileReader,
     keyColumn: String,
     compareColumn: String,
     thresholdColumn: String
-  ): IO<ListK<Benchmark>> =
+  ): IO<ListK<CsvBenchmark>> =
     IO {
       CSVParser(
-        file,
+        reader,
         CSVFormat.DEFAULT.withTrim()
       )
     }.bracket({ csvParser -> IO { csvParser.close() } }) { csvParser ->
@@ -61,7 +66,8 @@ object CsvBenchmarkReader : BenchmarkReader {
           }
         }.fix()
       }.flatMap {
-        it.fold({ IO.raiseError<ListK<Benchmark>>(BenchmarkInconsistencyError) },
+        it.fold(
+          { IO.raiseError<ListK<CsvBenchmark>>(BenchmarkInconsistencyError) },
           { IO { it.k() } })
       }
     }
@@ -71,11 +77,11 @@ object CsvBenchmarkReader : BenchmarkReader {
     compareColumn: String,
     thresholdColumn: String,
     vararg files: File
-  ): IO<Map<String, List<Benchmark>>> =
+  ): IO<Map<String, List<CsvBenchmark>>> =
     files.toList().traverse(
       IO.applicative()
     ) { file ->
-      IO { FileReader(file) }.flatMap { fileReader ->
+      IO { FileReader(file) }.bracket({ IO { it.close() } }) { fileReader ->
         readCSV(
           fileReader,
           keyColumn,
@@ -83,6 +89,6 @@ object CsvBenchmarkReader : BenchmarkReader {
           thresholdColumn
         ).map { file.nameWithoutExtension to it }
       }
-    }.fix().map { it.fix().groupByBenchmarkKey() }
+    }.fix().map { it.fix().groupByKey() }
 
 }

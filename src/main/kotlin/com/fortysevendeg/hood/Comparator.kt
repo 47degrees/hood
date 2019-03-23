@@ -13,7 +13,11 @@ import java.io.File
 
 object Comparator {
 
-  private fun compare(previous: Benchmark, current: Benchmark, threshold: Double): BenchmarkResult =
+  private fun compare(
+    previous: CsvBenchmark,
+    current: CsvBenchmark,
+    threshold: Double
+  ): BenchmarkResult =
     when {
       previous.score <= current.score             -> BenchmarkResult.OK
       previous.score - current.score <= threshold -> BenchmarkResult.WARN
@@ -21,28 +25,28 @@ object Comparator {
     }
 
   private fun getCompareResults(
-    currentBenchmarks: Map<String, List<Benchmark>>,
-    prev: Benchmark,
+    currentBenchmarks: Map<String, List<CsvBenchmark>>,
+    prev: CsvBenchmark,
     threshold: Double
-  ): List<Pair<List<Benchmark>, BenchmarkResult>> =
+  ): List<Pair<List<CsvBenchmark>, BenchmarkResult>> =
     currentBenchmarks.mapValues {
       it.value.filter { current -> prev.key == current.key }
     }.flatMap {
-      val currentWithName: List<Benchmark> =
-        it.value.map { current -> Benchmark(it.key, current.score, current.scoreError) }
+      val currentWithName: List<CsvBenchmark> =
+        it.value.map { current -> CsvBenchmark(it.key, current.score, current.scoreError) }
       it.value.map { current -> Pair(currentWithName, compare(prev, current, threshold)) }
     }
 
   private fun buildBenchmarkComparison(
     key: String,
-    previous: Benchmark,
-    result: Pair<List<Benchmark>, BenchmarkResult>
+    previous: CsvBenchmark,
+    result: Pair<List<CsvBenchmark>, BenchmarkResult>
   ): BenchmarkComparison {
     val benchmarksWithName = result.first.plus(previous).reversed()
     return BenchmarkComparison(key, benchmarksWithName, result.second)
   }
 
-  fun compareCsv(
+  fun compareBenchmarks(
     previousBenchmarkFile: File,
     currentBenchmarkFiles: List<File>,
     keyColumnName: String,
@@ -52,7 +56,7 @@ object Comparator {
   ): IO<List<BenchmarkComparison>> = fx {
     //List of BenchmarkComparison
 
-    val previousBenchmarks: Pair<String, List<Benchmark>> =
+    val previousBenchmarks: Pair<String, List<CsvBenchmark>> =
       !CsvBenchmarkReader.readFilesToBenchmark(
         keyColumnName,
         compareColumnName,
@@ -60,7 +64,7 @@ object Comparator {
         previousBenchmarkFile
       ).map { it.entries.first().toPair() }
 
-    val currentBenchmarks: Map<String, List<Benchmark>> =
+    val currentBenchmarks: Map<String, List<CsvBenchmark>> =
       !CsvBenchmarkReader.readFilesToBenchmark(
         keyColumnName,
         compareColumnName,
@@ -79,7 +83,7 @@ object Comparator {
 
     if (isConsistent)
       previousBenchmarks.second.flatMap { prev ->
-        val previousWithName = Benchmark(previousBenchmarks.first, prev.score, prev.scoreError)
+        val previousWithName = CsvBenchmark(previousBenchmarks.first, prev.score, prev.scoreError)
 
         getCompareResults(
           currentBenchmarks,

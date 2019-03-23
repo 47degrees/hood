@@ -23,15 +23,12 @@ object OutputFile {
     val file = !effect { File("$path.$format") }
     val exists = !effect { file.exists() }
 
-    if (exists || !createFile(file)) {
-
-      val writer = !IO { FileWriter(file) }
-
-      !IO { writer.write(result.prettyPrintResult(format)) }
-      !IO { writer.flush() }
-      !IO { writer.close() }
-
-    } else !raiseError<Unit>(GradleException("Cannot create the file"))
+    if (exists || !createFile(file))
+      !IO { FileWriter(file) }.bracket({ IO { it.close() } }) { writer ->
+        IO { writer.write(result.prettyPrintResult(format)) }
+          .flatMap { IO { writer.flush() } }
+      }
+    else !raiseError<Unit>(GradleException("Cannot create the file"))
 
   }.fix()
 
@@ -47,8 +44,8 @@ object OutputFile {
       FileFormat.toFileFormat(outputFormat).fold({
         !raiseError<Unit>(GradleException("Unknown format to file output"))
       }, {
-        if(it == FileFormat.JSON && allJson || it != FileFormat.JSON)
-        !effect { writeOutputFile(path, result, it) }
+        if (it == FileFormat.JSON && allJson || it != FileFormat.JSON)
+          !effect { writeOutputFile(path, result, it) }
         else !raiseError<Unit>(GradleException("Wrong output format selected, all the benchmarks must to be Json in order to print one"))
       })
 

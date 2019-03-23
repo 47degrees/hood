@@ -47,7 +47,7 @@ open class CompareBenchmark : DefaultTask() {
 
   @TaskAction
   fun compareBenchmark() =
-    Comparator.compareCsv(
+    Comparator.compareBenchmarks(
       previousBenchmarkPath,
       currentBenchmarkPath,
       keyColumnName,
