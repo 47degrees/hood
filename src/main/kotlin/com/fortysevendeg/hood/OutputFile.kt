@@ -1,10 +1,9 @@
 package com.fortysevendeg.hood
 
 import arrow.effects.IO
+import arrow.effects.extensions.io.fx.fx
 import arrow.effects.fix
-import arrow.effects.instances.io.monad.monad
 import com.fortysevendeg.hood.Printer.prettyPrintResult
-import com.fortysevendeg.hood.Printer.toFileFormat
 import org.gradle.api.GradleException
 import java.io.File
 import java.io.FileWriter
@@ -19,20 +18,20 @@ object OutputFile {
     path: String,
     result: List<BenchmarkComparison>,
     format: FileFormat
-  ): IO<Unit> = IO.monad().binding {
+  ): IO<Unit> = fx {
 
-    val file = IO { File("$path.$format") }.bind()
-    val exists = IO { file.exists() }.bind()
+    val file = !effect { File("$path.$format") }
+    val exists = !effect { file.exists() }
 
-    if (exists || createFile(file).bind()) {
+    if (exists || !createFile(file)) {
 
-      val writer = IO { FileWriter(file) }.bind()
+      val writer = !IO { FileWriter(file) }
 
-      IO { writer.write(result.prettyPrintResult(format)) }.bind()
-      IO { writer.flush() }.bind()
-      IO { writer.close() }.bind()
+      !IO { writer.write(result.prettyPrintResult(format)) }
+      !IO { writer.flush() }
+      !IO { writer.close() }
 
-    } else IO.raiseError<Unit>(GradleException("Cannot create the file")).bind()
+    } else !raiseError<Unit>(GradleException("Cannot create the file"))
 
   }.fix()
 
@@ -41,14 +40,14 @@ object OutputFile {
     path: String,
     result: List<BenchmarkComparison>,
     outputFormat: String
-  ): IO<Unit> = IO.monad().binding {
+  ): IO<Unit> = fx {
     if (outputToFile) {
 
-      outputFormat.toFileFormat().fold({
-        IO.raiseError<Unit>(GradleException("Unknown format to file output")).bind()
-      }, { writeOutputFile(path, result, it).bind() })
+      FileFormat.toFileFormat(outputFormat).fold({
+        !raiseError<Unit>(GradleException("Unknown format to file output"))
+      }, { !effect { writeOutputFile(path, result, it) } })
 
-    } else IO.unit.bind()
+    } else !unit()
   }.fix()
 
   fun readFileToBase64(file: File): IO<String> =

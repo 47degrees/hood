@@ -1,16 +1,16 @@
 package com.fortysevendeg.hood.reader
 
 import arrow.core.Option
+import arrow.core.extensions.option.fx.fx
 import arrow.core.firstOrNone
 import arrow.core.fix
 import arrow.data.ListK
+import arrow.data.extensions.list.traverse.traverse
 import arrow.data.fix
 import arrow.data.k
 import arrow.effects.IO
+import arrow.effects.extensions.io.applicative.applicative
 import arrow.effects.fix
-import arrow.effects.instances.io.applicative.applicative
-import arrow.instances.list.traverse.traverse
-import arrow.instances.option.monad.monad
 import arrow.syntax.collections.tail
 import com.fortysevendeg.hood.Benchmark
 import com.fortysevendeg.hood.BenchmarkInconsistencyError
@@ -46,10 +46,10 @@ object CsvBenchmarkReader : BenchmarkReader {
     }.bracket({ csvParser -> IO { csvParser.close() } }) { csvParser ->
       IO {
         val records: List<CSVRecord> = csvParser.records
-        Option.monad().binding {
-          val key = records.getColumnIndex(keyColumn).bind()
-          val column = records.getColumnIndex(compareColumn).bind()
-          val threshold = records.getColumnIndex(thresholdColumn).bind()
+        fx {
+          val key = !records.getColumnIndex(keyColumn)
+          val column = !records.getColumnIndex(compareColumn)
+          val threshold = !records.getColumnIndex(thresholdColumn)
 
           records.tail().map {
             benchmarkFromCSV(

@@ -1,5 +1,10 @@
 package com.fortysevendeg.hood
 
+import arrow.core.None
+import arrow.core.Option
+import arrow.core.some
+import java.io.File
+
 data class Benchmark(
   val key: String,
   val score: Double,
@@ -37,6 +42,16 @@ enum class FileFormat {
 
   override fun toString(): String {
     return super.toString().toLowerCase()
+  }
+
+  companion object {
+    fun getFileFormat(file: File) = toFileFormat(file.extension.toLowerCase())
+
+    fun toFileFormat(str: String): Option<FileFormat> = when {
+      str.toLowerCase() == "md"   -> FileFormat.MD.some()
+      str.toLowerCase() == "json" -> FileFormat.JSON.some()
+      else                        -> None
+    }
   }
 }
 

@@ -2,12 +2,12 @@ package com.fortysevendeg.hood
 
 import arrow.core.Option
 import arrow.core.getOrElse
+import arrow.data.extensions.list.foldable.exists
+import arrow.data.extensions.list.foldable.forAll
 import arrow.effects.IO
+import arrow.effects.extensions.io.applicativeError.handleError
+import arrow.effects.extensions.io.fx.fx
 import arrow.effects.fix
-import arrow.effects.instances.io.applicativeError.handleError
-import arrow.effects.instances.io.monad.monad
-import arrow.instances.list.foldable.exists
-import arrow.instances.list.foldable.forAll
 import com.fortysevendeg.hood.reader.CsvBenchmarkReader
 import java.io.File
 
@@ -49,26 +49,24 @@ object Comparator {
     compareColumnName: String,
     thresholdColumnName: String,
     maybeThreshold: Option<Double>
-  ): IO<List<BenchmarkComparison>> = IO.monad().binding {
+  ): IO<List<BenchmarkComparison>> = fx {
     //List of BenchmarkComparison
 
     val previousBenchmarks: Pair<String, List<Benchmark>> =
-      CsvBenchmarkReader.readFilesToBenchmark(
+      !CsvBenchmarkReader.readFilesToBenchmark(
         keyColumnName,
         compareColumnName,
         thresholdColumnName,
         previousBenchmarkFile
-      )
-        .bind()
-        .entries.first().toPair()
+      ).map { it.entries.first().toPair() }
 
     val currentBenchmarks: Map<String, List<Benchmark>> =
-      CsvBenchmarkReader.readFilesToBenchmark(
+      !CsvBenchmarkReader.readFilesToBenchmark(
         keyColumnName,
         compareColumnName,
         thresholdColumnName,
         *currentBenchmarkFiles.toTypedArray()
-      ).bind()
+      )
 
     val isConsistent = previousBenchmarks.second.forAll { prev ->
       currentBenchmarks.values.toList()

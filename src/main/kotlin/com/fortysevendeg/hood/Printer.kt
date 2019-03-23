@@ -1,9 +1,5 @@
 package com.fortysevendeg.hood
 
-import arrow.core.None
-import arrow.core.Option
-import arrow.core.some
-
 object Printer {
 
   private fun List<Benchmark>.mkString() =
@@ -59,12 +55,6 @@ object Printer {
 
     return if (format == FileFormat.MD) printMDFormat()
     else printJSONFormat()
-  }
-
-  fun String.toFileFormat(): Option<FileFormat> = when {
-    this.toLowerCase() == "md"   -> FileFormat.MD.some()
-    this.toLowerCase() == "json" -> FileFormat.JSON.some()
-    else                         -> None
   }
 
 }
