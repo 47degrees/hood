@@ -39,17 +39,15 @@ object OutputFile {
     result: List<BenchmarkComparison>,
     outputFormat: String
   ): IO<Unit> = fx {
-    if (outputToFile) {
-
-      FileFormat.toFileFormat(outputFormat).fold({
-        !raiseError<Unit>(GradleException("Unknown format to file output"))
-      }, {
+    if (outputToFile)
+      !FileFormat.toFileFormatOrRaise(outputFormat).flatMap {
         if (it == FileFormat.JSON && allJson || it != FileFormat.JSON)
-          !effect { writeOutputFile(path, result, it) }
-        else !raiseError<Unit>(GradleException("Wrong output format selected, all the benchmarks must to be Json in order to print one"))
-      })
-
-    } else !unit()
+          writeOutputFile(path, result, it)
+        else raiseError<Unit>(
+          GradleException("Wrong output format selected, all the benchmarks must to be Json in order to print one")
+        )
+      }
+    else !unit()
   }.fix()
 
   fun readFileToBase64(file: File): IO<String> =

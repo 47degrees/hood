@@ -4,7 +4,9 @@ import arrow.core.Option
 import arrow.effects.IO
 import arrow.syntax.collections.firstOption
 import com.fasterxml.jackson.databind.JsonNode
-import com.fortysevendeg.hood.*
+import com.fortysevendeg.hood.BenchmarkComparison
+import com.fortysevendeg.hood.FileFormat
+import com.fortysevendeg.hood.GhStatusState
 import com.fortysevendeg.hood.Printer.prettyPrintResult
 import com.fortysevendeg.hood.github.GithubCommon.buildRequest
 import com.fortysevendeg.hood.github.GithubCommon.client

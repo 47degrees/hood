@@ -49,12 +49,12 @@ object Printer {
         |""".trimMargin()
     }
 
+  //Same format as input json but with the same key grouped as MD print(without icon)
+  //Custom serializer
   private fun List<BenchmarkComparison>.printJSONFormat(): String = TODO()
 
-  fun List<BenchmarkComparison>.prettyPrintResult(format: FileFormat): String {
-
-    return if (format == FileFormat.MD) printMDFormat()
+  fun List<BenchmarkComparison>.prettyPrintResult(format: FileFormat): String =
+    if (format == FileFormat.MD) printMDFormat()
     else printJSONFormat()
-  }
 
 }

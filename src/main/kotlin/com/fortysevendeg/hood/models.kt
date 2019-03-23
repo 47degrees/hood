@@ -1,10 +1,6 @@
 package com.fortysevendeg.hood
 
-import arrow.core.None
-import arrow.core.Option
-import arrow.core.some
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import java.io.File
 
 sealed class BenchmarkResult {
   abstract fun symbol(): String
@@ -32,24 +28,6 @@ sealed class BenchmarkResult {
 
 }
 
-enum class FileFormat {
-  MD, JSON;
-
-  override fun toString(): String {
-    return super.toString().toLowerCase()
-  }
-
-  companion object {
-    fun getFileFormat(file: File) = toFileFormat(file.extension.toLowerCase())
-
-    fun toFileFormat(str: String): Option<FileFormat> = when {
-      str.toLowerCase() == "md"   -> FileFormat.MD.some()
-      str.toLowerCase() == "json" -> FileFormat.JSON.some()
-      else                        -> None
-    }
-  }
-}
-
 object BenchmarkInconsistencyError :
   Throwable("Benchmarks have differents formats and cannot be compared")
 
@@ -57,29 +35,29 @@ enum class GhStatusState(val value: String) {
   Succeed("success"), Pending("pending"), Failed("failure")
 }
 
-//Github
+//Benchmarks
 
-data class GhInfo(val owner: String, val repo: String, val token: String)
-
-data class GhStatus(
-  val state: GhStatusState,
-  val description: String,
-  val context: String = "benchmark-ci/hood"
+@JsonIgnoreProperties(value = ["key", "score", "scoreError"])
+abstract class Benchmark(
+  open val key: String,
+  open val score: Double,
+  open val scoreError: Double
 )
 
-data class GhUser(val login: String)
+data class BenchmarkComparison(
+  val key: String,
+  val benchmark: List<Benchmark>,
+  val result: BenchmarkResult
+)
 
-data class GhComment(val id: Long, val user: GhUser, val body: String)
-
-data class GhFileSha(val sha: String)
-
-data class GhCreateCommit(val message: String, val content: String, val branch: String)
-
-data class GhUpdateCommit(
-  val message: String,
-  val content: String,
-  val sha: String,
-  val branch: String
+data class CsvBenchmark(
+  override val key: String,
+  override val score: Double,
+  override val scoreError: Double
+) : Benchmark(
+  key,
+  score,
+  scoreError
 )
 
 //Json benchmarks
@@ -98,23 +76,6 @@ data class JsonSecondaryMetric(
   val rawData: List<List<Double>>?
 )
 
-@JsonIgnoreProperties(value = ["key", "score", "scoreError"])
-abstract class Benchmark(
-  open val key: String,
-  open val score: Double,
-  open val scoreError: Double
-)
-
-data class CsvBenchmark(
-  override val key: String,
-  override val score: Double,
-  override val scoreError: Double
-) : Benchmark(
-  key,
-  score,
-  scoreError
-)
-
 data class JsonBenchmark(
   val benchmark: String,
   val mode: String,
@@ -124,10 +85,4 @@ data class JsonBenchmark(
   benchmark,
   primaryMetric.score,
   primaryMetric.scoreError
-)
-
-data class BenchmarkComparison(
-  val key: String,
-  val benchmark: List<Benchmark>,
-  val result: BenchmarkResult
 )

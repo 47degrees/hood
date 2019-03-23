@@ -1,7 +1,6 @@
 package com.fortysevendeg.hood.github
 
 import arrow.effects.IO
-import com.fortysevendeg.hood.GhInfo
 import org.gradle.api.GradleException
 import org.http4k.client.DualSyncAsyncHttpHandler
 import org.http4k.client.OkHttp

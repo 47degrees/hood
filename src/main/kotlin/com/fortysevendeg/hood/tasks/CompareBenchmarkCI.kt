@@ -7,6 +7,7 @@ import arrow.effects.extensions.io.fx.fx
 import arrow.effects.fix
 import arrow.effects.handleErrorWith
 import com.fortysevendeg.hood.*
+import com.fortysevendeg.hood.github.GhInfo
 import com.fortysevendeg.hood.github.GithubCommentIntegration
 import com.fortysevendeg.hood.github.GithubCommon
 import org.gradle.api.DefaultTask

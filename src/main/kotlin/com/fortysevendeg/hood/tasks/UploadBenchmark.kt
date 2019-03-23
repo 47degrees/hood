@@ -4,10 +4,10 @@ import arrow.core.toOption
 import arrow.effects.IO
 import arrow.effects.extensions.io.fx.fx
 import arrow.effects.fix
-import com.fortysevendeg.hood.GhCreateCommit
-import com.fortysevendeg.hood.GhInfo
-import com.fortysevendeg.hood.GhUpdateCommit
 import com.fortysevendeg.hood.OutputFile
+import com.fortysevendeg.hood.github.GhCreateCommit
+import com.fortysevendeg.hood.github.GhInfo
+import com.fortysevendeg.hood.github.GhUpdateCommit
 import com.fortysevendeg.hood.github.GithubCommitIntegration
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
