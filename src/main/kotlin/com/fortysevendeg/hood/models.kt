@@ -3,6 +3,7 @@ package com.fortysevendeg.hood
 import arrow.core.None
 import arrow.core.Option
 import arrow.core.some
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import java.io.File
 
 sealed class BenchmarkResult {
@@ -97,6 +98,7 @@ data class JsonSecondaryMetric(
   val rawData: List<List<Double>>?
 )
 
+@JsonIgnoreProperties(value = ["key", "score", "scoreError"])
 abstract class Benchmark(
   open val key: String,
   open val score: Double,
