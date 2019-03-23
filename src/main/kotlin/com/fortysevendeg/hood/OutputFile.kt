@@ -37,6 +37,7 @@ object OutputFile {
 
   fun sendOutputToFile(
     outputToFile: Boolean,
+    allJson: Boolean,
     path: String,
     result: List<BenchmarkComparison>,
     outputFormat: String
@@ -45,7 +46,11 @@ object OutputFile {
 
       FileFormat.toFileFormat(outputFormat).fold({
         !raiseError<Unit>(GradleException("Unknown format to file output"))
-      }, { !effect { writeOutputFile(path, result, it) } })
+      }, {
+        if(it == FileFormat.JSON && allJson || it != FileFormat.JSON)
+        !effect { writeOutputFile(path, result, it) }
+        else !raiseError<Unit>(GradleException("Wrong output format selected, all the benchmarks must to be Json in order to print one"))
+      })
 
     } else !unit()
   }.fix()

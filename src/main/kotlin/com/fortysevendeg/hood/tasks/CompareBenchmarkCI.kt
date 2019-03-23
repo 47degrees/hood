@@ -80,7 +80,9 @@ open class CompareBenchmarkCI : DefaultTask() {
     if (commentResult) !IO.unit
     else !GithubCommon.raiseError("Error creating the comment")
 
-    !OutputFile.sendOutputToFile(outputToFile, outputPath, result, outputFormat)
+    val allJson = JsonSupport.areAllJson(currentBenchmarkPath.plus(previousBenchmarkPath))
+
+    !OutputFile.sendOutputToFile(outputToFile, allJson, outputPath, result, outputFormat)
 
     val errors: List<BenchmarkComparison> = getWrongResults(result)
 

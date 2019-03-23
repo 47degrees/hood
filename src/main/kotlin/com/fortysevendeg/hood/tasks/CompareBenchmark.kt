@@ -2,6 +2,7 @@ package com.fortysevendeg.hood.tasks
 
 import arrow.core.toOption
 import com.fortysevendeg.hood.Comparator
+import com.fortysevendeg.hood.JsonSupport
 import com.fortysevendeg.hood.OutputFile
 import com.fortysevendeg.hood.Printer.prettyPrintResult
 import org.gradle.api.DefaultTask
@@ -55,7 +56,8 @@ open class CompareBenchmark : DefaultTask() {
       threshold.toOption()
     ).flatMap {
       println(it.prettyPrintResult())
-      OutputFile.sendOutputToFile(outputToFile, outputPath, it, outputFormat)
+      val allJson = JsonSupport.areAllJson(currentBenchmarkPath.plus(previousBenchmarkPath))
+      OutputFile.sendOutputToFile(outputToFile, allJson, outputPath, it, outputFormat)
     }.unsafeRunSync()
 
 }
