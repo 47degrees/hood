@@ -1,6 +1,29 @@
 package com.fortysevendeg.hood
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import arrow.core.None
+import arrow.core.Option
+import arrow.core.some
+import arrow.generic.coproduct2.Coproduct2
+import java.io.File
+
+enum class BenchmarkFileFormat {
+  CSV, JSON;
+
+  override fun toString(): String = super.toString().toLowerCase()
+
+  companion object {
+
+    private fun toFileFormat(str: String): Option<BenchmarkFileFormat> = when {
+      str.toLowerCase() == CSV.toString()  -> BenchmarkFileFormat.CSV.some()
+      str.toLowerCase() == JSON.toString() -> BenchmarkFileFormat.JSON.some()
+      else                                 -> None
+    }
+
+    fun getFileFormat(file: File): Option<BenchmarkFileFormat> =
+      toFileFormat(file.extension.toLowerCase())
+
+  }
+}
 
 sealed class BenchmarkResult {
   abstract fun symbol(): String
@@ -29,7 +52,7 @@ sealed class BenchmarkResult {
 }
 
 object BenchmarkInconsistencyError :
-  Throwable("Benchmarks have differents formats and cannot be compared")
+  Throwable("Benchmarks have different formats and cannot be compared")
 
 enum class GhStatusState(val value: String) {
   Succeed("success"), Pending("pending"), Failed("failure")
@@ -37,27 +60,10 @@ enum class GhStatusState(val value: String) {
 
 //Benchmarks
 
-@JsonIgnoreProperties(value = ["key", "score", "scoreError"])
-abstract class Benchmark(
-  open val key: String,
-  open val score: Double,
-  open val scoreError: Double
-)
-
-data class BenchmarkComparison(
-  val key: String,
-  val benchmark: List<Benchmark>,
-  val result: BenchmarkResult
-)
-
 data class CsvBenchmark(
-  override val key: String,
-  override val score: Double,
-  override val scoreError: Double
-) : Benchmark(
-  key,
-  score,
-  scoreError
+  val key: String,
+  val score: Double,
+  val scoreError: Double
 )
 
 //Json benchmarks
@@ -81,8 +87,13 @@ data class JsonBenchmark(
   val mode: String,
   val primaryMetric: JsonPrimaryMetric,
   val secondaryMetrics: JsonSecondaryMetric
-) : Benchmark(
-  benchmark,
-  primaryMetric.score,
-  primaryMetric.scoreError
+)
+
+typealias Benchmark = Coproduct2<CsvBenchmark, JsonBenchmark>
+
+data class BenchmarkComparison(
+  val key: String,
+  val benchmark: List<Benchmark>,
+  val result: BenchmarkResult,
+  val threshold: Double
 )

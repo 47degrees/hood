@@ -5,8 +5,8 @@ import arrow.effects.IO
 import arrow.syntax.collections.firstOption
 import com.fasterxml.jackson.databind.JsonNode
 import com.fortysevendeg.hood.BenchmarkComparison
-import com.fortysevendeg.hood.FileFormat
 import com.fortysevendeg.hood.GhStatusState
+import com.fortysevendeg.hood.OutputFileFormat
 import com.fortysevendeg.hood.Printer.prettyPrintResult
 import com.fortysevendeg.hood.github.GithubCommon.buildRequest
 import com.fortysevendeg.hood.github.GithubCommon.client
@@ -23,7 +23,7 @@ object GithubCommentIntegration {
   private const val commentIntro: String = "***Hood benchmark comparison:***"
 
   private fun generateCommentBody(results: List<BenchmarkComparison>): JsonNode {
-    val content = "$commentIntro\n${results.prettyPrintResult(FileFormat.MD)}"
+    val content = "$commentIntro\n${results.prettyPrintResult(OutputFileFormat.MD)}"
 
     return Jackson {
       obj("body" to string(content))
@@ -40,7 +40,7 @@ object GithubCommentIntegration {
     return IO { client(request) }.map { Jackson.asA(it.bodyString(), Array<GhComment>::class) }
       .map { list ->
         list.filter { it.body.startsWith(commentIntro) }
-          .firstOption().map { it.id }
+          .firstOption().map(GhComment::id)
       }
   }
 
@@ -91,7 +91,7 @@ object GithubCommentIntegration {
     }
   }
 
-  fun setPendingStatus(info: GhInfo, commitSha: String) = setStatus(
+  fun setPendingStatus(info: GhInfo, commitSha: String): IO<Unit> = setStatus(
     info, commitSha,
     GhStatus(
       GhStatusState.Pending,
@@ -99,7 +99,7 @@ object GithubCommentIntegration {
     )
   )
 
-  fun setSuccessStatus(info: GhInfo, commitSha: String) = setStatus(
+  fun setSuccessStatus(info: GhInfo, commitSha: String): IO<Unit> = setStatus(
     info, commitSha,
     GhStatus(
       GhStatusState.Succeed,
@@ -107,7 +107,7 @@ object GithubCommentIntegration {
     )
   )
 
-  fun setFailedStatus(info: GhInfo, commitSha: String, comment: String) =
+  fun setFailedStatus(info: GhInfo, commitSha: String, comment: String): IO<Unit> =
     setStatus(
       info,
       commitSha,

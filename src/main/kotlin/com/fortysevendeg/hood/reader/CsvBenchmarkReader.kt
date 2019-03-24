@@ -48,7 +48,7 @@ object CsvBenchmarkReader : BenchmarkReader {
         reader,
         CSVFormat.DEFAULT.withTrim()
       )
-    }.bracket({ csvParser -> IO { csvParser.close() } }) { csvParser ->
+    }.bracket({ csvParser -> IO(csvParser::close) }) { csvParser ->
       IO {
         val records: List<CSVRecord> = csvParser.records
         fx {
@@ -81,7 +81,7 @@ object CsvBenchmarkReader : BenchmarkReader {
     files.toList().traverse(
       IO.applicative()
     ) { file ->
-      IO { FileReader(file) }.bracket({ IO { it.close() } }) { fileReader ->
+      IO { FileReader(file) }.bracket({ IO(it::close) }) { fileReader ->
         readCSV(
           fileReader,
           keyColumn,

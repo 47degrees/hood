@@ -16,7 +16,7 @@ import java.io.FileReader
 object JsonBenchmarkReader : BenchmarkReader {
 
   private fun readJson(reader: FileReader): IO<ListK<JsonBenchmark>> =
-    IO { reader.readText() }.flatMap {
+    IO(reader::readText).flatMap {
       IO { JsonSupport.mapper.readValue<List<JsonBenchmark>>(it).k() }
     }
 
@@ -26,7 +26,7 @@ object JsonBenchmarkReader : BenchmarkReader {
     files.toList().traverse(
       IO.applicative()
     ) { file ->
-      IO { FileReader(file) }.bracket({ IO { it.close() } }) { fileReader ->
+      IO { FileReader(file) }.bracket({ IO(it::close) }) { fileReader ->
         readJson(fileReader).map { file.nameWithoutExtension to it }
       }
     }.fix().map { it.fix().groupByKey() }

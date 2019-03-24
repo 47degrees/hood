@@ -91,7 +91,7 @@ open class CompareBenchmarkCI : DefaultTask() {
       !GithubCommentIntegration.setFailedStatus(
         info,
         commitSha,
-        errors.joinToString { it.key }
+        errors.joinToString(transform = BenchmarkComparison::key)
       )
     } else
       !GithubCommentIntegration.setSuccessStatus(

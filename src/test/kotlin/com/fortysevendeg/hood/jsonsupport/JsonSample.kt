@@ -1,7 +1,7 @@
 package com.fortysevendeg.hood.jsonsupport
 
 object JsonSample {
-  val benchmarkJson =
+  val benchmarkJson: String =
     """{
     |  "benchmark" : "helios.benchmarks.HeliosBenchmark.decoding",
     |  "mode" : "thrpt",

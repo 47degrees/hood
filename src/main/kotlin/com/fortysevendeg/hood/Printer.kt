@@ -1,13 +1,16 @@
 package com.fortysevendeg.hood
 
+import com.fortysevendeg.hood.BenchmarkCopHandler.getKey
+import com.fortysevendeg.hood.BenchmarkCopHandler.getScore
+
 object Printer {
 
   private fun List<Benchmark>.mkString() =
-    this.joinToString(separator = "\n") { "${it.key} | ${it.score}" }
+    this.joinToString(separator = "\n") { "${it.getKey()} | ${it.getScore()}" }
 
   /**
    * Expected format
-   * `benchmark key`
+   * Icon `benchmark key` (Threshold)
    *
    * Benchmark | Value
    * file name | benchmark.score
@@ -18,7 +21,8 @@ object Printer {
    */
   fun List<BenchmarkComparison>.prettyPrintResult(): String =
     this.joinToString(separator = "\n\n") { comp ->
-      val header = "${comp.result.symbol()} `${comp.key.capitalize()}`"
+      val header =
+        "${comp.result.symbol()} `${comp.key.capitalize()}` (Threshold: ${comp.threshold})"
       if (comp.result is BenchmarkResult.ERROR)
         """
         |$header
@@ -33,7 +37,7 @@ object Printer {
 
   private fun List<BenchmarkComparison>.printMDFormat(): String =
     this.joinToString(separator = "\n\n") { comp ->
-      val header = "${comp.result.icon()} `${comp.key.capitalize()}`"
+      val header = "${comp.result.icon()} `${comp.key.capitalize()}` (Threshold: ${comp.threshold})"
       if (comp.result is BenchmarkResult.ERROR)
         """
         |$header
@@ -53,8 +57,8 @@ object Printer {
   //Custom serializer
   private fun List<BenchmarkComparison>.printJSONFormat(): String = TODO()
 
-  fun List<BenchmarkComparison>.prettyPrintResult(format: FileFormat): String =
-    if (format == FileFormat.MD) printMDFormat()
+  fun List<BenchmarkComparison>.prettyPrintResult(format: OutputFileFormat): String =
+    if (format == OutputFileFormat.MD) printMDFormat()
     else printJSONFormat()
 
 }

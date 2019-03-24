@@ -23,6 +23,8 @@ object JsonSupport {
   val mapper: ObjectMapper = jacksonObjectMapper().enable(SerializationFeature.INDENT_OUTPUT)
     .setSerializationInclusion(JsonInclude.Include.NON_NULL).setDefaultPrettyPrinter(printer)
 
-  fun areAllJson(list: List<File>) =
-    list.forAll { file -> FileFormat.getFileFormat(file).exists { it == FileFormat.JSON } }
+  fun areAllJson(list: List<File>): Boolean =
+    list.forAll { file ->
+      OutputFileFormat.getFileFormat(file).exists { it == OutputFileFormat.JSON }
+    }
 }

@@ -17,6 +17,6 @@ open class HoodPlugin : Plugin<Project> {
   }
 
   object Settings {
-    const val group = "com.fortysevendeg.hood"
+    const val group: String = "com.fortysevendeg.hood"
   }
 }

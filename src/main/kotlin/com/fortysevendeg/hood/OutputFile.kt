@@ -12,21 +12,21 @@ import java.util.Base64
 object OutputFile {
 
   private fun createFile(file: File): IO<Boolean> =
-    IO { file.parentFile.mkdirs() }.map { file.createNewFile() }
+    IO(file.parentFile::mkdirs).map { file.createNewFile() }
 
   private fun writeOutputFile(
     path: String,
     result: List<BenchmarkComparison>,
-    format: FileFormat
+    format: OutputFileFormat
   ): IO<Unit> = fx {
 
     val file = !effect { File("$path.$format") }
     val exists = !effect { file.exists() }
 
     if (exists || !createFile(file))
-      !IO { FileWriter(file) }.bracket({ IO { it.close() } }) { writer ->
+      !IO { FileWriter(file) }.bracket({ IO(it::close) }) { writer ->
         IO { writer.write(result.prettyPrintResult(format)) }
-          .flatMap { IO { writer.flush() } }
+          .flatMap { IO(writer::flush) }
       }
     else !raiseError<Unit>(GradleException("Cannot create the file"))
 
@@ -40,8 +40,8 @@ object OutputFile {
     outputFormat: String
   ): IO<Unit> = fx {
     if (outputToFile)
-      !FileFormat.toFileFormatOrRaise(outputFormat).flatMap {
-        if (it == FileFormat.JSON && allJson || it != FileFormat.JSON)
+      !OutputFileFormat.toFileFormatOrRaise(outputFormat).flatMap {
+        if (it == OutputFileFormat.JSON && allJson || it != OutputFileFormat.JSON)
           writeOutputFile(path, result, it)
         else raiseError<Unit>(
           GradleException("Wrong output format selected, all the benchmarks must to be Json in order to print one")

@@ -46,7 +46,7 @@ open class CompareBenchmark : DefaultTask() {
   var threshold: Double? = project.objects.property(Double::class.java).orNull
 
   @TaskAction
-  fun compareBenchmark() =
+  fun compareBenchmark(): Unit =
     Comparator.compareBenchmarks(
       previousBenchmarkPath,
       currentBenchmarkPath,
