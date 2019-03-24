@@ -1,4 +1,4 @@
-package com.fortysevendeg.hood
+package com.fortysevendeg.hood.models
 
 import arrow.core.None
 import arrow.core.Option
@@ -14,8 +14,8 @@ enum class BenchmarkFileFormat {
   companion object {
 
     private fun toFileFormat(str: String): Option<BenchmarkFileFormat> = when {
-      str.toLowerCase() == CSV.toString()  -> BenchmarkFileFormat.CSV.some()
-      str.toLowerCase() == JSON.toString() -> BenchmarkFileFormat.JSON.some()
+      str.toLowerCase() == CSV.toString()  -> CSV.some()
+      str.toLowerCase() == JSON.toString() -> JSON.some()
       else                                 -> None
     }
 

@@ -2,9 +2,9 @@ package com.fortysevendeg.hood.jsonsupport
 
 import arrow.effects.IO
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.fortysevendeg.hood.JsonBenchmark
 import com.fortysevendeg.hood.JsonSupport
 import com.fortysevendeg.hood.jsonsupport.JsonSample.benchmarkJson
+import com.fortysevendeg.hood.models.JsonBenchmark
 import io.kotlintest.assertions.arrow.either.shouldBeRight
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec

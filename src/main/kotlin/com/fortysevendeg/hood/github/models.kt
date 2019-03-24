@@ -1,6 +1,6 @@
 package com.fortysevendeg.hood.github
 
-import com.fortysevendeg.hood.GhStatusState
+import com.fortysevendeg.hood.models.GhStatusState
 
 data class GhInfo(val owner: String, val repo: String, val token: String)
 

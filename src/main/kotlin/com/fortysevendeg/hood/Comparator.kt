@@ -11,11 +11,7 @@ import arrow.effects.IO
 import arrow.effects.extensions.io.applicativeError.handleError
 import arrow.effects.extensions.io.fx.fx
 import arrow.effects.fix
-import com.fortysevendeg.hood.BenchmarkCopHandler.benchmarkOf
-import com.fortysevendeg.hood.BenchmarkCopHandler.getKey
-import com.fortysevendeg.hood.BenchmarkCopHandler.getScore
-import com.fortysevendeg.hood.BenchmarkCopHandler.getScoreError
-import com.fortysevendeg.hood.BenchmarkCopHandler.withName
+import com.fortysevendeg.hood.models.*
 import com.fortysevendeg.hood.reader.CsvBenchmarkReader
 import com.fortysevendeg.hood.reader.JsonBenchmarkReader
 import java.io.File

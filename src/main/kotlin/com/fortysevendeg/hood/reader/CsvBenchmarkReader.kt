@@ -12,9 +12,9 @@ import arrow.effects.IO
 import arrow.effects.extensions.io.applicative.applicative
 import arrow.effects.fix
 import arrow.syntax.collections.tail
-import com.fortysevendeg.hood.BenchmarkInconsistencyError
-import com.fortysevendeg.hood.CsvBenchmark
-import com.fortysevendeg.hood.Printer
+import com.fortysevendeg.hood.cleanKey
+import com.fortysevendeg.hood.models.BenchmarkInconsistencyError
+import com.fortysevendeg.hood.models.CsvBenchmark
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
@@ -30,7 +30,7 @@ object CsvBenchmarkReader : BenchmarkReader {
     threshold: Int
   ): CsvBenchmark =
     CsvBenchmark(
-      Printer.cleanKey(row[key]),
+      cleanKey(row[key]),
       row[column].toDouble(),
       row[threshold].toDouble()
     )

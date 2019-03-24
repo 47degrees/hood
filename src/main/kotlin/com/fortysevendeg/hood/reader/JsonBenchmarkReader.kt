@@ -8,9 +8,9 @@ import arrow.effects.IO
 import arrow.effects.extensions.io.applicative.applicative
 import arrow.effects.fix
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.fortysevendeg.hood.JsonBenchmark
 import com.fortysevendeg.hood.JsonSupport
-import com.fortysevendeg.hood.Printer
+import com.fortysevendeg.hood.cleanKey
+import com.fortysevendeg.hood.models.JsonBenchmark
 import java.io.File
 import java.io.FileReader
 
@@ -20,7 +20,8 @@ object JsonBenchmarkReader : BenchmarkReader {
     IO(reader::readText).flatMap { content ->
       IO {
         JsonSupport.mapper.readValue<List<JsonBenchmark>>(content).k()
-          .map { it.copy(benchmark = Printer.cleanKey(it.benchmark)) }
+          .map { it.copy(benchmark = cleanKey(it.benchmark)) }
+          .map { it.copy(benchmark = cleanKey(it.benchmark)) }
       }
     }
 

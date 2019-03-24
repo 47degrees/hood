@@ -3,7 +3,8 @@ package com.fortysevendeg.hood
 import arrow.effects.IO
 import arrow.effects.extensions.io.fx.fx
 import arrow.effects.fix
-import com.fortysevendeg.hood.Printer.prettyPrintResult
+import com.fortysevendeg.hood.models.BenchmarkComparison
+import com.fortysevendeg.hood.models.OutputFileFormat
 import org.gradle.api.GradleException
 import java.io.File
 import java.io.FileWriter

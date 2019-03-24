@@ -1,4 +1,4 @@
-package com.fortysevendeg.hood
+package com.fortysevendeg.hood.models
 
 import arrow.core.None
 import arrow.core.Option
@@ -15,8 +15,8 @@ enum class OutputFileFormat {
   companion object {
 
     private fun toFileFormat(str: String): Option<OutputFileFormat> = when {
-      str.toLowerCase() == MD.toString()   -> OutputFileFormat.MD.some()
-      str.toLowerCase() == JSON.toString() -> OutputFileFormat.JSON.some()
+      str.toLowerCase() == MD.toString()   -> MD.some()
+      str.toLowerCase() == JSON.toString() -> JSON.some()
       else                                 -> None
     }
 
@@ -24,7 +24,7 @@ enum class OutputFileFormat {
       toFileFormat(file.extension.toLowerCase())
 
     fun toFileFormatOrRaise(str: String): IO<OutputFileFormat> =
-      OutputFileFormat.toFileFormat(str).fold({
+      toFileFormat(str).fold({
         IO.raiseError(GradleException("Unknown format to file output"))
       }) { IO { it } }
 

@@ -6,10 +6,14 @@ import arrow.effects.IO
 import arrow.effects.extensions.io.fx.fx
 import arrow.effects.fix
 import arrow.effects.handleErrorWith
-import com.fortysevendeg.hood.*
+import com.fortysevendeg.hood.Comparator
+import com.fortysevendeg.hood.JsonSupport
+import com.fortysevendeg.hood.OutputFile
 import com.fortysevendeg.hood.github.GhInfo
 import com.fortysevendeg.hood.github.GithubCommentIntegration
 import com.fortysevendeg.hood.github.GithubCommon
+import com.fortysevendeg.hood.models.BenchmarkComparison
+import com.fortysevendeg.hood.models.BenchmarkResult
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
