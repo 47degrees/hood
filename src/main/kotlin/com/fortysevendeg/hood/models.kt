@@ -93,7 +93,7 @@ typealias Benchmark = Coproduct2<CsvBenchmark, JsonBenchmark>
 
 data class BenchmarkComparison(
   val key: String,
-  val benchmark: List<Benchmark>,
+  val benchmarks: List<Benchmark>,
   val result: BenchmarkResult,
   val threshold: Double
 )

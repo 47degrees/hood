@@ -67,8 +67,7 @@ object Comparator {
     vararg benchmarkFiles: File
   ): IO<Map<String, List<Benchmark>>> = fx {
     val (csvFiles, jsonFiles) = benchmarkFiles.partition { file ->
-      BenchmarkFileFormat.getFileFormat(file).map { it == BenchmarkFileFormat.CSV }
-        .getOrElse { false }
+      BenchmarkFileFormat.getFileFormat(file).exists { it == BenchmarkFileFormat.CSV }
     }
 
     val csvBenchmarks = !CsvBenchmarkReader.readFilesToBenchmark(
@@ -86,10 +85,10 @@ object Comparator {
       }
 
     csvBenchmarks.foldLeft(jsonBenchmarks) { map, entry ->
-      map[entry.key].toOption().map { json ->
+      map[entry.key].toOption().fold({ map.plus(entry.toPair()) }) { json ->
         val fullEntry = entry.toPair().copy(second = entry.value.plus(json))
         map.plus(fullEntry)
-      }.getOrElse { map.plus(entry.toPair()) }
+      }
     }
 
   }
@@ -123,9 +122,7 @@ object Comparator {
     val isConsistent =
       previousBenchmarks.second.map { it.getKey() }.forAll { prevKey ->
         currentBenchmarks.values.toList().forAll { list ->
-          list.map { it.getKey() }.exists { currentKey ->
-            currentKey.substringAfterLast('.') == prevKey.substringAfterLast('.')
-          }
+          list.map { it.getKey() }.exists { it == prevKey }
         }
       }
 

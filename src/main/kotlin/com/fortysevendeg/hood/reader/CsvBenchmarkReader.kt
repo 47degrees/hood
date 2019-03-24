@@ -14,6 +14,7 @@ import arrow.effects.fix
 import arrow.syntax.collections.tail
 import com.fortysevendeg.hood.BenchmarkInconsistencyError
 import com.fortysevendeg.hood.CsvBenchmark
+import com.fortysevendeg.hood.Printer
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
@@ -29,7 +30,7 @@ object CsvBenchmarkReader : BenchmarkReader {
     threshold: Int
   ): CsvBenchmark =
     CsvBenchmark(
-      row[key].substringAfterLast('.'),
+      Printer.cleanKey(row[key]),
       row[column].toDouble(),
       row[threshold].toDouble()
     )
