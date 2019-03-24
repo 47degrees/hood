@@ -66,12 +66,12 @@ private fun List<BenchmarkComparison>.printJSONFormat(): String =
         Jackson {
           obj(
             "benchmark" to string("${bc.result.symbol()} ${bc.key}.${jsonBenchmark.benchmark}"),
-            "mode" to string(""),
+            "mode" to string(jsonBenchmark.mode),
             "primaryMetric" to obj(
-              "score" to string(""),
-              "scoreError" to string(""),
-              "scoreUnit" to string(""),
-              "rawData" to string("")
+              "score" to number(jsonBenchmark.primaryMetric.score),
+              "scoreError" to number(jsonBenchmark.primaryMetric.scoreError),
+              "scoreUnit" to string(jsonBenchmark.primaryMetric.scoreUnit),
+              "rawData" to array(jsonBenchmark.primaryMetric.rawData.map { arr -> array(arr.map(this::number)) })
             ),
             "secondaryMetrics" to obj()
           )

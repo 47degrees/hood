@@ -42,11 +42,7 @@ object OutputFile {
   ): IO<Unit> = fx {
     if (outputToFile)
       !OutputFileFormat.toFileFormatOrRaise(outputFormat).flatMap {
-        if (it == OutputFileFormat.JSON && allJson || it != OutputFileFormat.JSON)
-          writeOutputFile(path, result, it)
-        else raiseError<Unit>(
-          GradleException("Wrong output format selected, all the benchmarks must to be Json in order to print one")
-        )
+        writeOutputFile(path, result, it)
       }
     else !unit()
   }.fix()
