@@ -1,6 +1,6 @@
 [
   {
-    "benchmark": "Decoding.master",
+    "benchmark": "✓Decoding.master",
     "mode": "thrpt",
     "primaryMetric": {
       "score": 19206.255850270245,

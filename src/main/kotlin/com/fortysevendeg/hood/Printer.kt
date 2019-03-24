@@ -58,8 +58,7 @@ object Printer {
         |""".trimMargin()
     }
 
-  //Same format as input json but with the same key grouped as MD print(without icon)
-  //Custom serializer
+  //Same format as input json but with the same key grouped as MD print(with symbol)
   private fun List<BenchmarkComparison>.printJSONFormat(): String =
     JsonSupport.mapper.writeValueAsString(Jackson.array(this.flatMap { bc ->
       bc.benchmarks.map { it.select(Unit) }.map { maybeBenchmark ->
