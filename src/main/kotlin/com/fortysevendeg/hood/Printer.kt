@@ -69,7 +69,7 @@ private fun List<BenchmarkComparison>.printJSONFormat(): String =
             "mode" to string(jsonBenchmark.mode),
             "primaryMetric" to obj(
               "score" to number(jsonBenchmark.primaryMetric.score),
-              "scoreError" to number(jsonBenchmark.primaryMetric.scoreError),
+              "scoreError" to number(bc.threshold),
               "scoreUnit" to string(jsonBenchmark.primaryMetric.scoreUnit),
               "rawData" to array(jsonBenchmark.primaryMetric.rawData.map { arr -> array(arr.map(this::number)) })
             ),
