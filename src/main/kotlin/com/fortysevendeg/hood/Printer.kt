@@ -58,14 +58,14 @@ object Printer {
         |""".trimMargin()
     }
 
-  //Same format as input json but with the same key grouped as MD print(with symbol)
+  //Same format as input json but with the same key group as MD print(using symbol)
   private fun List<BenchmarkComparison>.printJSONFormat(): String =
     JsonSupport.mapper.writeValueAsString(Jackson.array(this.flatMap { bc ->
       bc.benchmarks.map { it.select(Unit) }.map { maybeBenchmark ->
         maybeBenchmark.fold(Jackson::obj) { jsonBenchmark ->
           Jackson {
             obj(
-              "benchmark" to string("${bc.key}.${jsonBenchmark.benchmark}")
+              "benchmark" to string("${bc.result.symbol()} ${bc.key}.${jsonBenchmark.benchmark}")
             )
           }
         }

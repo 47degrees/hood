@@ -1,6 +1,6 @@
 [
   {
-    "benchmark": "✓Decoding.master",
+    "benchmark": "✓ Decoding.master",
     "mode": "thrpt",
     "primaryMetric": {
       "score": 19206.255850270245,
@@ -37,7 +37,7 @@
     }
   },
   {
-    "benchmark": "Decoding.current",
+    "benchmark": "✓ Decoding.current",
     "primaryMetric": {
       "score": 34013.15005329637,
       "scoreError": 850.2391715190806,
