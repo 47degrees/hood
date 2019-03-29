@@ -16,6 +16,6 @@ elif [ "$TRAVIS_BRANCH" != "$BRANCH" ]; then
 elif ! [[ "$VERSION_NAME" =~ $VERSION_PATTERN ]]; then
   echo "Skipping snapshot deployment '$VERSION_NAME': This is probably a pre-release build"
 else
-  ./gradlew uploadArchives
+  ./gradlew bintrayPublish
   echo "Snapshot '$VERSION_NAME' deployed!"
 fi
