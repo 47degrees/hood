@@ -61,10 +61,14 @@ gradlePlugin {
   }
 }
 
+def findPropertyOrEnv(String key) {
+  [project.properties[key], System.getenv(key)].find { it != null }
+}
+
 bintray {
   publish = true
-  user = findProperty("BINTRAY_USER") ?: "no.bintray.user"
-  key = findProperty("BINTRAY_API_KEY") ?: "no.bintray.api.key"
+  user = findPropertyOrEnv("BINTRAY_USER") ?: "no.bintray.user"
+  key = findPropertyOrEnv("BINTRAY_API_KEY") ?: "no.bintray.api.key"
   publications = ['MyPublication']
   configurations = ['archives']
   pkg {

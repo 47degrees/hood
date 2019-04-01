@@ -2,10 +2,6 @@
 version = VERSION_NAME
 group = GROUP
 
-def findProperty(String key) {
-  [project.properties[key], System.getenv(key)].find { it != null }
-}
-
 def getReleaseRepositoryUrl() {
   return findProperty("RELEASE_REPOSITORY_URL") ?: "https://api.bintray.com/maven/47deg/hood/hood"
 }
