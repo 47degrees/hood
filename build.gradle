@@ -18,14 +18,15 @@ buildscript {
   }
 }
 
+apply plugin: 'kotlin'
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
 repositories {
   maven { url "https://dl.bintray.com/arrow-kt/arrow-kt/" }
   mavenCentral()
 }
-
-apply plugin: "kotlin"
-apply plugin: "java-gradle-plugin"
-apply plugin: "com.jfrog.bintray"
 
 apply from: rootProject.file("gradle/gradle-mvn-push.gradle")
 
@@ -71,11 +72,16 @@ gradlePlugin {
   }
 }
 
+def findPropertyOrEnv(String key) {
+  [project.properties[key], System.getenv(key)].find { it != null }
+}
+
 bintray {
   publish = true
-  user = project.hasProperty("bintrayUser") ? project.property("bintrayUser") : System.getenv("BINTRAY_USER")
-  key = project.hasProperty("bintrayApiKey") ? project.property("bintrayApiKey") : System.getenv("BINTRAY_API_KEY")
-  configurations = ["archives"]
+  user = findPropertyOrEnv("BINTRAY_USER") ?: "no.bintray.user"
+  key = findPropertyOrEnv("BINTRAY_API_KEY") ?: "no.bintray.api.key"
+  publications = ['MyPublication']
+  configurations = ['archives']
   pkg {
     repo = "hood"
     name = project.name
