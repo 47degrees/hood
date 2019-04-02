@@ -4,6 +4,7 @@ import arrow.core.None
 import arrow.core.Option
 import arrow.core.some
 import arrow.generic.coproduct2.Coproduct2
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import java.io.File
 
 enum class BenchmarkFileFormat {
@@ -68,6 +69,7 @@ data class CsvBenchmark(
 
 //Json benchmarks
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class JsonPrimaryMetric(
   val score: Double,
   val scoreError: Double,
@@ -75,6 +77,7 @@ data class JsonPrimaryMetric(
   val rawData: List<List<Double>>
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class JsonSecondaryMetric(
   val score: Double?,
   val scoreError: Double?,
@@ -82,6 +85,7 @@ data class JsonSecondaryMetric(
   val rawData: List<List<Double>>?
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class JsonBenchmark(
   val benchmark: String,
   val mode: String,

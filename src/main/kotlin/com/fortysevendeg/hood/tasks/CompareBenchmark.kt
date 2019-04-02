@@ -6,10 +6,7 @@ import com.fortysevendeg.hood.JsonSupport
 import com.fortysevendeg.hood.OutputFile
 import com.fortysevendeg.hood.prettyPrintResult
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFile
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
 import java.io.File
 
 open class CompareBenchmark : DefaultTask() {
@@ -43,6 +40,7 @@ open class CompareBenchmark : DefaultTask() {
 
   //Extra
   @get:Input
+  @Optional
   var threshold: Double? = project.objects.property(Double::class.java).orNull
 
   @TaskAction
