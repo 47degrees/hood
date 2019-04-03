@@ -21,7 +21,6 @@ object JsonBenchmarkReader : BenchmarkReader {
       IO {
         JsonSupport.mapper.readValue<List<JsonBenchmark>>(content).k()
           .map { it.copy(benchmark = cleanKey(it.benchmark)) }
-          .map { it.copy(benchmark = cleanKey(it.benchmark)) }
       }
     }
 
