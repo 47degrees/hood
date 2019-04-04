@@ -98,7 +98,6 @@ object Comparator {
     maybeThreshold: Option<Double>
   ): IO<List<BenchmarkComparison>> = fx {
 
-    //TODO Choose csv or json reader per file
     val previousBenchmarks: Pair<String, List<Benchmark>> =
       !readFilesToBenchmark(
         keyColumnName,
