@@ -18,17 +18,24 @@ import java.io.File
 
 object Comparator {
 
+  //Compare 2 benchmarks and get its result: Ok, Warning or Failure
   private fun compare(
     previous: Benchmark,
     current: Benchmark,
     threshold: Double
   ): BenchmarkResult =
     when {
-      previous.getScore() <= current.getScore() -> BenchmarkResult.OK
+      previous.getScore() <= current.getScore()             -> BenchmarkResult.OK
       previous.getScore() - current.getScore() <= threshold -> BenchmarkResult.WARN
-      else -> BenchmarkResult.FAILED
+      else                                                  -> BenchmarkResult.FAILED
     }
 
+  /**
+   * Get the branch benchmarks grouped by file name and one of the master benchmarks
+   * Filter out the keys non existing on master benchmark
+   * Compare and get the result
+   * @return A list of benchmarks with the file name as key and their result of compare them with the master benchmark
+   */
   private fun getCompareResults(
     currentBenchmarks: Map<String, List<Benchmark>>,
     prev: Benchmark,
@@ -42,20 +49,23 @@ object Comparator {
       entry.value.map { Pair(currentWithName, compare(prev, it, threshold)) }
     }
 
+  /**
+   * Build the comparison result with the master score on the first position
+   */
   private fun buildBenchmarkComparison(
     key: String,
     previous: Benchmark,
     result: Pair<List<Benchmark>, BenchmarkResult>
-  ): BenchmarkComparison {
-    val benchmarksWithName = result.first.plus(previous).reversed()
-    return BenchmarkComparison(
-      key,
-      benchmarksWithName,
-      result.second,
-      previous.getScoreError()
-    )
-  }
+  ): BenchmarkComparison = BenchmarkComparison(
+    key,
+    result.first.plus(previous).reversed(),
+    result.second,
+    previous.getScoreError()
+  )
 
+  /**
+   * Use csv or json reader depending on the file extension
+   */
   private fun readFilesToBenchmark(
     keyColumnName: String,
     compareColumnName: String,
@@ -114,6 +124,7 @@ object Comparator {
         *currentBenchmarkFiles.toTypedArray()
       )
 
+    //All the keys on master must to be on the branch benchmarks
     val isConsistent =
       previousBenchmarks.second.map { it.getKey() }.forAll { prevKey ->
         currentBenchmarks.values.toList().forAll { list ->
