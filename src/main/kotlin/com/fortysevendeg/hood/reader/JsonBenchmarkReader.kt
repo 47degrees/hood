@@ -27,9 +27,7 @@ object JsonBenchmarkReader : BenchmarkReader {
   fun readFilesToBenchmark(
     vararg files: File
   ): IO<Map<String, List<JsonBenchmark>>> =
-    files.toList().traverse(
-      IO.applicative()
-    ) { file ->
+    files.toList().traverse(IO.applicative()) { file ->
       IO { FileReader(file) }.bracket({ IO(it::close) }) { fileReader ->
         readJson(fileReader).map { file.nameWithoutExtension to it }
       }

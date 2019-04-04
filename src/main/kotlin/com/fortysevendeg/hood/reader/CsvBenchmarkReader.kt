@@ -79,9 +79,7 @@ object CsvBenchmarkReader : BenchmarkReader {
     thresholdColumn: String,
     vararg files: File
   ): IO<Map<String, List<CsvBenchmark>>> =
-    files.toList().traverse(
-      IO.applicative()
-    ) { file ->
+    files.toList().traverse(IO.applicative()) { file ->
       IO { FileReader(file) }.bracket({ IO(it::close) }) { fileReader ->
         readCSV(
           fileReader,
