@@ -26,7 +26,7 @@ object OutputFile {
 
     if (exists || !createFile(file))
       !IO { FileWriter(file) }.bracket({ IO(it::close) }) { writer ->
-        IO { writer.write(result.prettyPrintResult(format)) }
+        IO { writer.write(result.prettyOutputResult(format)) }
           .flatMap { IO(writer::flush) }
       }
     else !raiseError<Unit>(GradleException("Cannot create the file"))

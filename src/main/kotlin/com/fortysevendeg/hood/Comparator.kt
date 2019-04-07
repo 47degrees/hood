@@ -1,8 +1,6 @@
 package com.fortysevendeg.hood
 
-import arrow.core.Option
-import arrow.core.getOrElse
-import arrow.core.toOption
+import arrow.core.*
 import arrow.data.extensions.list.foldable.exists
 import arrow.data.extensions.list.foldable.forAll
 import arrow.data.extensions.list.semigroup.plus
@@ -106,7 +104,7 @@ object Comparator {
     compareColumnName: String,
     thresholdColumnName: String,
     maybeThreshold: Option<Double>
-  ): IO<List<BenchmarkComparison>> = fx {
+  ): IO<Either<BenchmarkComparisonError, List<BenchmarkComparison>>> = fx {
 
     val previousBenchmarks: Pair<String, List<Benchmark>> =
       !readFilesToBenchmark(
@@ -135,30 +133,16 @@ object Comparator {
     if (isConsistent)
       previousBenchmarks.second.flatMap { prev ->
         val previousWithName = prev.withName(previousBenchmarks.first)
-
         getCompareResults(
           currentBenchmarks,
           prev,
           maybeThreshold.getOrElse { prev.getScoreError() }).map {
           buildBenchmarkComparison(prev.getKey(), previousWithName, it)
         }
-      }
-    else listOf(
-      BenchmarkComparison(
-        "",
-        emptyList(),
-        BenchmarkResult.ERROR(BenchmarkInconsistencyError),
-        maybeThreshold.getOrElse { 0.0 }
-      )
-    )
+      }.right()
+    else BenchmarkComparisonError(BenchmarkInconsistencyError).left()
   }.fix().handleError {
-    listOf(
-      BenchmarkComparison(
-        "",
-        emptyList(),
-        BenchmarkResult.ERROR(it),
-        maybeThreshold.getOrElse { 0.0 })
-    )
+    BenchmarkComparisonError(it).left()
   }
 
 }

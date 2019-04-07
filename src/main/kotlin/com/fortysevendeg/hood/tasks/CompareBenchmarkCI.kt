@@ -1,5 +1,6 @@
 package com.fortysevendeg.hood.tasks
 
+import arrow.core.Either
 import arrow.core.toOption
 import arrow.data.extensions.list.foldable.nonEmpty
 import arrow.effects.IO
@@ -13,6 +14,7 @@ import com.fortysevendeg.hood.github.GhInfo
 import com.fortysevendeg.hood.github.GithubCommentIntegration
 import com.fortysevendeg.hood.github.GithubCommon
 import com.fortysevendeg.hood.models.BenchmarkComparison
+import com.fortysevendeg.hood.models.BenchmarkComparisonError
 import com.fortysevendeg.hood.models.BenchmarkResult
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -58,7 +60,7 @@ open class CompareBenchmarkCI : DefaultTask() {
   var token: String? = project.objects.property(String::class.java).orNull
 
   private fun getWrongResults(result: List<BenchmarkComparison>): List<BenchmarkComparison> =
-    result.filter { it.result::class == BenchmarkResult.ERROR::class || it.result::class == BenchmarkResult.FAILED::class }
+    result.filter { it.result::class == BenchmarkResult.FAILED::class }
 
   private fun compareCI(info: GhInfo, commitSha: String, pr: Int) = fx {
 
@@ -67,14 +69,17 @@ open class CompareBenchmarkCI : DefaultTask() {
       commitSha
     )
 
-    val result: List<BenchmarkComparison> = !Comparator.compareBenchmarks(
-      previousBenchmarkPath,
-      currentBenchmarkPath,
-      keyColumnName,
-      compareColumnName,
-      thresholdColumnName,
-      threshold.toOption()
-    )
+    val resultOrError: Either<BenchmarkComparisonError, List<BenchmarkComparison>> =
+      !Comparator.compareBenchmarks(
+        previousBenchmarkPath,
+        currentBenchmarkPath,
+        keyColumnName,
+        compareColumnName,
+        thresholdColumnName,
+        threshold.toOption()
+      )
+
+    val result = !resultOrError.getOrRaiseError(BenchmarkComparisonError::error)
 
     val previousComment = !GithubCommentIntegration.getPreviousCommentId(info, pr)
 

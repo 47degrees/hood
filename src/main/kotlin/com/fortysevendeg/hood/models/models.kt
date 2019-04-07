@@ -45,11 +45,6 @@ sealed class BenchmarkResult {
     override fun icon(): String = ":red_circle:"
   }
 
-  data class ERROR(val error: Throwable) : BenchmarkResult() {
-    override fun symbol(): String = "☠"
-    override fun icon(): String = ":skull_and_crossbones:"
-  }
-
 }
 
 object BenchmarkInconsistencyError :
@@ -101,3 +96,7 @@ data class BenchmarkComparison(
   val result: BenchmarkResult,
   val threshold: Double
 )
+
+data class BenchmarkComparisonError(val error: Throwable) {
+  fun symbol(): String = "☠"
+}

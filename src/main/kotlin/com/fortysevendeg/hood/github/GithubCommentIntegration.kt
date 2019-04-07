@@ -10,7 +10,7 @@ import com.fortysevendeg.hood.github.GithubCommon.raiseError
 import com.fortysevendeg.hood.models.BenchmarkComparison
 import com.fortysevendeg.hood.models.GhStatusState
 import com.fortysevendeg.hood.models.OutputFileFormat
-import com.fortysevendeg.hood.prettyPrintResult
+import com.fortysevendeg.hood.prettyOutputResult
 import org.http4k.core.Body
 import org.http4k.core.Method
 import org.http4k.core.Status
@@ -23,7 +23,7 @@ object GithubCommentIntegration {
   private const val commentIntro: String = "***Hood benchmark comparison:***"
 
   private fun generateCommentBody(results: List<BenchmarkComparison>): JsonNode {
-    val content = "$commentIntro\n${results.prettyPrintResult(OutputFileFormat.MD)}"
+    val content = "$commentIntro\n${results.prettyOutputResult(OutputFileFormat.MD)}"
 
     return Jackson {
       obj("body" to string(content))
