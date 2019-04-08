@@ -2,12 +2,12 @@ package com.fortysevendeg.hood.tasks
 
 import arrow.core.toOption
 import arrow.effects.IO
+import arrow.effects.extensions.io.fx.fx
 import arrow.effects.fix
-import arrow.effects.instances.io.monad.monad
-import com.fortysevendeg.hood.BenchmarkReader
-import com.fortysevendeg.hood.GhCreateCommit
-import com.fortysevendeg.hood.GhInfo
-import com.fortysevendeg.hood.GhUpdateCommit
+import com.fortysevendeg.hood.OutputFile
+import com.fortysevendeg.hood.github.GhCreateCommit
+import com.fortysevendeg.hood.github.GhInfo
+import com.fortysevendeg.hood.github.GhUpdateCommit
 import com.fortysevendeg.hood.github.GithubCommitIntegration
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -31,30 +31,28 @@ open class UploadBenchmark : DefaultTask() {
   var token: String? = project.objects.property(String::class.java).orNull
 
   @TaskAction
-  fun uploadBenchmark(): Unit = IO.monad().binding {
-    val branch: String = IO { System.getenv("TRAVIS_BRANCH") }.bind()
+  fun uploadBenchmark(): Unit = fx {
+    val branch: String = !IO { System.getenv("TRAVIS_BRANCH") }
 
-    val slug = IO { System.getenv("TRAVIS_REPO_SLUG").split('/') }.bind()
-    if (slug.size < 2)
-      IO.raiseError<Unit>(GradleException("Error reading env var: TRAVIS_REPO_SLUG")).bind()
+    val slug = !IO { System.getenv("TRAVIS_REPO_SLUG").split('/') }
+    if (slug.size < 2) !raiseError<Unit>(GradleException("Error reading env var: TRAVIS_REPO_SLUG"))
     val owner: String = slug.first()
     val repo: String = slug.last()
 
-    val token: String =
+    val (token: String) =
       token.toOption()
-        .fold({ IO.raiseError<String>(GradleException("Error getting Github token")) }) { IO { it } }
-        .bind()
+        .fold({ raiseError<String>(GradleException("Error getting Github token")) }) { IO { it } }
 
     val info = GhInfo(owner, repo, token)
 
     val fileSha =
-      GithubCommitIntegration.getFileSha(info, branch, benchmarkDestinationFromProjectRoot).bind()
+      !GithubCommitIntegration.getFileSha(info, branch, benchmarkDestinationFromProjectRoot)
 
-    val content = BenchmarkReader.readFileToBase64(benchmarkFile).bind()
+    val content = !OutputFile.readFileToBase64(benchmarkFile)
 
     fileSha.fold({
       val createCommit = GhCreateCommit(commitMessage, content, branch)
-      GithubCommitIntegration.createFileCommit(
+      !GithubCommitIntegration.createFileCommit(
         info,
         benchmarkDestinationFromProjectRoot,
         createCommit
@@ -62,12 +60,12 @@ open class UploadBenchmark : DefaultTask() {
     }, {
       val updateCommit =
         GhUpdateCommit(commitMessage, content, it.sha, branch)
-      GithubCommitIntegration.updateFileCommit(
+      !GithubCommitIntegration.updateFileCommit(
         info,
         benchmarkDestinationFromProjectRoot,
         updateCommit
       )
-    }).bind()
+    })
 
   }.fix().unsafeRunSync()
 

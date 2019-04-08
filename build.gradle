@@ -1,8 +1,9 @@
 buildscript {
   ext {
-    kotlinVersion = '1.3.21'
-    arrowVersion = "0.8.2"
+    kotlinVersion = "1.3.21"
+    arrowVersion = "0.9.0"
     http4kVersion = "3.113.0"
+    kotlintestVersion = "3.3.0"
   }
 
   repositories {
@@ -13,14 +14,14 @@ buildscript {
 
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
   }
 }
 
-apply plugin: 'kotlin'
-apply plugin: 'java-gradle-plugin'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'maven-publish'
+apply plugin: "kotlin"
+apply plugin: "java-gradle-plugin"
+apply plugin: "com.jfrog.bintray"
+apply plugin: "maven-publish"
 
 repositories {
   maven { url "https://dl.bintray.com/arrow-kt/arrow-kt/" }
@@ -29,27 +30,37 @@ repositories {
 
 apply from: rootProject.file("gradle/gradle-mvn-push.gradle")
 
+test {
+  useJUnitPlatform()
+}
+
 dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
 
-  implementation "io.arrow-kt:arrow-core:$arrowVersion"
-  implementation "io.arrow-kt:arrow-data:$arrowVersion"
+  implementation "io.arrow-kt:arrow-core-data:$arrowVersion"
+  implementation "io.arrow-kt:arrow-core-extensions:$arrowVersion"
   implementation "io.arrow-kt:arrow-syntax:$arrowVersion"
   implementation "io.arrow-kt:arrow-typeclasses:$arrowVersion"
-  implementation "io.arrow-kt:arrow-effects:$arrowVersion"
-  implementation "io.arrow-kt:arrow-effects-instances:$arrowVersion"
-  implementation "io.arrow-kt:arrow-data-instances-effects:$arrowVersion"
+  implementation "io.arrow-kt:arrow-extras-data:$arrowVersion"
+  implementation "io.arrow-kt:arrow-extras-extensions:$arrowVersion"
+  implementation "io.arrow-kt:arrow-effects-data:$arrowVersion"
+  implementation "io.arrow-kt:arrow-effects-extensions:$arrowVersion"
+  implementation "io.arrow-kt:arrow-effects-io-extensions:$arrowVersion"
+  implementation "io.arrow-kt:arrow-generic:$arrowVersion"
 
   implementation "org.http4k:http4k-core:$http4kVersion"
   implementation "org.http4k:http4k-client-okhttp:$http4kVersion"
   implementation "org.http4k:http4k-format-jackson:$http4kVersion"
 
   implementation "org.apache.commons:commons-csv:1.5"
+  testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintestVersion"
+  testImplementation "io.kotlintest:kotlintest-assertions-arrow:$kotlintestVersion"
+
 }
 
 sourceSets {
-  main.java.srcDirs += 'src/main/kotlin'
-  test.java.srcDirs += 'src/test/kotlin'
+  main.java.srcDirs += "src/main/kotlin"
+  test.java.srcDirs += "src/test/kotlin"
 }
 
 gradlePlugin {
@@ -69,14 +80,14 @@ bintray {
   publish = true
   user = findPropertyOrEnv("BINTRAY_USER") ?: "no.bintray.user"
   key = findPropertyOrEnv("BINTRAY_API_KEY") ?: "no.bintray.api.key"
-  publications = ['MyPublication']
-  configurations = ['archives']
+  publications = ["MyPublication"]
+  configurations = ["archives"]
   pkg {
-    repo = 'hood'
+    repo = "hood"
     name = project.name
     userOrg = POM_DEVELOPER_ID
-    licenses = ['Apache-2.0']
-    vcsUrl = 'https://github.com/47deg/hood.git'
+    licenses = ["Apache-2.0"]
+    vcsUrl = "https://github.com/47deg/hood.git"
   }
 }
 

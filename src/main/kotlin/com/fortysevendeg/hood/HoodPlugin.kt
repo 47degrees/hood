@@ -6,6 +6,7 @@ import com.fortysevendeg.hood.tasks.UploadBenchmark
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+@Suppress("unused")
 open class HoodPlugin : Plugin<Project> {
 
   override fun apply(project: Project): Unit = project.run {
@@ -16,6 +17,6 @@ open class HoodPlugin : Plugin<Project> {
   }
 
   object Settings {
-    const val group = "com.fortysevendeg.hood"
+    const val group: String = "com.fortysevendeg.hood"
   }
 }

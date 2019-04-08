@@ -4,10 +4,6 @@ import arrow.core.None
 import arrow.core.Option
 import arrow.core.some
 import arrow.effects.IO
-import com.fortysevendeg.hood.GhCreateCommit
-import com.fortysevendeg.hood.GhFileSha
-import com.fortysevendeg.hood.GhInfo
-import com.fortysevendeg.hood.GhUpdateCommit
 import com.fortysevendeg.hood.github.GithubCommon.buildRequest
 import com.fortysevendeg.hood.github.GithubCommon.client
 import com.fortysevendeg.hood.github.GithubCommon.raiseError

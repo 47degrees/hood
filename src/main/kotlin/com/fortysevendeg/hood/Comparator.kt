@@ -1,89 +1,148 @@
 package com.fortysevendeg.hood
 
+import arrow.core.*
+import arrow.data.extensions.list.foldable.exists
+import arrow.data.extensions.list.foldable.forAll
+import arrow.data.extensions.list.semigroup.plus
+import arrow.data.foldLeft
 import arrow.effects.IO
+import arrow.effects.extensions.io.applicativeError.handleError
+import arrow.effects.extensions.io.fx.fx
 import arrow.effects.fix
-import arrow.effects.instances.io.applicativeError.handleError
-import arrow.effects.instances.io.monad.monad
-import arrow.instances.list.foldable.exists
-import arrow.instances.list.foldable.forAll
+import com.fortysevendeg.hood.models.*
+import com.fortysevendeg.hood.reader.CsvBenchmarkReader
+import com.fortysevendeg.hood.reader.JsonBenchmarkReader
 import java.io.File
 
 object Comparator {
 
-  private fun compare(previous: Benchmark, current: Benchmark, threshold: Int): BenchmarkResult =
+  //Compare 2 benchmarks and get its result: Ok, Warning or Failure
+  private fun compare(
+    previous: Benchmark,
+    current: Benchmark,
+    threshold: Double
+  ): BenchmarkResult =
     when {
-      previous.score <= current.score             -> BenchmarkResult.OK
-      previous.score - current.score <= threshold -> BenchmarkResult.WARN
-      else                                        -> BenchmarkResult.FAILED
+      previous.getScore() <= current.getScore()             -> BenchmarkResult.OK
+      previous.getScore() - current.getScore() <= threshold -> BenchmarkResult.WARN
+      else                                                  -> BenchmarkResult.FAILED
     }
 
+  /**
+   * Get the branch benchmarks grouped by file name and one of the master benchmarks
+   * Filter out the keys non existing on master benchmark
+   * Compare and get the result
+   * @return A list of benchmarks with the file name as key and their result of compare them with the master benchmark
+   */
   private fun getCompareResults(
     currentBenchmarks: Map<String, List<Benchmark>>,
     prev: Benchmark,
-    threshold: Int
+    threshold: Double
   ): List<Pair<List<Benchmark>, BenchmarkResult>> =
     currentBenchmarks.mapValues {
-      it.value.filter { current -> prev.key == current.key }
-    }.flatMap {
+      it.value.filter { current -> prev.getKey() == current.getKey() }
+    }.flatMap { entry ->
       val currentWithName: List<Benchmark> =
-        it.value.map { current -> Benchmark(it.key, current.score) }
-      it.value.map { current -> Pair(currentWithName, compare(prev, current, threshold)) }
+        entry.value.map { it.withName(entry.key) }
+      entry.value.map { Pair(currentWithName, compare(prev, it, threshold)) }
     }
 
+  /**
+   * Build the comparison result with the master score on the first position
+   */
   private fun buildBenchmarkComparison(
     key: String,
     previous: Benchmark,
     result: Pair<List<Benchmark>, BenchmarkResult>
-  ): BenchmarkComparison {
-    val benchmarksWithName = result.first.plus(previous).reversed()
-    return BenchmarkComparison(key, benchmarksWithName, result.second)
+  ): BenchmarkComparison = BenchmarkComparison(
+    key,
+    result.first.plus(previous).reversed(),
+    result.second,
+    previous.getScoreError()
+  )
+
+  /**
+   * Use csv or json reader depending on the file extension
+   */
+  private fun readFilesToBenchmark(
+    keyColumnName: String,
+    compareColumnName: String,
+    thresholdColumnName: String,
+    vararg benchmarkFiles: File
+  ): IO<Map<String, List<Benchmark>>> = fx {
+    val (csvFiles, jsonFiles) = benchmarkFiles.partition { file ->
+      BenchmarkFileFormat.getFileFormat(file).exists { it == BenchmarkFileFormat.CSV }
+    }
+
+    val csvBenchmarks = !CsvBenchmarkReader.readFilesToBenchmark(
+      keyColumnName,
+      compareColumnName,
+      thresholdColumnName,
+      *csvFiles.toTypedArray()
+    ).map { map ->
+      map.mapValues { entry -> entry.value.map(::benchmarkOf) }
+    }
+
+    val jsonBenchmarks =
+      !JsonBenchmarkReader.readFilesToBenchmark(*jsonFiles.toTypedArray()).map { map ->
+        map.mapValues { entry -> entry.value.map(::benchmarkOf) }
+      }
+
+    csvBenchmarks.foldLeft(jsonBenchmarks) { map, entry ->
+      map[entry.key].toOption().fold({ map.plus(entry.toPair()) }) { json ->
+        val fullEntry = entry.toPair().copy(second = entry.value.plus(json))
+        map.plus(fullEntry)
+      }
+    }
+
   }
 
-  fun compareCsv(
+  fun compareBenchmarks(
     previousBenchmarkFile: File,
     currentBenchmarkFiles: List<File>,
-    threshold: Int,
     keyColumnName: String,
-    compareColumnName: String
-  ): IO<List<BenchmarkComparison>> = IO.monad().binding {
-    //List of BenchmarkComparison
+    compareColumnName: String,
+    thresholdColumnName: String,
+    maybeThreshold: Option<Double>
+  ): IO<Either<BenchmarkComparisonError, List<BenchmarkComparison>>> = fx {
 
     val previousBenchmarks: Pair<String, List<Benchmark>> =
-      BenchmarkReader.readFilesToBenchmark(keyColumnName, compareColumnName, previousBenchmarkFile)
-        .bind()
-        .entries.first().toPair()
-
-    val currentBenchmarks: Map<String, List<Benchmark>> =
-      BenchmarkReader.readFilesToBenchmark(
+      !readFilesToBenchmark(
         keyColumnName,
         compareColumnName,
-        *currentBenchmarkFiles.toTypedArray()
-      ).bind()
+        thresholdColumnName,
+        previousBenchmarkFile
+      ).map { it.entries.first().toPair() }
 
-    val isConsistent = previousBenchmarks.second.forAll { prev ->
-      currentBenchmarks.values.toList()
-        .forAll {
-          it.exists { current ->
-            current.key.substringAfterLast('.') == prev.key.substringAfterLast('.')
-          }
+    val currentBenchmarks: Map<String, List<Benchmark>> =
+      !readFilesToBenchmark(
+        keyColumnName,
+        compareColumnName,
+        thresholdColumnName,
+        *currentBenchmarkFiles.toTypedArray()
+      )
+
+    //All the keys on master must to be on the branch benchmarks
+    val isConsistent =
+      previousBenchmarks.second.map { it.getKey() }.forAll { prevKey ->
+        currentBenchmarks.values.toList().forAll { list ->
+          list.map { it.getKey() }.exists { it == prevKey }
         }
-    }
+      }
 
     if (isConsistent)
       previousBenchmarks.second.flatMap { prev ->
-        val previousWithName = Benchmark(previousBenchmarks.first, prev.score)
-
-        getCompareResults(currentBenchmarks, prev, threshold).map {
-          buildBenchmarkComparison(prev.key, previousWithName, it)
+        val previousWithName = prev.withName(previousBenchmarks.first)
+        getCompareResults(
+          currentBenchmarks,
+          prev,
+          maybeThreshold.getOrElse { prev.getScoreError() }).map {
+          buildBenchmarkComparison(prev.getKey(), previousWithName, it)
         }
-      }
-    else listOf(
-      BenchmarkComparison(
-        "",
-        emptyList(),
-        BenchmarkResult.ERROR(BenchmarkInconsistencyError)
-      )
-    )
-  }.fix().handleError { listOf(BenchmarkComparison("", emptyList(), BenchmarkResult.ERROR(it))) }
+      }.right()
+    else BenchmarkComparisonError(BenchmarkInconsistencyError).left()
+  }.fix().handleError {
+    BenchmarkComparisonError(it).left()
+  }
 
 }

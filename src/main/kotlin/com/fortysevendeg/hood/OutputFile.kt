@@ -1,53 +1,53 @@
 package com.fortysevendeg.hood
 
 import arrow.effects.IO
+import arrow.effects.extensions.io.fx.fx
 import arrow.effects.fix
-import arrow.effects.instances.io.monad.monad
-import com.fortysevendeg.hood.syntax.prettyPrintResult
-import com.fortysevendeg.hood.syntax.toFileFormat
+import com.fortysevendeg.hood.models.BenchmarkComparison
+import com.fortysevendeg.hood.models.OutputFileFormat
 import org.gradle.api.GradleException
 import java.io.File
 import java.io.FileWriter
+import java.util.Base64
 
 object OutputFile {
 
   private fun createFile(file: File): IO<Boolean> =
-    IO { file.parentFile.mkdirs() }.map { file.createNewFile() }
+    IO(file.parentFile::mkdirs).map { file.createNewFile() }
 
   private fun writeOutputFile(
     path: String,
     result: List<BenchmarkComparison>,
-    format: FileFormat
-  ): IO<Unit> = IO.monad().binding {
+    format: OutputFileFormat
+  ): IO<Unit> = fx {
 
-    val file = IO { File("$path.$format") }.bind()
-    val exists = IO { file.exists() }.bind()
+    val file = !effect { File("$path.$format") }
+    val exists = !effect { file.exists() }
 
-    if (exists || createFile(file).bind()) {
-
-      val writer = IO { FileWriter(file) }.bind()
-
-      IO { writer.write(result.prettyPrintResult(format)) }.bind()
-      IO { writer.flush() }.bind()
-      IO { writer.close() }.bind()
-
-    } else IO.raiseError<Unit>(GradleException("Cannot create the file")).bind()
+    if (exists || !createFile(file))
+      !IO { FileWriter(file) }.bracket({ IO(it::close) }) { writer ->
+        IO { writer.write(result.prettyOutputResult(format)) }
+          .flatMap { IO(writer::flush) }
+      }
+    else !raiseError<Unit>(GradleException("Cannot create the file"))
 
   }.fix()
 
   fun sendOutputToFile(
     outputToFile: Boolean,
+    allJson: Boolean,
     path: String,
     result: List<BenchmarkComparison>,
     outputFormat: String
-  ): IO<Unit> = IO.monad().binding {
-    if (outputToFile) {
-
-      outputFormat.toFileFormat().fold({
-        IO.raiseError<Unit>(GradleException("Unknown format to file output")).bind()
-      }, { writeOutputFile(path, result, it).bind() })
-
-    } else IO.unit.bind()
+  ): IO<Unit> = fx {
+    if (outputToFile)
+      !OutputFileFormat.toFileFormatOrRaise(outputFormat).flatMap {
+        writeOutputFile(path, result, it)
+      }
+    else !unit()
   }.fix()
+
+  fun readFileToBase64(file: File): IO<String> =
+    IO { Base64.getEncoder().encodeToString(file.readBytes()) }
 
 }

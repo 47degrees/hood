@@ -12,13 +12,13 @@ def getSnapshotRepositoryUrl() {
 task sourcesJar(type: Jar, dependsOn: classes) {
   archiveClassifier = "sources"
   from sourceSets.main.allSource,
-      'build/generated/source/kapt/main',
-      'build/generated/source/kapt/debug',
-      'build/generated/source/kapt/release',
-      'build/generated/source/kaptKotlin/main',
-      'build/generated/source/kaptKotlin/debug',
-      'build/generated/source/kaptKotlin/release',
-      'build/tmp/kapt/main/kotlinGenerated'
+      "build/generated/source/kapt/main",
+      "build/generated/source/kapt/debug",
+      "build/generated/source/kapt/release",
+      "build/generated/source/kaptKotlin/main",
+      "build/generated/source/kaptKotlin/debug",
+      "build/generated/source/kaptKotlin/release",
+      "build/tmp/kapt/main/kotlinGenerated"
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -68,7 +68,7 @@ publishing {
     maven {
       def releasesRepoUrl = getReleaseRepositoryUrl()
       def snapshotsRepoUrl = getSnapshotRepositoryUrl()
-      url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+      url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
     }
   }
 }

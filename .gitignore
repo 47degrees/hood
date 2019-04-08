@@ -1,11 +1,10 @@
 ### Kotlin
+.kotlintest
 
-# Compiled class file
-*.class
-
-# Log file
+### Log file
 *.log
-# Package Files #
+
+### Package Files
 *.jar
 
 ### Gradle
@@ -13,9 +12,5 @@
 build/
 !gradle-wrapper.jar
 
-# IntelliJ project files
+### IntelliJ project files
 .idea
-*.iml
-
-Benchmarks
-*.csv
