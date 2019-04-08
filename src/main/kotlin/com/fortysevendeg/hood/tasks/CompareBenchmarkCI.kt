@@ -18,10 +18,7 @@ import com.fortysevendeg.hood.models.BenchmarkComparisonError
 import com.fortysevendeg.hood.models.BenchmarkResult
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFile
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
 import java.io.File
 
 open class CompareBenchmarkCI : DefaultTask() {
@@ -55,6 +52,7 @@ open class CompareBenchmarkCI : DefaultTask() {
 
   //Extra
   @get:Input
+  @Optional
   var threshold: Double? = project.objects.property(Double::class.java).orNull
   @get:Input
   var token: String? = project.objects.property(String::class.java).orNull
