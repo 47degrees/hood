@@ -16,6 +16,8 @@
   - **compareColumnName**: Column name of the column to compare (the values must to be a `Double`). By default: `Score`.
   - **thresholdColumnName**: Column name to get the threshold per benchmark. By default: `Score Error (99.9%)`.
   - **threshold**: Maximum differentiation for negative result. Optional.
+  - **include**: Regular expression to include only the benchmarks with a matching key. Optional.
+  - **exclude**: Regular expression to exclude the benchmarks using its key. Optional.
   
  The `compareBenchmarksCI` task also needs an extra parameter, **token**, the `Github` access token. 
  At this moment, only `travis-ci` is supported.
