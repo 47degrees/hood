@@ -55,6 +55,14 @@ open class CompareBenchmarkCI : DefaultTask() {
   @Optional
   var threshold: Double? = project.objects.property(Double::class.java).orNull
   @get:Input
+  @Optional
+  var include: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  @Optional
+  var exclude: String? = project.objects.property(String::class.java).orNull
+
+  //CI
+  @get:Input
   var token: String? = project.objects.property(String::class.java).orNull
 
   private fun getWrongResults(result: List<BenchmarkComparison>): List<BenchmarkComparison> =
@@ -74,7 +82,9 @@ open class CompareBenchmarkCI : DefaultTask() {
         keyColumnName,
         compareColumnName,
         thresholdColumnName,
-        threshold.toOption()
+        threshold.toOption(),
+        include.toOption().map(String::toRegex),
+        exclude.toOption().map(String::toRegex)
       )
 
     val result = !resultOrError.getOrRaiseError(BenchmarkComparisonError::error)
