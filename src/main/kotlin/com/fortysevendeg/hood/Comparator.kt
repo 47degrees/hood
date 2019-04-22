@@ -120,7 +120,9 @@ object Comparator {
     compareColumnName: String,
     thresholdColumnName: String,
     maybeGeneralThreshold: Option<Double>,
-    maybeBenchmarkThreshold: Option<Map<String, Double>>
+    maybeBenchmarkThreshold: Option<Map<String, Double>>,
+    includeRegex: Option<Regex>,
+    excludeRegex: Option<Regex>
   ): IO<Either<BenchmarkComparisonError, List<BenchmarkComparison>>> = fx {
 
     val previousBenchmarks: Pair<String, List<Benchmark>> =
@@ -139,20 +141,27 @@ object Comparator {
         *currentBenchmarkFiles.toTypedArray()
       )
 
+    val previousBenchmarksAfterFilter: Pair<String, List<Benchmark>> =
+      previousBenchmarks.copy(
+        second = previousBenchmarks.second.filterBenchmarkIE(includeRegex, excludeRegex)
+      )
+    val currentBenchmarksAfterFilter: Map<String, List<Benchmark>> =
+      currentBenchmarks.mapValues { it.value.filterBenchmarkIE(includeRegex, excludeRegex) }
+
     //All the keys on master must to be on the branch benchmarks
     val isConsistent =
-      previousBenchmarks.second.map { it.getKey() }.forAll { prevKey ->
+      previousBenchmarksAfterFilter.second.map { it.getKey() }.forAll { prevKey ->
         currentBenchmarks.values.toList().forAll { list ->
           list.map { it.getKey() }.exists { it == prevKey }
         }
       }
 
     if (isConsistent)
-      previousBenchmarks.second.flatMap { prev ->
+      previousBenchmarksAfterFilter.second.flatMap { prev ->
         val threshold = selectThreshold(prev, maybeGeneralThreshold, maybeBenchmarkThreshold)
-        val previousModified = prev.withName(previousBenchmarks.first).withThreshold(threshold)
+        val previousModified = prev.withName(previousBenchmarksAfterFilter.first).withThreshold(threshold)
 
-        getCompareResults(currentBenchmarks, prev, threshold).map {
+        getCompareResults(currentBenchmarksAfterFilter, prev, threshold).map {
           buildBenchmarkComparison(prev.getKey(), previousModified, it)
         }
       }.right()

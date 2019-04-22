@@ -48,6 +48,12 @@ open class CompareBenchmark : DefaultTask() {
   @Optional
   var benchmarkThreshold: Map<String, Double>? =
     project.objects.mapProperty(String::class.java, Double::class.java).orNull
+  @get:Input
+  @Optional
+  var include: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  @Optional
+  var exclude: String? = project.objects.property(String::class.java).orNull
 
   @TaskAction
   fun compareBenchmark(): Unit =
@@ -58,7 +64,9 @@ open class CompareBenchmark : DefaultTask() {
       compareColumnName,
       thresholdColumnName,
       generalThreshold.toOption(),
-      benchmarkThreshold.toOption()
+      benchmarkThreshold.toOption(),
+      include.toOption().map(String::toRegex),
+      exclude.toOption().map(String::toRegex)
     ).flatMap {
       println(it.prettyOutputResult())
       it.fromEither(BenchmarkComparisonError::error)
