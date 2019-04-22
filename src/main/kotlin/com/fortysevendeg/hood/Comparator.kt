@@ -149,13 +149,11 @@ object Comparator {
 
     if (isConsistent)
       previousBenchmarks.second.flatMap { prev ->
-        val previousWithName = prev.withName(previousBenchmarks.first)
-        getCompareResults(
-          currentBenchmarks,
-          prev,
-          selectThreshold(prev, maybeGeneralThreshold, maybeBenchmarkThreshold)
-        ).map {
-          buildBenchmarkComparison(prev.getKey(), previousWithName, it)
+        val threshold = selectThreshold(prev, maybeGeneralThreshold, maybeBenchmarkThreshold)
+        val previousModified = prev.withName(previousBenchmarks.first).withThreshold(threshold)
+
+        getCompareResults(currentBenchmarks, prev, threshold).map {
+          buildBenchmarkComparison(prev.getKey(), previousModified, it)
         }
       }.right()
     else BenchmarkComparisonError(BenchmarkInconsistencyError).left()

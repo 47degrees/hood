@@ -17,3 +17,8 @@ fun Benchmark.getScoreError(): Double =
 
 fun Benchmark.withName(name: String): Benchmark =
   this.fold({ benchmarkOf(it.copy(key = name)) }, { benchmarkOf(it.copy(benchmark = name)) })
+
+fun Benchmark.withThreshold(threshold: Double): Benchmark =
+  this.fold(
+    { benchmarkOf(it.copy(scoreError = threshold)) },
+    { benchmarkOf(it.copy(primaryMetric = it.primaryMetric.copy(scoreError = threshold))) })
