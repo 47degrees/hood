@@ -28,6 +28,7 @@
  ***Notes***: Currently **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available.
  
  ### Send output to a file
+ 
  Both task can send the result to a file, just need to fulfill the following parameters:
   - **outputToFile**: If send the output to a file. By default: `false`.
   - **outputPath**: The path to the output file. By default: `./hood/comparison`.
