@@ -25,7 +25,7 @@
  The `compareBenchmarksCI` task also needs an extra parameter, **token**, the `Github` access token. 
  At this moment, only `travis-ci` is supported.
 
- ***Notes***: Currently **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available.
+ ***Note***: Currently **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available.
  
  ### Send output to a file
  
