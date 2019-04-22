@@ -19,10 +19,13 @@
   - **include**: Regular expression to include only the benchmarks with a matching key. Optional.
   - **exclude**: Regular expression to exclude the benchmarks using its key. Optional.
   
+ The `include/exclude` feature use the cleaned key from benchmarks. 
+ This means the key for `hood.comparing` will be `Comparing` with the capitalization.
+ 
  The `compareBenchmarksCI` task also needs an extra parameter, **token**, the `Github` access token. 
  At this moment, only `travis-ci` is supported.
- 
- ***Note***: Currently **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available.
+
+ ***Notes***: Currently **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available.
  
  ### Send output to a file
  Both task can send the result to a file, just need to fulfill the following parameters:
