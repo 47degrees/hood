@@ -97,13 +97,30 @@ object Comparator {
 
   }
 
+  /**
+   * Select threshold between all the possibilities
+   * If there is benchmark threshold we'll use that.
+   * If not we use the general.
+   * If any of both is defined by default the benchmark one.
+   */
+  private fun selectThreshold(
+    masterBenchmark: Benchmark,
+    generalThreshold: Option<Double>,
+    benchmarkThreshold: Option<Map<String, Double>>
+  ): Double {
+    val general = generalThreshold.getOrElse { masterBenchmark.getScoreError() }
+    return benchmarkThreshold.flatMap { it[masterBenchmark.getKey()].toOption() }
+      .getOrElse { general }
+  }
+
   fun compareBenchmarks(
     previousBenchmarkFile: File,
     currentBenchmarkFiles: List<File>,
     keyColumnName: String,
     compareColumnName: String,
     thresholdColumnName: String,
-    maybeThreshold: Option<Double>
+    maybeGeneralThreshold: Option<Double>,
+    maybeBenchmarkThreshold: Option<Map<String, Double>>
   ): IO<Either<BenchmarkComparisonError, List<BenchmarkComparison>>> = fx {
 
     val previousBenchmarks: Pair<String, List<Benchmark>> =
@@ -136,7 +153,8 @@ object Comparator {
         getCompareResults(
           currentBenchmarks,
           prev,
-          maybeThreshold.getOrElse { prev.getScoreError() }).map {
+          selectThreshold(prev, maybeGeneralThreshold, maybeBenchmarkThreshold)
+        ).map {
           buildBenchmarkComparison(prev.getKey(), previousWithName, it)
         }
       }.right()
