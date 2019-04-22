@@ -15,7 +15,8 @@
   - **keyColumnName**: Column name to distinct each benchmark on the comparison. By default: `Benchmark`.
   - **compareColumnName**: Column name of the column to compare (the values must to be a `Double`). By default: `Score`.
   - **thresholdColumnName**: Column name to get the threshold per benchmark. By default: `Score Error (99.9%)`.
-  - **threshold**: Maximum differentiation for negative result. Optional.
+  - **generalThreshold**: Common threshold to all benchmarks overriding the value coming from `thresholdColumnName`. Optional.
+  - **benchmarkThreshold**: `Map` with a custom threshold per benchmark key overriding the value coming from `thresholdColumnName` or `generalThreshold`. Optional.
   
  The `compareBenchmarksCI` task also needs an extra parameter, **token**, the `Github` access token. 
  At this moment, only `travis-ci` is supported.
