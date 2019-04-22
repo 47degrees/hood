@@ -97,13 +97,30 @@ object Comparator {
 
   }
 
+  /**
+   * Select threshold between all the possibilities
+   * If there is benchmark threshold we'll use that.
+   * If not we use the general.
+   * If none are defined, is used the one in the benchmark.
+   */
+  private fun selectThreshold(
+    masterBenchmark: Benchmark,
+    generalThreshold: Option<Double>,
+    benchmarkThreshold: Option<Map<String, Double>>
+  ): Double {
+    val general = generalThreshold.getOrElse { masterBenchmark.getScoreError() }
+    return benchmarkThreshold.flatMap { it[masterBenchmark.getKey()].toOption() }
+      .getOrElse { general }
+  }
+
   fun compareBenchmarks(
     previousBenchmarkFile: File,
     currentBenchmarkFiles: List<File>,
     keyColumnName: String,
     compareColumnName: String,
     thresholdColumnName: String,
-    maybeThreshold: Option<Double>,
+    maybeGeneralThreshold: Option<Double>,
+    maybeBenchmarkThreshold: Option<Map<String, Double>>,
     includeRegex: Option<Regex>,
     excludeRegex: Option<Regex>
   ): IO<Either<BenchmarkComparisonError, List<BenchmarkComparison>>> = fx {
@@ -141,12 +158,11 @@ object Comparator {
 
     if (isConsistent)
       previousBenchmarksAfterFilter.second.flatMap { prev ->
-        val previousWithName = prev.withName(previousBenchmarksAfterFilter.first)
-        getCompareResults(
-          currentBenchmarksAfterFilter,
-          prev,
-          maybeThreshold.getOrElse { prev.getScoreError() }).map {
-          buildBenchmarkComparison(prev.getKey(), previousWithName, it)
+        val threshold = selectThreshold(prev, maybeGeneralThreshold, maybeBenchmarkThreshold)
+        val previousModified = prev.withName(previousBenchmarksAfterFilter.first).withThreshold(threshold)
+
+        getCompareResults(currentBenchmarksAfterFilter, prev, threshold).map {
+          buildBenchmarkComparison(prev.getKey(), previousModified, it)
         }
       }.right()
     else BenchmarkComparisonError(BenchmarkInconsistencyError).left()

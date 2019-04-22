@@ -53,7 +53,11 @@ open class CompareBenchmarkCI : DefaultTask() {
   //Extra
   @get:Input
   @Optional
-  var threshold: Double? = project.objects.property(Double::class.java).orNull
+  var generalThreshold: Double? = project.objects.property(Double::class.java).orNull
+  @get:Input
+  @Optional
+  var benchmarkThreshold: Map<String, Double>? =
+    project.objects.mapProperty(String::class.java, Double::class.java).orNull
   @get:Input
   @Optional
   var include: String? = project.objects.property(String::class.java).orNull
@@ -82,7 +86,8 @@ open class CompareBenchmarkCI : DefaultTask() {
         keyColumnName,
         compareColumnName,
         thresholdColumnName,
-        threshold.toOption(),
+        generalThreshold.toOption(),
+        benchmarkThreshold.toOption(),
         include.toOption().map(String::toRegex),
         exclude.toOption().map(String::toRegex)
       )
