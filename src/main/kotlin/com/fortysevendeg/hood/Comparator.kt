@@ -101,7 +101,7 @@ object Comparator {
    * Select threshold between all the possibilities
    * If there is benchmark threshold we'll use that.
    * If not we use the general.
-   * If any of both is defined by default the benchmark one.
+   * If none are defined, is used the one in the benchmark.
    */
   private fun selectThreshold(
     masterBenchmark: Benchmark,
