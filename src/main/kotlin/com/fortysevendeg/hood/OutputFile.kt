@@ -42,7 +42,10 @@ object OutputFile {
   ): IO<Unit> = fx {
     if (outputToFile)
       !OutputFileFormat.toFileFormatOrRaise(outputFormat).flatMap {
-        writeOutputFile(path, result, it)
+        if (it == OutputFileFormat.JSON && allJson)
+          writeOutputFile(path, result, it)
+        else
+          writeOutputFile(path, result, OutputFileFormat.MD)
       }
     else !unit()
   }.fix()
