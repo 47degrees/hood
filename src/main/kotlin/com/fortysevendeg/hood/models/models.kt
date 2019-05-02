@@ -64,6 +64,8 @@ data class CsvBenchmark(
 
 //Json benchmarks
 
+typealias JsonObject = Map<String, Any?>
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class JsonPrimaryMetric(
   val score: Double,
@@ -73,19 +75,11 @@ data class JsonPrimaryMetric(
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class JsonSecondaryMetric(
-  val score: Double?,
-  val scoreError: Double?,
-  val scoreUnit: String?,
-  val rawData: List<List<Double>>?
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 data class JsonBenchmark(
   val benchmark: String,
   val mode: String,
   val primaryMetric: JsonPrimaryMetric,
-  val secondaryMetrics: JsonSecondaryMetric
+  val secondaryMetrics: JsonObject
 )
 
 typealias Benchmark = Coproduct2<CsvBenchmark, JsonBenchmark>
