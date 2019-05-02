@@ -1,6 +1,7 @@
 package com.fortysevendeg.hood.tasks
 
 import arrow.core.Either
+import arrow.core.extensions.option.applicative.map2
 import arrow.core.toOption
 import arrow.data.extensions.list.foldable.nonEmpty
 import arrow.effects.IO
@@ -68,6 +69,12 @@ open class CompareBenchmarkCI : DefaultTask() {
   //CI
   @get:Input
   var token: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  var slug: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  var pullRequestSha: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  var pullRequestNumber: Int = project.objects.property(Int::class.java).getOrElse(-1)
 
   private fun getWrongResults(result: List<BenchmarkComparison>): List<BenchmarkComparison> =
     result.filter { it.result::class == BenchmarkResult.FAILED::class }
@@ -130,28 +137,27 @@ open class CompareBenchmarkCI : DefaultTask() {
   }
 
   @TaskAction
-  fun compareBenchmarkCI(): Unit =
-    IO { System.getenv("TRAVIS_PULL_REQUEST") }.flatMap {
-
-      if (!it.contains("false")) {
+  fun compareBenchmarkCI() {
+    val maybeSlug = slug.toOption()
+    val maybeSha = pullRequestSha.toOption()
+    maybeSlug.map2(maybeSha) { (slug, sha) ->
+      (if (pullRequestNumber != -1 && slug.contains('/') ) {
         fx {
-
-          val slug = !IO { System.getenv("TRAVIS_REPO_SLUG").split('/') }
-          if (slug.size < 2) !raiseError<Unit>(GradleException("Error reading env var: TRAVIS_REPO_SLUG"))
-          val owner: String = slug.first()
-          val repo: String = slug.last()
+          val separatedSlug = !IO { slug.split('/') }
+          if (separatedSlug.size < 2) !raiseError<Unit>(GradleException("Invalid slug format"))
+          val owner: String = separatedSlug.first()
+          val repo: String = separatedSlug.last()
 
           val (token: String) =
             token.toOption()
               .fold({ raiseError<String>(GradleException("Error getting Github token")) }) { IO { it } }
 
           val info = GhInfo(owner, repo, token)
-          val commitSha: String = !IO { System.getenv("TRAVIS_PULL_REQUEST_SHA") }
 
-          !compareCI(info, commitSha, it.toInt())
+          !compareCI(info, sha, pullRequestNumber)
         }.fix()
-      } else IO.unit
-
-    }.unsafeRunSync()
+      } else IO.unit).unsafeRunSync()
+    }
+  }
 
 }
