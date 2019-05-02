@@ -1,9 +1,11 @@
 buildscript {
   ext {
-    kotlinVersion = "1.3.21"
+    kotlinVersion = "1.3.31"
     arrowVersion = "0.9.0"
     http4kVersion = "3.113.0"
     kotlintestVersion = "3.3.0"
+    bintrayVersion = "1.8.4"
+    csvVersion = "1.5"
   }
 
   repositories {
@@ -14,7 +16,7 @@ buildscript {
 
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayVersion"
   }
 }
 
@@ -52,7 +54,7 @@ dependencies {
   implementation "org.http4k:http4k-client-okhttp:$http4kVersion"
   implementation "org.http4k:http4k-format-jackson:$http4kVersion"
 
-  implementation "org.apache.commons:commons-csv:1.5"
+  implementation "org.apache.commons:commons-csv:$csvVersion"
   testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintestVersion"
   testImplementation "io.kotlintest:kotlintest-assertions-arrow:$kotlintestVersion"
 
