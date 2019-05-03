@@ -31,6 +31,11 @@ open class UploadBenchmark : DefaultTask() {
     project.objects.property(String::class.java).getOrElse("Upload benchmark")
   @get:Input
   var token: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  var slug: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  var branch: String =
+    project.objects.property(String::class.java).getOrElse("master")
 
   private fun upload(info: GhInfo, branch: String, benchmarkFile: File): IO<Unit> = fx {
 
@@ -60,12 +65,14 @@ open class UploadBenchmark : DefaultTask() {
 
   @TaskAction
   fun uploadBenchmark(): Unit = fx {
-    val branch: String = !IO { System.getenv("TRAVIS_BRANCH") }
 
-    val slug = !IO { System.getenv("TRAVIS_REPO_SLUG").split('/') }
-    if (slug.size < 2) !raiseError<Unit>(GradleException("Error reading env var: TRAVIS_REPO_SLUG"))
-    val owner: String = slug.first()
-    val repo: String = slug.last()
+    val (separatedSlug: List<String>) = slug.toOption().fold({
+      raiseError<List<String>>(GradleException("slug param cannot be null"))
+    }) { IO { it.split('/') } }
+
+    if (separatedSlug.size < 2) !raiseError<Unit>(GradleException("Invalid slug format"))
+    val owner: String = separatedSlug.first()
+    val repo: String = separatedSlug.last()
 
     val (ghToken: String) =
       token.toOption()
@@ -73,7 +80,8 @@ open class UploadBenchmark : DefaultTask() {
 
     val info = GhInfo(owner, repo, ghToken)
 
-    !benchmarkFiles.traverse_(IO.applicative()) {
+    !benchmarkFiles.traverse_(IO.applicative())
+    {
       upload(info, branch, it)
     }
 
