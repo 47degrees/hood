@@ -25,9 +25,9 @@ This means the key for `hood.comparing` will be `Comparing` with the capitalizat
 
 The `compareBenchmarksCI` task also needs some extra parameters:
  - **token**: The `Github` access token.
- - **slug**: The repository slug with the format `owner/repository`. The environment variable `TRAVIS_PULL_REQUEST` on Travis CI.
- - **pullRequestSha**: The sha for the Pull Request. The environment variable `TRAVIS_REPO_SLUG` on Travis CI.
- - **pullRequestNumber**: The number of the Pull Request. The environment variable `TRAVIS_PULL_REQUEST_SHA` on Travis CI.
+ - **slug**: The repository slug with the format `owner/repository`. The environment variable `TRAVIS_REPO_SLUG` on Travis CI.
+ - **pullRequestSha**: The sha for the Pull Request. The environment variable `TRAVIS_PULL_REQUEST_SHA` on Travis CI.
+ - **pullRequestNumber**: The number of the Pull Request. The environment variable `TRAVIS_PULL_REQUEST` on Travis CI.
 
 ***Note***: Currently **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available.
 
@@ -50,5 +50,5 @@ The task `uploadBenchmark` has the following parameters:
  - **uploadDirectory**: The path for the folder where you want to keep them, from project root directory. By default: `benchmarks`.
  - **commitMessage**: The message for the task commit uploading the benchmark. By default: `Upload benchmark`.
  - **token**: the `Github` access token.
- - **slug**: The repository slug with the format `owner/repository`. The environment variable `TRAVIS_PULL_REQUEST` on Travis CI.
+ - **slug**: The repository slug with the format `owner/repository`. The environment variable `TRAVIS_REPO_SLUG` on Travis CI.
  - **branch**: The branch where you want to upload those benchmarks. By default: `master`.
