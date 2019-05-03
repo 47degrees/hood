@@ -39,7 +39,8 @@ open class UploadBenchmark : DefaultTask() {
 
   private fun upload(info: GhInfo, branch: String, benchmarkFile: File): IO<Unit> = fx {
 
-    val destination = uploadDirectory + benchmarkFile.name
+    val parent = if (uploadDirectory.endsWith('/')) uploadDirectory else "$uploadDirectory/"
+    val destination = parent + benchmarkFile.name
     val fileSha = !GithubCommitIntegration.getFileSha(info, branch, destination)
 
     val content = !OutputFile.readFileToBase64(benchmarkFile)
