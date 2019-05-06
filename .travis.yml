@@ -7,8 +7,6 @@ jdk:
 
 stages:
   - name: build
-  - name: test
-    if: type = pull_request
   - name: deploy
     if: branch = master AND type != pull_request
 
@@ -16,10 +14,7 @@ jobs:
   include:
     - stage: build
       script:
-        - ./gradlew clean build
-    - stage: test
-      script:
-        - ./gradlew test
+        - ./gradlew clean build test
     - stage: deploy
       script:
         - ./deploy-scripts/deploy.sh
