@@ -1,5 +1,7 @@
 package com.fortysevendeg.hood.tasks
 
+import arrow.core.extensions.option.applicative.map2
+import arrow.core.getOrElse
 import arrow.core.toOption
 import arrow.data.extensions.list.foldable.traverse_
 import arrow.effects.IO
@@ -32,7 +34,9 @@ open class UploadBenchmark : DefaultTask() {
   @get:Input
   var token: String? = project.objects.property(String::class.java).orNull
   @get:Input
-  var slug: String? = project.objects.property(String::class.java).orNull
+  var owner: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  var repository: String? = project.objects.property(String::class.java).orNull
   @get:Input
   var branch: String =
     project.objects.property(String::class.java).getOrElse("master")
@@ -65,27 +69,17 @@ open class UploadBenchmark : DefaultTask() {
   }
 
   @TaskAction
-  fun uploadBenchmark(): Unit = fx {
+  fun uploadBenchmark(): Unit =
+    owner.toOption().map2(repository.toOption()) { (projectOwner, projectRepo) ->
+      fx {
+        val (ghToken: String) = token.toOption().getOrRaiseError { GradleException("Error getting Github token") }
 
-    val (separatedSlug: List<String>) = slug.toOption().fold({
-      raiseError<List<String>>(GradleException("slug param cannot be null"))
-    }) { IO { it.split('/') } }
+        val info = GhInfo(projectOwner, projectRepo, ghToken)
 
-    if (separatedSlug.size < 2) !raiseError<Unit>(GradleException("Invalid slug format"))
-    val owner: String = separatedSlug.first()
-    val repo: String = separatedSlug.last()
-
-    val (ghToken: String) =
-      token.toOption()
-        .fold({ raiseError<String>(GradleException("Error getting Github token")) }) { IO { it } }
-
-    val info = GhInfo(owner, repo, ghToken)
-
-    !benchmarkFiles.traverse_(IO.applicative())
-    {
-      upload(info, branch, it)
-    }
-
-  }.fix().unsafeRunSync()
+        !benchmarkFiles.traverse_(IO.applicative()) { upload(info, branch, it) }
+      }.fix()
+    }.getOrElse {
+      IO.raiseError(GradleException("Missing one of the following parameters: 'owner', 'repository'"))
+    }.unsafeRunSync()
 
 }

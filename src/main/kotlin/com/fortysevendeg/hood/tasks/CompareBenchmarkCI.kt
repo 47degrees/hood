@@ -1,8 +1,7 @@
 package com.fortysevendeg.hood.tasks
 
-import arrow.core.Either
-import arrow.core.extensions.option.applicative.map2
-import arrow.core.toOption
+import arrow.core.*
+import arrow.core.extensions.option.applicative.applicative
 import arrow.data.extensions.list.foldable.nonEmpty
 import arrow.effects.IO
 import arrow.effects.extensions.io.fx.fx
@@ -70,11 +69,13 @@ open class CompareBenchmarkCI : DefaultTask() {
   @get:Input
   var token: String? = project.objects.property(String::class.java).orNull
   @get:Input
-  var slug: String? = project.objects.property(String::class.java).orNull
+  var owner: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  var repository: String? = project.objects.property(String::class.java).orNull
   @get:Input
   var pullRequestSha: String? = project.objects.property(String::class.java).orNull
   @get:Input
-  var pullRequestNumber: Int = project.objects.property(Int::class.java).getOrElse(-1)
+  var pullRequestNumber: Int? = project.objects.property(Int::class.java).orNull
 
   private fun getWrongResults(result: List<BenchmarkComparison>): List<BenchmarkComparison> =
     result.filter { it.result::class == BenchmarkResult.FAILED::class }
@@ -137,27 +138,28 @@ open class CompareBenchmarkCI : DefaultTask() {
   }
 
   @TaskAction
-  fun compareBenchmarkCI() {
-    val maybeSlug = slug.toOption()
-    val maybeSha = pullRequestSha.toOption()
-    maybeSlug.map2(maybeSha) { (slug, sha) ->
-      (if (pullRequestNumber != -1 && slug.contains('/') ) {
-        fx {
-          val separatedSlug = !IO { slug.split('/') }
-          if (separatedSlug.size < 2) !raiseError<Unit>(GradleException("Invalid slug format"))
-          val owner: String = separatedSlug.first()
-          val repo: String = separatedSlug.last()
+  fun compareBenchmarkCI() =
+    Option.applicative().map(
+      owner.toOption(),
+      repository.toOption(),
+      pullRequestSha.toOption(),
+      pullRequestNumber.toOption()
+    ) { (projectOwner, projectRepo, sha, number) ->
+      fx {
+        val (token: String) = token.toOption().getOrRaiseError { GradleException("Error getting Github token") }
 
-          val (token: String) =
-            token.toOption()
-              .fold({ raiseError<String>(GradleException("Error getting Github token")) }) { IO { it } }
+        val info = GhInfo(projectOwner, projectRepo, token)
 
-          val info = GhInfo(owner, repo, token)
-
-          !compareCI(info, sha, pullRequestNumber)
-        }.fix()
-      } else IO.unit).unsafeRunSync()
-    }
-  }
+        !compareCI(info, sha, number)
+      }.fix()
+    }.fix()
+      .getOrElse {
+        IO.raiseError(
+          GradleException(
+            "Missing one of the following parameters: 'owner', 'repository', 'pullRequestSha', 'pullRequestNumber'"
+          )
+        )
+      }
+      .unsafeRunSync()
 
 }
