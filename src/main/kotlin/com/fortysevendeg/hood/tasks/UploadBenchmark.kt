@@ -34,9 +34,9 @@ open class UploadBenchmark : DefaultTask() {
   @get:Input
   var token: String? = project.objects.property(String::class.java).orNull
   @get:Input
-  var owner: String? = project.objects.property(String::class.java).orNull
+  var repositoryOwner: String? = project.objects.property(String::class.java).orNull
   @get:Input
-  var repository: String? = project.objects.property(String::class.java).orNull
+  var repositoryName: String? = project.objects.property(String::class.java).orNull
   @get:Input
   var branch: String =
     project.objects.property(String::class.java).getOrElse("master")
@@ -70,16 +70,16 @@ open class UploadBenchmark : DefaultTask() {
 
   @TaskAction
   fun uploadBenchmark(): Unit =
-    owner.toOption().map2(repository.toOption()) { (projectOwner, projectRepo) ->
+    repositoryOwner.toOption().map2(repositoryName.toOption()) { (owner, repo) ->
       fx {
         val (ghToken: String) = token.toOption().getOrRaiseError { GradleException("Error getting Github token") }
 
-        val info = GhInfo(projectOwner, projectRepo, ghToken)
+        val info = GhInfo(owner, repo, ghToken)
 
         !benchmarkFiles.traverse_(IO.applicative()) { upload(info, branch, it) }
       }.fix()
     }.getOrElse {
-      IO.raiseError(GradleException("Missing one of the following parameters: 'owner', 'repository'"))
+      IO.raiseError(GradleException("Missing one of the following parameters: 'repositoryOwner', 'repositoryName'"))
     }.unsafeRunSync()
 
 }

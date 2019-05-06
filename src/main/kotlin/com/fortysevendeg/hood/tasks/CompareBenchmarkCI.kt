@@ -69,9 +69,9 @@ open class CompareBenchmarkCI : DefaultTask() {
   @get:Input
   var token: String? = project.objects.property(String::class.java).orNull
   @get:Input
-  var owner: String? = project.objects.property(String::class.java).orNull
+  var repositoryOwner: String? = project.objects.property(String::class.java).orNull
   @get:Input
-  var repository: String? = project.objects.property(String::class.java).orNull
+  var repositoryName: String? = project.objects.property(String::class.java).orNull
   @get:Input
   var pullRequestSha: String? = project.objects.property(String::class.java).orNull
   @get:Input
@@ -140,15 +140,15 @@ open class CompareBenchmarkCI : DefaultTask() {
   @TaskAction
   fun compareBenchmarkCI() =
     Option.applicative().map(
-      owner.toOption(),
-      repository.toOption(),
+      repositoryOwner.toOption(),
+      repositoryName.toOption(),
       pullRequestSha.toOption(),
       pullRequestNumber.toOption()
-    ) { (projectOwner, projectRepo, sha, number) ->
+    ) { (owner, name, sha, number) ->
       fx {
         val (token: String) = token.toOption().getOrRaiseError { GradleException("Error getting Github token") }
 
-        val info = GhInfo(projectOwner, projectRepo, token)
+        val info = GhInfo(owner, name, token)
 
         !compareCI(info, sha, number)
       }.fix()
@@ -156,7 +156,7 @@ open class CompareBenchmarkCI : DefaultTask() {
       .getOrElse {
         IO.raiseError(
           GradleException(
-            "Missing one of the following parameters: 'owner', 'repository', 'pullRequestSha', 'pullRequestNumber'"
+            "Missing one of the following parameters: 'repositoryOwner', 'repositoryName', 'pullRequestSha', 'pullRequestNumber'"
           )
         )
       }
