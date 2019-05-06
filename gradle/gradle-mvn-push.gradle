@@ -28,7 +28,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 publishing {
   publications {
-    MyPublication(MavenPublication) {
+    HoodPublication(MavenPublication) {
 
       artifactId = POM_ARTIFACT_ID
       groupId = group

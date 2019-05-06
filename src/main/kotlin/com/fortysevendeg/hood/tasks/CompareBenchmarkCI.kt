@@ -1,7 +1,7 @@
 package com.fortysevendeg.hood.tasks
 
-import arrow.core.Either
-import arrow.core.toOption
+import arrow.core.*
+import arrow.core.extensions.option.applicative.applicative
 import arrow.data.extensions.list.foldable.nonEmpty
 import arrow.effects.IO
 import arrow.effects.extensions.io.fx.fx
@@ -68,6 +68,14 @@ open class CompareBenchmarkCI : DefaultTask() {
   //CI
   @get:Input
   var token: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  var repositoryOwner: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  var repositoryName: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  var pullRequestSha: String? = project.objects.property(String::class.java).orNull
+  @get:Input
+  var pullRequestNumber: Int? = project.objects.property(Int::class.java).orNull
 
   private fun getWrongResults(result: List<BenchmarkComparison>): List<BenchmarkComparison> =
     result.filter { it.result::class == BenchmarkResult.FAILED::class }
@@ -130,28 +138,28 @@ open class CompareBenchmarkCI : DefaultTask() {
   }
 
   @TaskAction
-  fun compareBenchmarkCI(): Unit =
-    IO { System.getenv("TRAVIS_PULL_REQUEST") }.flatMap {
+  fun compareBenchmarkCI() =
+    Option.applicative().map(
+      repositoryOwner.toOption(),
+      repositoryName.toOption(),
+      pullRequestSha.toOption(),
+      pullRequestNumber.toOption()
+    ) { (owner, name, sha, number) ->
+      fx {
+        val (token: String) = token.toOption().getOrRaiseError { GradleException("Error getting Github token") }
 
-      if (!it.contains("false")) {
-        fx {
+        val info = GhInfo(owner, name, token)
 
-          val slug = !IO { System.getenv("TRAVIS_REPO_SLUG").split('/') }
-          if (slug.size < 2) !raiseError<Unit>(GradleException("Error reading env var: TRAVIS_REPO_SLUG"))
-          val owner: String = slug.first()
-          val repo: String = slug.last()
-
-          val (token: String) =
-            token.toOption()
-              .fold({ raiseError<String>(GradleException("Error getting Github token")) }) { IO { it } }
-
-          val info = GhInfo(owner, repo, token)
-          val commitSha: String = !IO { System.getenv("TRAVIS_PULL_REQUEST_SHA") }
-
-          !compareCI(info, commitSha, it.toInt())
-        }.fix()
-      } else IO.unit
-
-    }.unsafeRunSync()
+        !compareCI(info, sha, number)
+      }.fix()
+    }.fix()
+      .getOrElse {
+        IO.raiseError(
+          GradleException(
+            "Missing one of the following parameters: 'repositoryOwner', 'repositoryName', 'pullRequestSha', 'pullRequestNumber'"
+          )
+        )
+      }
+      .unsafeRunSync()
 
 }
