@@ -93,6 +93,12 @@ open class CompareBenchmarkCI : DefaultTask() {
         number
       )
     }.fix().getOrElse {
+
+      println(
+        """|Missing one of the following parameters: 'repositoryOwner', 'repositoryName', 'pullRequestSha', 'pullRequestNumber'.
+           |Comparison without CI features will be executed.""".trimMargin()
+      )
+
       HoodComparison.compare(
         previousBenchmarkPath,
         currentBenchmarkPath,
