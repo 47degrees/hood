@@ -68,7 +68,31 @@ open class CompareBenchmarkCI : DefaultTask() {
 
   @TaskAction
   fun compareBenchmarkCI() =
-    token.toOption().fold({
+    Option.applicative().map(
+      token.toOption(),
+      repositoryOwner.toOption(),
+      repositoryName.toOption(),
+      pullRequestSha.toOption(),
+      pullRequestNumber.toOption()
+    ) { (token, owner, name, sha, number) ->
+      HoodComparison.compareCI(
+        previousBenchmarkPath,
+        currentBenchmarkPath,
+        keyColumnName,
+        compareColumnName,
+        thresholdColumnName,
+        outputToFile,
+        outputPath,
+        outputFormat,
+        generalThreshold,
+        benchmarkThreshold,
+        include,
+        exclude,
+        GhInfo(owner, name, token),
+        sha,
+        number
+      )
+    }.fix().getOrElse {
       HoodComparison.compare(
         previousBenchmarkPath,
         currentBenchmarkPath,
@@ -83,38 +107,6 @@ open class CompareBenchmarkCI : DefaultTask() {
         include,
         exclude
       )
-    }, { token ->
-      Option.applicative().map(
-        repositoryOwner.toOption(),
-        repositoryName.toOption(),
-        pullRequestSha.toOption(),
-        pullRequestNumber.toOption()
-      ) { (owner, name, sha, number) ->
-        HoodComparison.compareCI(
-          previousBenchmarkPath,
-          currentBenchmarkPath,
-          keyColumnName,
-          compareColumnName,
-          thresholdColumnName,
-          outputToFile,
-          outputPath,
-          outputFormat,
-          generalThreshold,
-          benchmarkThreshold,
-          include,
-          exclude,
-          GhInfo(owner, name, token),
-          sha,
-          number
-        )
-      }.fix()
-        .getOrElse {
-          IO.raiseError(
-            GradleException(
-              "Missing one of the following parameters: 'repositoryOwner', 'repositoryName', 'pullRequestSha', 'pullRequestNumber'"
-            )
-          )
-        }
-    }).unsafeRunSync()
+    }.unsafeRunSync()
 
 }
