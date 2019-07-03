@@ -1,6 +1,6 @@
 package com.fortysevendeg.hood.tasks
 
-import com.fortysevendeg.hood.*
+import com.fortysevendeg.hood.HoodComparison
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
 import java.io.File

@@ -1,12 +1,13 @@
 package com.fortysevendeg.hood.tasks
 
-import arrow.core.*
+import arrow.core.Option
 import arrow.core.extensions.option.applicative.applicative
-import arrow.effects.IO
+import arrow.core.fix
+import arrow.core.getOrElse
+import arrow.core.toOption
 import com.fortysevendeg.hood.HoodComparison
 import com.fortysevendeg.hood.github.GhInfo
 import org.gradle.api.DefaultTask
-import org.gradle.api.GradleException
 import org.gradle.api.tasks.*
 import java.io.File
 

@@ -6,9 +6,7 @@ import arrow.data.extensions.list.foldable.forAll
 import arrow.data.extensions.list.semigroup.plus
 import arrow.data.foldLeft
 import arrow.effects.IO
-import arrow.effects.extensions.io.applicativeError.handleError
 import arrow.effects.extensions.io.fx.fx
-import arrow.effects.fix
 import com.fortysevendeg.hood.models.*
 import com.fortysevendeg.hood.reader.CsvBenchmarkReader
 import com.fortysevendeg.hood.reader.JsonBenchmarkReader
@@ -159,7 +157,8 @@ object Comparator {
     if (isConsistent)
       previousBenchmarksAfterFilter.second.flatMap { prev ->
         val threshold = selectThreshold(prev, maybeGeneralThreshold, maybeBenchmarkThreshold)
-        val previousModified = prev.withName(previousBenchmarksAfterFilter.first).withThreshold(threshold)
+        val previousModified =
+          prev.withName(previousBenchmarksAfterFilter.first).withThreshold(threshold)
 
         getCompareResults(currentBenchmarksAfterFilter, prev, threshold).map {
           buildBenchmarkComparison(prev.getKey(), previousModified, it)
