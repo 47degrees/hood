@@ -1,12 +1,6 @@
 package com.fortysevendeg.hood.tasks
 
-import arrow.core.toOption
-import arrow.effects.extensions.io.applicativeError.fromEither
-import com.fortysevendeg.hood.Comparator
-import com.fortysevendeg.hood.JsonSupport
-import com.fortysevendeg.hood.OutputFile
-import com.fortysevendeg.hood.models.BenchmarkComparisonError
-import com.fortysevendeg.hood.prettyOutputResult
+import com.fortysevendeg.hood.*
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
 import java.io.File
@@ -57,22 +51,19 @@ open class CompareBenchmark : DefaultTask() {
 
   @TaskAction
   fun compareBenchmark(): Unit =
-    Comparator.compareBenchmarks(
+    HoodComparison.compare(
       previousBenchmarkPath,
       currentBenchmarkPath,
       keyColumnName,
       compareColumnName,
       thresholdColumnName,
-      generalThreshold.toOption(),
-      benchmarkThreshold.toOption(),
-      include.toOption().map(String::toRegex),
-      exclude.toOption().map(String::toRegex)
-    ).flatMap {
-      println(it.prettyOutputResult())
-      it.fromEither(BenchmarkComparisonError::error)
-    }.flatMap {
-      val allJson = JsonSupport.areAllJson(currentBenchmarkPath.plus(previousBenchmarkPath))
-      OutputFile.sendOutputToFile(outputToFile, allJson, outputPath, it, outputFormat)
-    }.unsafeRunSync()
+      outputToFile,
+      outputPath,
+      outputFormat,
+      generalThreshold,
+      benchmarkThreshold,
+      include,
+      exclude
+    ).unsafeRunSync()
 
 }

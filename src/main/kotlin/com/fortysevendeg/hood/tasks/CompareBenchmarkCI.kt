@@ -2,20 +2,9 @@ package com.fortysevendeg.hood.tasks
 
 import arrow.core.*
 import arrow.core.extensions.option.applicative.applicative
-import arrow.data.extensions.list.foldable.nonEmpty
 import arrow.effects.IO
-import arrow.effects.extensions.io.fx.fx
-import arrow.effects.fix
-import arrow.effects.handleErrorWith
-import com.fortysevendeg.hood.Comparator
-import com.fortysevendeg.hood.JsonSupport
-import com.fortysevendeg.hood.OutputFile
+import com.fortysevendeg.hood.HoodComparison
 import com.fortysevendeg.hood.github.GhInfo
-import com.fortysevendeg.hood.github.GithubCommentIntegration
-import com.fortysevendeg.hood.github.GithubCommon
-import com.fortysevendeg.hood.models.BenchmarkComparison
-import com.fortysevendeg.hood.models.BenchmarkComparisonError
-import com.fortysevendeg.hood.models.BenchmarkResult
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.*
@@ -77,89 +66,55 @@ open class CompareBenchmarkCI : DefaultTask() {
   @get:Input
   var pullRequestNumber: Int? = project.objects.property(Int::class.java).orNull
 
-  private fun getWrongResults(result: List<BenchmarkComparison>): List<BenchmarkComparison> =
-    result.filter { it.result::class == BenchmarkResult.FAILED::class }
-
-  private fun compareCI(info: GhInfo, commitSha: String, pr: Int) = fx {
-
-    !GithubCommentIntegration.setPendingStatus(
-      info,
-      commitSha
-    )
-
-    val resultOrError: Either<BenchmarkComparisonError, List<BenchmarkComparison>> =
-      !Comparator.compareBenchmarks(
+  @TaskAction
+  fun compareBenchmarkCI() =
+    token.toOption().fold({
+      HoodComparison.compare(
         previousBenchmarkPath,
         currentBenchmarkPath,
         keyColumnName,
         compareColumnName,
         thresholdColumnName,
-        generalThreshold.toOption(),
-        benchmarkThreshold.toOption(),
-        include.toOption().map(String::toRegex),
-        exclude.toOption().map(String::toRegex)
+        outputToFile,
+        outputPath,
+        outputFormat,
+        generalThreshold,
+        benchmarkThreshold,
+        include,
+        exclude
       )
-
-    val result = !resultOrError.getOrRaiseError(BenchmarkComparisonError::error)
-
-    val previousComment = !GithubCommentIntegration.getPreviousCommentId(info, pr)
-
-    val (commentResult) = previousComment.fold({
-      GithubCommentIntegration.createComment(info, pr, result)
-    }) { GithubCommentIntegration.updateComment(info, it, result) }
-
-    if (commentResult) !IO.unit
-    else !GithubCommon.raiseError("Error creating the comment")
-
-    val allJson = JsonSupport.areAllJson(currentBenchmarkPath.plus(previousBenchmarkPath))
-
-    !OutputFile.sendOutputToFile(outputToFile, allJson, outputPath, result, outputFormat)
-
-    val errors: List<BenchmarkComparison> = getWrongResults(result)
-
-    if (errors.nonEmpty()) {
-      !GithubCommentIntegration.setFailedStatus(
-        info,
-        commitSha,
-        errors.joinToString(transform = BenchmarkComparison::key)
-      )
-    } else
-      !GithubCommentIntegration.setSuccessStatus(
-        info,
-        commitSha
-      )
-
-  }.fix().handleErrorWith {
-    GithubCommentIntegration.setFailedStatus(
-      info,
-      commitSha,
-      it.localizedMessage
-    )
-  }
-
-  @TaskAction
-  fun compareBenchmarkCI() =
-    Option.applicative().map(
-      repositoryOwner.toOption(),
-      repositoryName.toOption(),
-      pullRequestSha.toOption(),
-      pullRequestNumber.toOption()
-    ) { (owner, name, sha, number) ->
-      fx {
-        val (token: String) = token.toOption().getOrRaiseError { GradleException("Error getting Github token") }
-
-        val info = GhInfo(owner, name, token)
-
-        !compareCI(info, sha, number)
-      }.fix()
-    }.fix()
-      .getOrElse {
-        IO.raiseError(
-          GradleException(
-            "Missing one of the following parameters: 'repositoryOwner', 'repositoryName', 'pullRequestSha', 'pullRequestNumber'"
-          )
+    }, { token ->
+      Option.applicative().map(
+        repositoryOwner.toOption(),
+        repositoryName.toOption(),
+        pullRequestSha.toOption(),
+        pullRequestNumber.toOption()
+      ) { (owner, name, sha, number) ->
+        HoodComparison.compareCI(
+          previousBenchmarkPath,
+          currentBenchmarkPath,
+          keyColumnName,
+          compareColumnName,
+          thresholdColumnName,
+          outputToFile,
+          outputPath,
+          outputFormat,
+          generalThreshold,
+          benchmarkThreshold,
+          include,
+          exclude,
+          GhInfo(owner, name, token),
+          sha,
+          number
         )
-      }
-      .unsafeRunSync()
+      }.fix()
+        .getOrElse {
+          IO.raiseError(
+            GradleException(
+              "Missing one of the following parameters: 'repositoryOwner', 'repositoryName', 'pullRequestSha', 'pullRequestNumber'"
+            )
+          )
+        }
+    }).unsafeRunSync()
 
 }
