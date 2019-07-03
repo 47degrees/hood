@@ -6,6 +6,8 @@ import arrow.data.extensions.list.foldable.forAll
 import arrow.data.extensions.list.semigroup.plus
 import arrow.data.foldLeft
 import arrow.effects.IO
+import arrow.effects.fix
+import arrow.effects.extensions.io.applicativeError.handleError
 import arrow.effects.extensions.io.fx.fx
 import com.fortysevendeg.hood.models.*
 import com.fortysevendeg.hood.reader.CsvBenchmarkReader
