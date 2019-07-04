@@ -57,14 +57,19 @@ open class CompareBenchmarkCI : DefaultTask() {
 
   //CI
   @get:Input
+  @Optional
   var token: String? = project.objects.property(String::class.java).orNull
   @get:Input
+  @Optional
   var repositoryOwner: String? = project.objects.property(String::class.java).orNull
   @get:Input
+  @Optional
   var repositoryName: String? = project.objects.property(String::class.java).orNull
   @get:Input
+  @Optional
   var pullRequestSha: String? = project.objects.property(String::class.java).orNull
   @get:Input
+  @Optional
   var pullRequestNumber: Int? = project.objects.property(Int::class.java).orNull
 
   @TaskAction
