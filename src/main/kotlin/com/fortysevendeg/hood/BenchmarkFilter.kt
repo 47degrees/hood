@@ -1,7 +1,9 @@
 package com.fortysevendeg.hood
 
+import arrow.core.Either
 import arrow.core.Option
-import com.fortysevendeg.hood.models.Benchmark
+import arrow.data.NonEmptyList
+import com.fortysevendeg.hood.models.*
 
 private fun List<Benchmark>.filterUsingRegex(
   maybeRegex: Option<Regex>,
@@ -19,3 +21,11 @@ fun List<Benchmark>.filterBenchmarkIE(
   includeRegex: Option<Regex>,
   excludeRegex: Option<Regex>
 ): List<Benchmark> = filterBenchmark(includeRegex).filterBenchmarkNot(excludeRegex)
+
+fun List<BenchmarkComparison>.getWrongResults(): List<BenchmarkComparison> =
+  this.filter { it.result::class == BenchmarkResult.FAILED::class }
+
+fun List<BenchmarkComparison>.handleFailures(): Either<BenchmarkComparisonError, List<BenchmarkComparison>> =
+  NonEmptyList.fromList(getWrongResults()).toEither { this }.map {
+    BenchmarkComparisonError(BadPerformanceBenchmarkError(it.all))
+  }.swap()

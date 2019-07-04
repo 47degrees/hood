@@ -47,9 +47,6 @@ sealed class BenchmarkResult {
 
 }
 
-object BenchmarkInconsistencyError :
-  Throwable("Benchmarks have different formats and cannot be compared")
-
 enum class GhStatusState(val value: String) {
   Succeed("success"), Pending("pending"), Failed("failure")
 }
@@ -90,6 +87,12 @@ data class BenchmarkComparison(
   val result: BenchmarkResult,
   val threshold: Double
 )
+
+object BenchmarkInconsistencyError :
+  Throwable("Benchmarks have different formats and cannot be compared")
+
+data class BadPerformanceBenchmarkError(val failures: List<BenchmarkComparison>) :
+  Throwable("Benchmarks shows a bad performance on the comparisons: ${failures.joinToString { it.key }}")
 
 data class BenchmarkComparisonError(val error: Throwable) {
   fun symbol(): String = "☠"
