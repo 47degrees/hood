@@ -27,7 +27,5 @@ fun List<BenchmarkComparison>.getWrongResults(): List<BenchmarkComparison> =
 
 fun List<BenchmarkComparison>.handleFailures(): Either<BenchmarkComparisonError, List<BenchmarkComparison>> =
   NonEmptyList.fromList(getWrongResults()).toEither { this }.map {
-    BenchmarkComparisonError(
-      BadPerformanceBenchmarkError(it.all)
-    )
+    BenchmarkComparisonError(BadPerformanceBenchmarkError(it.all))
   }.swap()
