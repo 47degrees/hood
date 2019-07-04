@@ -2,9 +2,7 @@ package com.fortysevendeg.hood
 
 import arrow.core.Either
 import arrow.core.Option
-import arrow.core.left
-import arrow.core.right
-import arrow.data.extensions.list.foldable.nonEmpty
+import arrow.data.NonEmptyList
 import com.fortysevendeg.hood.models.*
 
 private fun List<Benchmark>.filterUsingRegex(
@@ -27,9 +25,9 @@ fun List<Benchmark>.filterBenchmarkIE(
 fun List<BenchmarkComparison>.getWrongResults(): List<BenchmarkComparison> =
   this.filter { it.result::class == BenchmarkResult.FAILED::class }
 
-fun List<BenchmarkComparison>.handleFailures(): Either<BenchmarkComparisonError, List<BenchmarkComparison>> {
-  val failures = this.getWrongResults()
-  return if (failures.nonEmpty())
-    BenchmarkComparisonError(BadPerformanceBenchmarkError(failures)).left()
-  else this.right()
-}
+fun List<BenchmarkComparison>.handleFailures(): Either<BenchmarkComparisonError, List<BenchmarkComparison>> =
+  NonEmptyList.fromList(getWrongResults()).toEither { this }.map {
+    BenchmarkComparisonError(
+      BadPerformanceBenchmarkError(it.all)
+    )
+  }.swap()
