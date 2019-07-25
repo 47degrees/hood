@@ -17,6 +17,7 @@ import org.http4k.core.Status
 import org.http4k.core.with
 import org.http4k.format.Jackson
 import org.http4k.format.Jackson.json
+import java.net.URI
 
 object GithubCommentIntegration {
 
@@ -71,6 +72,7 @@ object GithubCommentIntegration {
     val body = Jackson {
       obj(
         "state" to string(status.state.value),
+        "target_url" to string(status.targetUrl.toString()),
         "description" to string(status.description),
         "context" to string(status.context)
       )
@@ -91,27 +93,36 @@ object GithubCommentIntegration {
     }
   }
 
-  fun setPendingStatus(info: GhInfo, commitSha: String): IO<Unit> = setStatus(
-    info, commitSha,
-    GhStatus(
-      GhStatusState.Pending,
-      "Comparing Benchmarks"
+  fun setPendingStatus(info: GhInfo, commitSha: String, targetUrl: URI?): IO<Unit> =
+    setStatus(
+      info, commitSha,
+      GhStatus(
+        GhStatusState.Pending,
+        targetUrl,
+        "Comparing Benchmarks"
+      )
     )
-  )
 
-  fun setSuccessStatus(info: GhInfo, commitSha: String): IO<Unit> = setStatus(
-    info, commitSha,
-    GhStatus(
-      GhStatusState.Succeed,
-      "Benchmarks comparison passed"
+  fun setSuccessStatus(info: GhInfo, commitSha: String, targetUrl: URI?): IO<Unit> =
+    setStatus(
+      info, commitSha,
+      GhStatus(
+        GhStatusState.Succeed,
+        targetUrl,
+        "Benchmarks comparison passed"
+      )
     )
-  )
 
-  fun setFailedStatus(info: GhInfo, commitSha: String, comment: String): IO<Unit> =
+  fun setFailedStatus(
+    info: GhInfo,
+    commitSha: String,
+    comment: String,
+    targetUrl: URI?
+  ): IO<Unit> =
     setStatus(
       info,
       commitSha,
-      GhStatus(GhStatusState.Failed, "Benchmarks comparison failed: $comment")
+      GhStatus(GhStatusState.Failed, targetUrl, "Benchmarks comparison failed: $comment")
     )
 
 }

@@ -10,6 +10,7 @@ import com.fortysevendeg.hood.github.GhInfo
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
 import java.io.File
+import java.net.URI
 
 open class CompareBenchmarkCI : DefaultTask() {
 
@@ -71,6 +72,9 @@ open class CompareBenchmarkCI : DefaultTask() {
   @get:Input
   @Optional
   var pullRequestNumber: Int? = project.objects.property(Int::class.java).orNull
+  @get:Input
+  @Optional
+  var statusTargetUrl: URI? = project.objects.property(URI::class.java).orNull
 
   @TaskAction
   fun compareBenchmarkCI() =
@@ -96,7 +100,8 @@ open class CompareBenchmarkCI : DefaultTask() {
         exclude,
         GhInfo(owner, name, token),
         sha,
-        number
+        number,
+        statusTargetUrl
       )
     }.fix().getOrElse {
 

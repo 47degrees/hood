@@ -15,6 +15,7 @@ import com.fortysevendeg.hood.models.BadPerformanceBenchmarkError
 import com.fortysevendeg.hood.models.BenchmarkComparison
 import com.fortysevendeg.hood.models.BenchmarkComparisonError
 import java.io.File
+import java.net.URI
 
 object HoodComparison {
   fun compare(
@@ -71,12 +72,14 @@ object HoodComparison {
     exclude: String?,
     info: GhInfo,
     commitSha: String,
-    pr: Int
+    pr: Int,
+    statusTargetUrl: URI?
   ): IO<Unit> = fx {
 
     !GithubCommentIntegration.setPendingStatus(
       info,
-      commitSha
+      commitSha,
+      statusTargetUrl
     )
 
     val resultOrError: Either<BenchmarkComparisonError, List<BenchmarkComparison>> =
@@ -113,20 +116,26 @@ object HoodComparison {
       !GithubCommentIntegration.setFailedStatus(
         info,
         commitSha,
-        errors.joinToString(transform = BenchmarkComparison::key)
+        errors.joinToString(transform = BenchmarkComparison::key),
+        statusTargetUrl
       ).flatMap { IO.raiseError<Unit>(BadPerformanceBenchmarkError(errors)) }
     } else
       !GithubCommentIntegration.setSuccessStatus(
         info,
-        commitSha
+        commitSha,
+        statusTargetUrl
       )
 
-  }.fix().handleErrorWith {
+  }.fix().handleErrorWith { ex ->
     GithubCommentIntegration.setFailedStatus(
       info,
       commitSha,
-      it.localizedMessage
-    )
+      ex.localizedMessage,
+      statusTargetUrl
+    ).flatMap {
+      @Suppress("RemoveExplicitTypeArguments")
+      IO.raiseError<Unit>(ex)
+    }
   }
 
 }
