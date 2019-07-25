@@ -29,8 +29,11 @@ The `compareBenchmarksCI` task also needs some extra parameters:
  - **repositoryName**: The repository name.
  - **pullRequestSha**: The sha for the Pull Request. The environment variable `TRAVIS_PULL_REQUEST_SHA` on Travis CI.
  - **pullRequestNumber**: The number of the Pull Request. The environment variable `TRAVIS_PULL_REQUEST` on Travis CI.
+ - **statusTargetUrl**: The URL to the CI job. The environment variable `TRAVIS_JOB_WEB_URL` on Travis CI. Optional.
 
-***Note***: Currently **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available.
+***Note***: Currently **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available. 
+***Note 2***: If the `CI` integration is not available because one the requested fields above is not defined, 
+  the task `compareBenchmarksCI` will be executed on the same way as `compareBenchmarks`.
 
 ### Send output to a file
 

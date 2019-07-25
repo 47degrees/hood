@@ -1,11 +1,13 @@
 package com.fortysevendeg.hood.github
 
 import com.fortysevendeg.hood.models.GhStatusState
+import java.net.URI
 
 data class GhInfo(val owner: String, val repo: String, val token: String)
 
 data class GhStatus(
   val state: GhStatusState,
+  val targetUrl: URI?,
   val description: String,
   val context: String = "benchmark-ci/hood"
 )
