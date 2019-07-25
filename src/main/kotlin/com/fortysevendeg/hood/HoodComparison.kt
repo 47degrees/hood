@@ -132,7 +132,10 @@ object HoodComparison {
       commitSha,
       ex.localizedMessage,
       statusTargetUrl
-    ).flatMap { IO.raiseError<Unit>(ex) }
+    ).flatMap {
+      @Suppress("RemoveExplicitTypeArguments")
+      IO.raiseError<Unit>(ex)
+    }
   }
 
 }
