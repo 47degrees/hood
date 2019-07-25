@@ -132,7 +132,7 @@ object HoodComparison {
       commitSha,
       ex.localizedMessage,
       statusTargetUrl
-    ).flatMap { IO.raiseError(ex) }
+    ).flatMap { IO.raiseError<Unit>(ex) }
   }
 
 }
