@@ -103,3 +103,5 @@ release {
   tagCommitMessage = "Publish "
   newVersionCommitMessage = "Setting version to"
 }
+
+afterReleaseBuild.dependsOn bintrayUpload
