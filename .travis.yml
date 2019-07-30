@@ -17,4 +17,8 @@ jobs:
         - ./gradlew clean build test
     - stage: deploy
       script:
+        - git reset --hard HEAD
+        - git clean -f
+        - git checkout master
+        - git pull origin master
         - ./deploy-scripts/deploy.sh
