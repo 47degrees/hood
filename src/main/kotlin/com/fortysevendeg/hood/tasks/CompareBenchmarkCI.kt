@@ -101,7 +101,7 @@ open class CompareBenchmarkCI : DefaultTask() {
         GhInfo(owner, name, token),
         sha,
         number,
-        statusTargetUrl
+        statusTargetUrl.toOption()
       )
     }.fix().getOrElse {
 

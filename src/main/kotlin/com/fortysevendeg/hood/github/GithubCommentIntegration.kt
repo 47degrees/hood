@@ -1,6 +1,8 @@
 package com.fortysevendeg.hood.github
 
 import arrow.core.Option
+import arrow.core.getOrElse
+import arrow.core.toOption
 import arrow.effects.IO
 import arrow.syntax.collections.firstOption
 import com.fasterxml.jackson.databind.JsonNode
@@ -72,7 +74,7 @@ object GithubCommentIntegration {
     val body = Jackson {
       obj(
         "state" to string(status.state.value),
-        "target_url" to string(status.targetUrl.toString()),
+        "target_url" to status.targetUrl.fold({ nullNode() }, {string(it.toString())}),
         "description" to string(status.description),
         "context" to string(status.context)
       )
@@ -93,7 +95,7 @@ object GithubCommentIntegration {
     }
   }
 
-  fun setPendingStatus(info: GhInfo, commitSha: String, targetUrl: URI?): IO<Unit> =
+  fun setPendingStatus(info: GhInfo, commitSha: String, targetUrl: Option<URI>): IO<Unit> =
     setStatus(
       info, commitSha,
       GhStatus(
@@ -103,7 +105,7 @@ object GithubCommentIntegration {
       )
     )
 
-  fun setSuccessStatus(info: GhInfo, commitSha: String, targetUrl: URI?): IO<Unit> =
+  fun setSuccessStatus(info: GhInfo, commitSha: String, targetUrl: Option<URI>): IO<Unit> =
     setStatus(
       info, commitSha,
       GhStatus(
@@ -117,7 +119,7 @@ object GithubCommentIntegration {
     info: GhInfo,
     commitSha: String,
     comment: String,
-    targetUrl: URI?
+    targetUrl: Option<URI>
   ): IO<Unit> =
     setStatus(
       info,
