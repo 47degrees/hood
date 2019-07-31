@@ -1,6 +1,7 @@
 package com.fortysevendeg.hood
 
 import arrow.core.Either
+import arrow.core.Option
 import arrow.core.flatMap
 import arrow.core.toOption
 import arrow.data.extensions.list.foldable.nonEmpty
@@ -73,7 +74,7 @@ object HoodComparison {
     info: GhInfo,
     commitSha: String,
     pr: Int,
-    statusTargetUrl: URI?
+    statusTargetUrl: Option<URI>
   ): IO<Unit> = fx {
 
     !GithubCommentIntegration.setPendingStatus(
