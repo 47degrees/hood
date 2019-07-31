@@ -74,7 +74,7 @@ object GithubCommentIntegration {
     val body = Jackson {
       obj(
         "state" to string(status.state.value),
-        "target_url" to string(status.targetUrl.fold({ "" }, {it.toString()})),
+        "target_url" to status.targetUrl.fold({ nullNode() }, {string(it.toString())}),
         "description" to string(status.description),
         "context" to string(status.context)
       )
