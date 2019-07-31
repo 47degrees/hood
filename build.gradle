@@ -97,7 +97,7 @@ bintray {
 }
 
 release {
-  scmAdapters = [ net.researchgate.release.GitAdapter ]
+  scmAdapters = [net.researchgate.release.GitAdapter]
   preCommitText = "[ci skip] - "
   preTagCommitMessage = "Publish "
   tagCommitMessage = "Publish "
