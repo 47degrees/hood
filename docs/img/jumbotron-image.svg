@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="540px" height="367px" viewBox="0 0 540 367" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>jumbotron-image</title>
+    <desc>Created with Sketch.</desc>
+    <g id="jumbotron-image" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="number" fill="#87DCB5" x="133" y="338" width="9" height="9"></rect>
+        <rect id="number" fill="#87DCB5" x="182" y="338" width="9" height="9"></rect>
+        <rect id="number" fill="#87DCB5" x="231" y="338" width="9" height="9"></rect>
+        <rect id="number" fill="#87DCB5" x="280" y="338" width="9" height="9"></rect>
+        <rect id="number" fill="#87DCB5" x="329" y="338" width="9" height="9"></rect>
+        <rect id="number" fill="#87DCB5" x="378" y="338" width="9" height="9"></rect>
+        <rect id="number" fill="#87DCB5" x="427" y="338" width="9" height="9"></rect>
+        <rect id="number" fill="#87DCB5" x="476" y="338" width="9" height="9"></rect>
+        <rect id="path" fill="#25BC77" opacity="0.214541481" x="24" y="283" width="53" height="16"></rect>
+        <rect id="path" fill="#25BC77" opacity="0.466820126" x="32" y="288" width="37" height="6"></rect>
+        <rect id="path" fill="#25BC77" opacity="0.214541481" x="9" y="233" width="68" height="16"></rect>
+        <rect id="path" fill="#25BC77" opacity="0.466820126" x="17" y="238" width="52" height="6"></rect>
+        <rect id="path" fill="#25BC77" opacity="0.214541481" x="34" y="184" width="43" height="16"></rect>
+        <rect id="path" fill="#25BC77" opacity="0.466820126" x="42" y="189" width="27" height="6"></rect>
+        <rect id="path" fill="#25BC77" opacity="0.214541481" x="16" y="136" width="61" height="16"></rect>
+        <rect id="path" fill="#25BC77" opacity="0.466820126" x="24" y="141" width="45" height="6"></rect>
+        <rect id="path" fill="#25BC77" opacity="0.214541481" x="21" y="86" width="56" height="16"></rect>
+        <rect id="path" fill="#25BC77" opacity="0.466820126" x="29" y="91" width="40" height="6"></rect>
+        <rect id="mark-horizontal" fill="#212D3A" x="81" y="290" width="4" height="2"></rect>
+        <rect id="mark-horizontal" fill="#212D3A" x="81" y="240" width="4" height="2"></rect>
+        <rect id="mark-horizontal" fill="#212D3A" x="81" y="191" width="4" height="2"></rect>
+        <rect id="mark-horizontal" fill="#212D3A" x="81" y="143" width="4" height="2"></rect>
+        <rect id="mark-horizontal" fill="#212D3A" x="81" y="93" width="4" height="2"></rect>
+        <rect id="vertical" fill="#212D3A" x="85" y="36" width="4" height="298"></rect>
+        <rect id="vertical-line" fill="#E9EAEB" x="137" y="36" width="1" height="298"></rect>
+        <rect id="vertical-line" fill="#E9EAEB" x="186" y="36" width="1" height="298"></rect>
+        <rect id="vertical-line" fill="#E9EAEB" x="235" y="36" width="1" height="298"></rect>
+        <rect id="vertical-line" fill="#E9EAEB" x="284" y="36" width="1" height="298"></rect>
+        <rect id="vertical-line" fill="#E9EAEB" x="333" y="36" width="1" height="298"></rect>
+        <rect id="vertical-line" fill="#E9EAEB" x="382" y="36" width="1" height="298"></rect>
+        <rect id="vertical-line" fill="#E9EAEB" x="431" y="36" width="1" height="298"></rect>
+        <rect id="vertical-line" fill="#E9EAEB" x="480" y="36" width="1" height="298"></rect>
+        <rect id="horizontal-line" fill="#E9EAEB" x="89" y="265" width="434" height="1"></rect>
+        <rect id="horizontal-line" fill="#E9EAEB" x="89" y="216" width="434" height="1"></rect>
+        <rect id="horizontal-line" fill="#E9EAEB" x="89" y="167" width="434" height="1"></rect>
+        <rect id="horizontal-line" fill="#E9EAEB" x="89" y="118" width="434" height="1"></rect>
+        <rect id="horizontal-line" fill="#E9EAEB" x="89" y="69" width="434" height="1"></rect>
+        <rect id="diagram" fill="#25BC77" opacity="0.8" x="89" y="274" width="368" height="32"></rect>
+        <rect id="diagram" fill="#25BC77" opacity="0.550757999" x="89" y="225" width="126" height="32"></rect>
+        <rect id="diagram" fill="#25BC77" opacity="0.803245908" x="89" y="176" width="265" height="32"></rect>
+        <rect id="diagram" fill="#25BC77" opacity="0.35" x="89" y="127" width="320" height="32"></rect>
+        <rect id="diagram" fill="#25BC77" opacity="0.85453869" x="89" y="78" width="177" height="32"></rect>
+    </g>
+</svg>

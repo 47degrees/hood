@@ -1,0 +1,90 @@
+// Styles doc
+//---------------------------------
+
+// Variables
+$sidebar-menu-width: 18rem;
+$sidebar-menu-margin: $sidebar-menu-width - ($sidebar-menu-width * 2);
+$sidebar-background: rgba($primary, 0.05);
+$sidebar-brand-background: rgba($primary, 0.09);
+
+
+
+//  Styles
+#documentation {
+    overflow-x: hidden;
+}
+
+#wrapper {
+    display: flex;
+}
+
+#site-sidebar {
+    min-height: 100vh;
+    margin-left: $sidebar-menu-margin;
+    background: $sidebar-background;
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+
+    .sidebar-brand {
+        padding: 2rem;
+        background: $sidebar-brand-background;
+    }
+    
+    .sidebar-menu {
+        margin: 1rem 0 0 0;
+        padding: 0;
+        width: $sidebar-menu-width;
+        list-style: none;
+        .sidebar-menu-item {
+            a {
+                display: block;
+                padding: 0.8rem 2rem;
+                color: $body-color;
+                
+                &.selected {
+                    padding-left: (2rem - 0.25rem);
+                    background: rgba($primary, 0.08);
+                    border-left: 0.25rem solid $primary;
+                }
+                
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+}
+
+#site-doc {
+    min-width: 100vw;
+}
+
+#wrapper {
+    &.toggled {
+        #site-sidebar {
+            margin-left: 0;
+        }
+    }
+}
+
+// Responsive
+@media (min-width: 768px) {
+    #site-sidebar {
+        margin-left: 0;
+    }
+    
+    #site-doc {
+        min-width: 0;
+        width: 100%;
+    }
+    
+    #wrapper {
+        &.toggled {
+            #site-sidebar {
+                margin-left: $sidebar-menu-margin;
+            }
+        }
+    }
+}

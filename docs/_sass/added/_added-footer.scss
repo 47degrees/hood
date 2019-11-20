@@ -1,0 +1,40 @@
+// Styles footer
+//---------------------------------
+
+//  Variables
+$site-footer-background: rgba($primary, 0.05);
+$site-footer-font-size: 0.875rem;
+$footer-menu-item-margin: 1.5rem;
+
+//  Styles
+#site-footer {
+    padding: 4rem 0;
+    font-size: $site-footer-font-size;
+    background: $site-footer-background;
+
+    .footer-menu {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: flex-end;
+        list-style: none;
+
+        .footer-menu-item:not(:last-child) {
+            margin-right: $footer-menu-item-margin;
+
+        }
+    }
+}
+
+// Responsive
+@include media-breakpoint-down(sm) {
+    #site-footer {
+        p {
+            text-align: center;
+        }
+
+        .footer-menu {
+            justify-content: center;
+        }
+    }
+}

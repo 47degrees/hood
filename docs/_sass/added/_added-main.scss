@@ -1,0 +1,30 @@
+// Styles main
+//---------------------------------
+
+// Variables
+$site-main-padding: 7rem;
+$image-margin-bottom: 1.2rem;
+
+//  Styles
+#site-main {
+    padding: 7rem 0;
+
+    .main-features {
+        .main-features-item {
+            text-align: center;
+
+            img {
+                margin-bottom: $image-margin-bottom;
+            }
+        }
+    }
+}
+
+// Responsive
+@include media-breakpoint-down(sm) {
+    .main-features-item {
+        &:not(:last-child) {
+            margin-bottom: 5rem;
+        }
+    }
+}

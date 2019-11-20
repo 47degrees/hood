@@ -1,0 +1,27 @@
+// Custom navbar
+//---------------------------------
+
+// Navbar
+.navbar-nav {
+    margin-top: 1.5rem;
+}
+
+// Toggler
+.navbar-toggler {
+    outline: none;
+    border: none;
+}
+
+.navbar-collapse {
+    outline: none;
+}
+
+button {
+    outline: none !important;
+}
+
+.navbar-light {
+  .navbar-toggler-icon {
+      background-image: url("../img/toggle-icon.svg");
+  }
+}

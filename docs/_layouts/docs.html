@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+{% include _head.html %}
+
+<body id="documentation">
+    <div id="wrapper">
+        {% include _sidebar.html %}
+        {% include _doc.html %}
+    </div>
+
+</body>
+
+</html>
+<script>
+    $("#sidebar-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>

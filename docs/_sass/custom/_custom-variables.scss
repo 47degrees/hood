@@ -1,0 +1,51 @@
+// Custom variables
+//---------------------------------
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Poppins:400,600&display=swap');
+
+
+// Color
+$primary: #25BC77;
+$body-color: #263238;
+
+// Spacing
+$spacer: 1rem;
+
+// Typography
+$font-family-sans-serif: 'Open Sans', sans-serif;
+$font-size-base: 1rem;
+$font-size-lg: $font-size-base;
+$font-weight-semibold: 600;
+
+$h1-font-size: $font-size-base * 3;
+$h2-font-size: $font-size-base * 1.4;
+$headings-font-family: 'Poppins', sans-serif;
+$headings-font-weight: 600;
+$headings-color: $body-color;
+
+$lead-font-size: $font-size-base * 1.35;
+
+// Navbar
+$navbar-toggler-padding-y: 0;
+$navbar-toggler-padding-x: 0;
+
+$navbar-padding-y: $spacer * 3;
+$navbar-nav-link-padding-x: 1.25rem;
+
+
+
+// Jumbotron
+$jumbotron-padding: 5rem;
+$jumbotron-bg: rgba($primary, 0.05);
+
+// Buttons + Form
+$input-btn-font-family: $headings-font-family;
+
+$btn-padding-y-lg: .7rem;
+$btn-padding-x-lg: 1.4rem;
+
+$btn-padding-x-sm:  0.9rem;
+$btn-padding-y-sm:  0.4rem;
+
+// Buttons
+$btn-border-radius-lg: 0;
+$btn-border-radius-sm: 0;
