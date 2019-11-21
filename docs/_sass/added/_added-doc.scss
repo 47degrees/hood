@@ -4,8 +4,10 @@
 // Variables
 $sidebar-menu-width: 18rem;
 $sidebar-menu-margin: $sidebar-menu-width - ($sidebar-menu-width * 2);
-$sidebar-background: rgba($primary, 0.05);
-$sidebar-brand-background: rgba($primary, 0.09);
+$sidebar-background: rgba($primary, 0.06);
+$sidebar-brand-background: rgba($primary, 0.12);
+$site-doc-padding: 2rem;
+$doc-header-margin: 2rem;
 
 
 
@@ -45,12 +47,13 @@ $sidebar-brand-background: rgba($primary, 0.09);
                 
                 &.selected {
                     padding-left: (2rem - 0.25rem);
-                    background: rgba($primary, 0.08);
+                    background: rgba($primary, 0.12);
                     border-left: 0.25rem solid $primary;
                 }
                 
                 &:hover {
                     text-decoration: none;
+                    background: rgba($primary, 0.05);
                 }
             }
         }
@@ -59,6 +62,13 @@ $sidebar-brand-background: rgba($primary, 0.09);
 
 #site-doc {
     min-width: 100vw;
+    padding: $site-doc-padding;
+    
+    .doc-header {
+        margin-bottom: $doc-header-margin;
+    }
+    //.doc-content {}
+   
 }
 
 #wrapper {
