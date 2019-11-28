@@ -35,12 +35,38 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae sapiente quidem c
 # Code
 Lorem `ipsum dolor` sit amet, consectetur `adipisicing elitquae` sapiente
 
-```javascript
-var s = "JavaScript syntax highlighting";
-alert(s);
+```
+repositories {
+    maven { url = uri("https://dl.bintray.com/47deg/helios") }
+}
+
+dependencies {
+    compile "com.47deg:helios-core:0.2.0"
+    compile "com.47deg:helios-parser:0.2.0"
+    compile "com.47deg:helios-optics:0.2.0"
+    kapt "com.47deg:helios-meta:0.2.0"
+    kapt "com.47deg:helios-dsl-meta:0.2.0"
+}
 ```
 
 ```
-No language indicated, so no syntax highlighting. 
-But let's throw in a <b>tag</b>.
+val jsonStr =
+"""{
+     "name": "Simon",
+     "age": 30
+   }"""
+
+val jsonFromString : Json =
+  Json.parseFromString(jsonStr).getOrHandle {
+    println("Failed creating the Json ${it.localizedMessage}, creating an empty one")
+    JsString("")
+  }
+
+val personOrError: Either<DecodingError, Person> = Person.decoder().decode(jsonFromString)
+
+personOrError.fold({
+  "Something went wrong during decoding: $it"
+}, {
+  "Successfully decode the json: $it"
+})
 ```

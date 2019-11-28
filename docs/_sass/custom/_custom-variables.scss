@@ -6,6 +6,7 @@
 // Color
 $primary: #25BC77;
 $body-color: #263238;
+$body-background-light: rgba($primary, 0.06);
 
 // Spacing
 $spacer: 1rem;
@@ -29,7 +30,6 @@ $navbar-toggler-padding-x: 0;
 
 $navbar-padding-y: $spacer * 3;
 $navbar-nav-link-padding-x: 1.25rem;
-
 
 
 // Jumbotron

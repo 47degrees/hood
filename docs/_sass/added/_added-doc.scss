@@ -41,7 +41,8 @@ $doc-header-margin: 2rem;
         list-style: none;
         .sidebar-menu-item {
             a {
-                display: block;
+                display: flex;
+                justify-content: space-between;
                 padding: 0.8rem 2rem;
                 color: $body-color;
                 
@@ -49,11 +50,23 @@ $doc-header-margin: 2rem;
                     padding-left: (2rem - 0.25rem);
                     background: rgba($primary, 0.12);
                     border-left: 0.25rem solid $primary;
+                    
+         
                 }
                 
-                &:hover {
+                &:hover:not(.selected) {
                     text-decoration: none;
                     background: rgba($primary, 0.05);
+                }
+            }
+            
+            #sidebar-sub-menu {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                background: $sidebar-background;
+                .sidebar-sub-menu-item {
+                    
                 }
             }
         }

@@ -8,11 +8,11 @@
 @import "bootstrap/reboot";
 @import "bootstrap/utilities";
 @import "bootstrap/transitions";
-@import "bootstrap/code";
 @import "bootstrap/grid";
 
 //-----
 @import "bootstrap/type";
+@import "bootstrap/code";
 //-----
 @import "bootstrap/navbar";
 @import "bootstrap/nav";
@@ -31,3 +31,7 @@
 @import "added/added-main";
 @import "added/added-footer";
 @import "added/added-doc";
+@import "added/added-code";
+
+// Vendors
+@import "vendors/highlight/color-brewer";
