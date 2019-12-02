@@ -1,0 +1,15 @@
+content:
+    - title: Benchmarks
+      description: Compares benchmarks between branches and detects performace downgrade
+      icon: img/main-icon-benchmarks.svg
+      url: docs/benchmarks
+
+    - title: CI
+      description: Include the comparison in your IQ and show the result in your PR
+      icon: img/main-icon-ci.svg
+      url:
+
+    - title: Upload
+      description: Update the benchmarks of a branch and keep it always up to date
+      icon: img/main-icon-upload.svg
+      url:

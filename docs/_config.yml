@@ -9,10 +9,14 @@ keywords: functional-programming, kotlin-library, arrow, monads, monad-transform
 #-------------------------
 url: https://www.47deg.com
 #-------------------------
+github: https://github.com/hood
+#-------------------------
 markdown: kramdown
 sass:
     sass_dir: _sass
     style: compressed
 #-------------------------
 permalink: pretty
+#-------------------------
+exclude: ['config.ru', 'Gemfile', 'Gemfile.lock', 'vendor', 'Procfile', 'Rakefile']
 #-------------------------

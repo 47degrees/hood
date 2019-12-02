@@ -1,0 +1,33 @@
+// Styles jumbotron
+//---------------------------------
+
+.jumbotron {
+  .container {
+    .row {
+      align-items: center;
+      .btn-primary {
+        a {
+          color: white;
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+// Responsive
+@include media-breakpoint-down(md) {
+  .jumbotron {
+    .container {
+      .row {
+        text-align: center;
+        .jumbotron-image {
+          display: none;
+        }
+      }
+    }
+  }
+}
