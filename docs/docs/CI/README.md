@@ -1,11 +1,11 @@
 ---
 layout: docs
-title: Generation
-permalink: /docs/generation/
+title: Continuous integration
+permalink: /docs/ci/
 
 ---
 
-# Generation h1
+# Continuous Integration h1
 ## Generation h2
 ### Generation h3
 #### Generation h4

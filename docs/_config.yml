@@ -8,8 +8,9 @@ author: 47 Degrees
 keywords: functional-programming, kotlin-library, arrow, monads, monad-transformers, functional-data-structure, kotlin, fp-types, adt, free-monads, tagless-final, mtl, for-comprehension, category-theory
 #-------------------------
 url: https://www.47deg.com
+author_url: https://www.47deg.com
 #-------------------------
-github: https://github.com/hood
+github: https://github.com/47deg/hood
 #-------------------------
 markdown: kramdown
 sass:

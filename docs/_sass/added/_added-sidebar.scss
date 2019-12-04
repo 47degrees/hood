@@ -1,0 +1,14 @@
+// Sidebar menu
+// -----------------------------------------------
+// -----------------------------------------------
+.sidebar-menu-item {
+  a {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+.active {
+  border-left: solid 4px #81d8b0;
+}

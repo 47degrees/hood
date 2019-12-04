@@ -1,10 +1,10 @@
 ---
 layout: docs
-title: Nef
+title: Quick Start
 permalink: /docs/
 ---
 
-# Titlte h1
+# Quick Start h1
 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae sapiente quidem culpa sit ab ipsam alias repellat sequi. Quae tempora nulla consequuntur quibusdam aut cupiditate eum ratione, voluptatum error repellat.
 
 ## Titlte h2

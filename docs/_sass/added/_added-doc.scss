@@ -33,7 +33,7 @@ $doc-header-margin: 2rem;
         padding: 2rem;
         background: $sidebar-brand-background;
     }
-    
+
     .sidebar-menu {
         margin: 1rem 0 0 0;
         padding: 0;
@@ -45,28 +45,28 @@ $doc-header-margin: 2rem;
                 justify-content: space-between;
                 padding: 0.8rem 2rem;
                 color: $body-color;
-                
+
                 &.selected {
                     padding-left: (2rem - 0.25rem);
                     background: rgba($primary, 0.12);
                     border-left: 0.25rem solid $primary;
-                    
-         
+
+
                 }
-                
+
                 &:hover:not(.selected) {
                     text-decoration: none;
                     background: rgba($primary, 0.05);
                 }
             }
-            
-            #sidebar-sub-menu {
+
+            .sidebar-sub-menu {
                 margin: 0;
                 padding: 0;
                 list-style: none;
                 background: $sidebar-background;
                 .sidebar-sub-menu-item {
-                    
+
                 }
             }
         }
@@ -76,12 +76,12 @@ $doc-header-margin: 2rem;
 #site-doc {
     min-width: 100vw;
     padding: $site-doc-padding;
-    
+
     .doc-header {
         margin-bottom: $doc-header-margin;
     }
     //.doc-content {}
-   
+
 }
 
 #wrapper {
@@ -97,12 +97,12 @@ $doc-header-margin: 2rem;
     #site-sidebar {
         margin-left: 0;
     }
-    
+
     #site-doc {
         min-width: 0;
         width: 100%;
     }
-    
+
     #wrapper {
         &.toggled {
             #site-sidebar {

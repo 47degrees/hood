@@ -1,24 +1,45 @@
 <div id="site-sidebar">
-    <div class="sidebar-brand">
-        <img src="../img/sidebar-brand.svg" alt="">
-    </div>
-    <ul class="sidebar-menu">
-        <li class="sidebar-menu-item">
-            <a class="selected" href="#sidebar-sub-menu" data-toggle="collapse" aria-expanded="false">Benchmarks <img src="../img/sidebar-icon-arrow.svg" alt=""></a>
-            
-            <ul id="sidebar-sub-menu" class="collapse">
-                <li class="sidebar-sub-menu-item">
-                    <a href="#">Branches</a>
-                </li>
-                <li class="sidebar-sub-menu-item">
-                    <a href="#">Performace</a>
-                </li>
-                <li class="sidebar-sub-menu-item">
-                    <a href="#">Downgrade</a>
-                </li>
-            </ul>
+  <div class="sidebar-brand">
+    <a href="{{ site.baseurl }}/">
+      <img src="{{ 'img/sidebar-brand.svg' | relative_url }}" alt="{{ site.name }}">
+    </a>
+  </div>
+  <ul class="sidebar-menu">
+    {% assign i = 0 %}
+    {% assign pre_submenu = "sidebar-sub-menu" %}
+    {% for item in site.data.sidebar.options %}
+    {% assign i = i | plus:1 %}
+    {% assign sub_menu_title = pre_submenu | append: i %}
+
+    {% comment %}
+    <!-- Needed logic to show the submenu open when the active entry is an inner element -->
+    {% endcomment %}
+    {% assign open_submenu = '' %}
+    {% if item.nested_options %}
+    {% for nested_item in item.nested_options %}
+    {% if nested_item.url == page.url %}
+    {% assign open_submenu = 'show' %}
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    <li class="sidebar-menu-item">
+      <a class="{% if item.url == page.url or open_submenu == 'show' %}selected{% endif %}" href="{% if item.url %}{{ item.url }}{% else %}#{{sub_menu_title}}{% endif %}" data-toggle="{% if item.url %}{{ item.url }}{% else %}collapse{% endif %}"
+        aria-expanded="false">{{ item.title }}
+        {% if item.nested_options %}
+        <i class="fa fa-angle-right"></i>
+        {% endif%}
+      </a>
+      {% if item.nested_options %}
+      <ul id="{{sub_menu_title}}" class="collapse {% if item.url == page.url or open_submenu == 'show' %}show{% endif %} {{ open_submenu }} sidebar-sub-menu">
+        {% for nested_item in item.nested_options %}
+        <li class="sidebar-sub-menu-item">
+          <a class="{% if nested_item.url == page.url %}active{% endif %}" href="{{ nested_item.url }}"><span>{{ nested_item.title }}</span></a>
         </li>
-        <li class="sidebar-menu-item"><a href="#">Continuous Integration</a></li>
-        <li class="sidebar-menu-item"><a href="#">Updated</a></li>
-    </ul>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
 </div>
