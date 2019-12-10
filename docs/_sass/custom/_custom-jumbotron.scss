@@ -4,7 +4,7 @@
 .jumbotron {
     padding: ($jumbotron-padding * 2) 0;
     margin-bottom: 0;
-    // background: $jumbotron-bg url("../img/jumbotron-pattern.svg") no-repeat left center;
+    background: $jumbotron-bg url("../img/jumbotron-pattern.svg") no-repeat left center;
     border-radius: 0;
 
     h1 {
@@ -15,7 +15,7 @@
     @include media-breakpoint-down(sm) {
         padding: ($jumbotron-padding * 2) 0;
     }
-    
+
     @include media-breakpoint-down(sm) {
         padding: $jumbotron-padding 0;
         text-align: center;

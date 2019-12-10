@@ -24,7 +24,7 @@
     {% endif %}
 
     <li class="sidebar-menu-item">
-      <a class="{% if item.url == page.url or open_submenu == 'show' %}selected{% endif %}" href="{% if item.url %}{{ item.url }}{% else %}#{{sub_menu_title}}{% endif %}" data-toggle="{% if item.url %}{{ item.url }}{% else %}collapse{% endif %}"
+      <a class="{% if item.url == page.url or open_submenu == 'show' %}selected{% endif %}" href="{% if item.url %}{{ item.url }}{% else %}#{{sub_menu_title}}{% endif %}" data-toggle="{% if item.url %}{% else %}collapse{% endif %}"
         aria-expanded="false">{{ item.title }}
         {% if item.nested_options %}
         <i class="fa fa-angle-right"></i>

@@ -1,0 +1,16 @@
+// Styles navbar
+//---------------------------------
+
+.navbar-nav {
+  .nav-item {
+    .nav-link {
+      span {
+        padding-bottom: 6px;
+
+        &:hover {
+          border-bottom: 3px solid #25bc77;
+        }
+      }
+    }
+  }
+}

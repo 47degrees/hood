@@ -11,7 +11,9 @@
        <ul class="navbar-nav">
          {% for item in site.data.menu.nav %}
          <li class="nav-item active">
-           <a class="nav-link" href="{{ site.baseurl }}{{ item.url }}">{{ item.title}}</a>
+           <a class="nav-link" href="{{ site.baseurl }}{{ item.url }}">
+             <span>{{ item.title}}</span>
+           </a>
          </li>
          {% endfor %}
        </ul>

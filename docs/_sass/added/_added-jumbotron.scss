@@ -6,6 +6,7 @@
     .row {
       align-items: center;
       .btn-primary {
+        margin-right: 8px;
         a {
           color: white;
           &:hover {
@@ -26,6 +27,20 @@
         text-align: center;
         .jumbotron-image {
           display: none;
+        }
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(small) {
+  .jumbotron {
+    .container {
+      .row {
+        .col-lg-6 {
+          .btn {
+            margin-bottom: 20px;
+          }
         }
       }
     }
