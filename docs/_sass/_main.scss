@@ -1,33 +1,14 @@
 // Custom variables
 @import "custom/custom-variables";
-// Bootstrap components
-@import "bootstrap/functions";
-@import "bootstrap/variables";
-@import "bootstrap/mixins";
-@import "bootstrap/root";
-@import "bootstrap/reboot";
-@import "bootstrap/utilities";
-@import "bootstrap/transitions";
-@import "bootstrap/grid";
 
-//-----
-@import "bootstrap/type";
-@import "bootstrap/code";
-//-----
-@import "bootstrap/navbar";
-@import "bootstrap/nav";
-@import "bootstrap/jumbotron";
-@import "bootstrap/buttons";
-
+// Bootstrap components dependency
+@import "bootstrap";
 
 // Custom components
 @import "custom/custom-navbar";
 @import "custom/custom-type";
 @import "custom/custom-jumbotron";
 @import "custom/custom-buttons";
-
-// Mixins
-@import "utils/helpers";
 
 // Added styles
 @import "added/added-nav";

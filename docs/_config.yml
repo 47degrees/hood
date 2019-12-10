@@ -14,8 +14,10 @@ github: https://github.com/47deg/hood
 #-------------------------
 markdown: kramdown
 sass:
-    sass_dir: _sass
     style: compressed
+    load_paths:
+      - _sass
+      - vendor/bundle/ruby/**/gems/**/assets/stylesheets/
 #-------------------------
 permalink: pretty
 #-------------------------
