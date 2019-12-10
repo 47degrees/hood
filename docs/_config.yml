@@ -14,6 +14,7 @@ github: https://github.com/47deg/hood
 #-------------------------
 markdown: kramdown
 sass:
+    sourcemap: never
     style: compressed
     load_paths:
       - _sass
