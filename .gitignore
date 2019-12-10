@@ -22,7 +22,7 @@ _site
 .jekyll-cache
 
 ## OSX generated
-.DS_Store
+## .DS_Store
 
 ## Ruby environment normalization
 .bundle/
