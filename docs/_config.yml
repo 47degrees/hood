@@ -5,7 +5,7 @@ name: Hood
 description: Hood is a plugin to compare benchmarks and set the result as a Github status and comment on each Pull Request.
 #-------------------------
 author: 47 Degrees
-keywords: functional-programming, kotlin-library, arrow, monads, monad-transformers, functional-data-structure, kotlin, fp-types, adt, free-monads, tagless-final, mtl, for-comprehension, category-theory
+keywords: functional-programming, gradle, kotlin, arrow, scala, sbt, plugin, benchmark, comparison, continuous-integration, github
 #-------------------------
 url: https://www.47deg.com
 author_url: https://www.47deg.com
