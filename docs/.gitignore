@@ -1,4 +1,9 @@
+## Jekyll
 _site
 .sass-cache
-.jekyll-cache
 .jekyll-metadata
+.jekyll-cache
+
+## Ruby environment normalization
+.bundle/
+vendor/
