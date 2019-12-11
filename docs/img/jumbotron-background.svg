@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2079px" height="876px" viewBox="0 0 2079 876" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60.1 (88133) - https://sketch.com -->
+    <title>jumbotron-background</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="2067" height="876"></rect>
+    </defs>
+    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="jumbotron">
+            <g id="background">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g opacity="0.0339006696"></g>
+                <g id="pattern" mask="url(#mask-2)">
+                    <g transform="translate(-196.000000, -806.000000)">
+                        <polygon id="bound" fill="#82E6B9" opacity="0.109047619" points="0 0 2400 0 0 2400"></polygon>
+                        <g id="triangle" stroke-width="1" fill="none" transform="translate(150.000000, 150.000000)">
+                            <polygon id="path" fill="#82E6B9" opacity="0.207403274" points="1200 480 0 480 0 1680"></polygon>
+                            <polygon id="path" fill="#25BC77" opacity="0.285970052" points="1200 0 0 0 0 1200"></polygon>
+                        </g>
+                        <g id="icon" stroke-width="1" fill="none" transform="translate(780.000000, 780.000000)"></g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include _head.html %}
+
+<body id="documentation">
+  <div id="wrapper">
+    {% include _sidebar.html %}
+    {% include _doc.html %}
+  </div>
+  <script>
+  /**
+   * Toggle an specific class to the received DOM element.
+   * @param {string}	elemSelector The query selector specifying the target element.
+   * @param {string}	[activeClass='active'] The class to be applied/removed.
+   */
+  function toggleClass(elemSelector, activeClass = "active") {
+    const elem = document.querySelector(elemSelector);
+    if (elem) {
+      elem.classList.toggle(activeClass);
+    }
+  }
+
+  /**
+   * This will make the specified elements click event to show/hide the menu sidebar.
+   */
+  function activateToggle() {
+    const menuToggles = document.querySelectorAll("#sidebar-toggle");
+    if (menuToggles) {
+      [...menuToggles].map(elem => {
+        elem.onclick = e => {
+          e.preventDefault();
+          toggleClass("#wrapper", "toggled");
+        };
+      });
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    activateToggle();
+  });
+  </script>
+</body>
+</html>

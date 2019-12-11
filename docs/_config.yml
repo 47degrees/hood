@@ -1,0 +1,26 @@
+title: Hood
+#-------------------------
+name: Hood
+#-------------------------
+description: Hood is a plugin to compare benchmarks and set the result as a Github status and comment on each Pull Request.
+#-------------------------
+author: 47 Degrees
+keywords: functional-programming, gradle, kotlin, arrow, scala, sbt, plugin, benchmark, comparison, continuous-integration, github
+#-------------------------
+url: https://www.47deg.com
+author_url: https://www.47deg.com
+#-------------------------
+github: https://github.com/47deg/hood
+#-------------------------
+markdown: kramdown
+sass:
+    sourcemap: never
+    style: compressed
+    load_paths:
+      - _sass
+      - vendor/bundle/ruby/**/gems/**/assets/stylesheets/
+#-------------------------
+permalink: pretty
+#-------------------------
+exclude: ['config.ru', 'Gemfile', 'Gemfile.lock', 'vendor', 'Procfile', 'Rakefile']
+#-------------------------

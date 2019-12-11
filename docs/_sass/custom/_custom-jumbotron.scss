@@ -1,0 +1,23 @@
+// Custom jumbotron
+//---------------------------------
+
+.jumbotron {
+    padding: ($jumbotron-padding * 2) 0;
+    margin-bottom: 0;
+    background: $jumbotron-bg url("../img/jumbotron-pattern.svg") no-repeat left center;
+    border-radius: 0;
+
+    h1 {
+        margin-bottom: $headings-margin-bottom * 2;
+        font-size: $font-size-base * 3;
+    }
+
+    @include media-breakpoint-down(sm) {
+        padding: ($jumbotron-padding * 2) 0;
+    }
+
+    @include media-breakpoint-down(sm) {
+        padding: $jumbotron-padding 0;
+        text-align: center;
+    }
+}

@@ -1,0 +1,51 @@
+// Styles main
+//---------------------------------
+
+// Variables
+$site-main-padding: 7rem;
+$image-margin-bottom: 1.2rem;
+
+//  Styles
+#site-main {
+    padding: 7rem 0;
+
+    .main-features {
+        .main-features-item {
+            text-align: center;
+
+            h2 {
+                font-size:  $font-size-base * 1.4;
+            }
+
+            img {
+                margin-bottom: $image-margin-bottom;
+            }
+
+            button {
+              a {
+                color: white;
+                &:hover {
+                  text-decoration: none;
+                }
+              }
+            }
+
+            .feature-content {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              align-items: center;
+              height: 66%;
+            }
+        }
+    }
+}
+
+// Responsive
+@include media-breakpoint-down(sm) {
+    .main-features-item {
+        &:not(:last-child) {
+            margin-bottom: 5rem;
+        }
+    }
+}

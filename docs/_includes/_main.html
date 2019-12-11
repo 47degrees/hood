@@ -1,0 +1,18 @@
+<main id="site-main">
+  <div class="container">
+    <div class="row main-features">
+      {% for item in site.data.features.content %}
+      <div class="col-md-4 main-features-item">
+        <img src="{{ item.icon | relative_url }} " alt="{{ item.title }}">
+        <div class="feature-content">
+          <h2>{{ item.title }}</h2>
+          <p>{{ item.description }}</p>
+          <button type="button" class="btn btn-primary btn-sm">
+            <a href="{{ item.url }}">Learn More</a>
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</main>
