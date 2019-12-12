@@ -7,9 +7,9 @@ jdk:
 
 stages:
   - name: build
-  - name: deploy
-    if: branch = master AND type != pull_request
   - name: deploy-site
+    if: branch = master AND type != pull_request
+  - name: deploy
     if: branch = master AND type != pull_request
 
 jobs:
@@ -17,12 +17,6 @@ jobs:
     - stage: build
       script:
         - ./gradlew clean build test
-    - stage: deploy
-      install:
-        - rvm use 2.6.0 --install --fuzzy
-        - gem install bundler
-      script:
-        - ./deploy-scripts/deploy.sh
     - stage: deploy-site
       script:
         - bundle install --gemfile docs/Gemfile --path vendor/bundle && BUNDLE_GEMFILE=./docs/Gemfile bundle exec jekyll build -s docs -b /hood -d pub-dir
@@ -31,3 +25,9 @@ jobs:
         skip-cleanup: true
         github-token: $GITHUB_TOKEN
         local-dir: pub-dir
+    - stage: deploy
+      install:
+        - rvm use 2.6.0 --install --fuzzy
+        - gem install bundler
+      script:
+        - ./deploy-scripts/deploy.sh
