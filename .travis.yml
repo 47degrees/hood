@@ -9,6 +9,8 @@ stages:
   - name: build
   - name: deploy
     if: branch = master AND type != pull_request
+  - name: deploy-site
+    if: branch = master AND type != pull_request
 
 jobs:
   include:
@@ -21,7 +23,8 @@ jobs:
         - gem install bundler
       script:
         - ./deploy-scripts/deploy.sh
-      after_success:
+    - stage: deploy-site
+      script:
         - bundle install --gemfile docs/Gemfile --path vendor/bundle && BUNDLE_GEMFILE=./docs/Gemfile bundle exec jekyll build -s docs -b /hood -d pub-dir
       deploy:
         provider: pages
