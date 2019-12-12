@@ -18,6 +18,9 @@ jobs:
       script:
         - ./gradlew clean build test
     - stage: deploy-site
+      install:
+        - rvm use 2.6.0 --install --fuzzy
+        - gem install bundler
       script:
         - bundle install --gemfile docs/Gemfile --path vendor/bundle && BUNDLE_GEMFILE=./docs/Gemfile bundle exec jekyll build -s docs -b /hood -d pub-dir
       deploy:
@@ -26,8 +29,5 @@ jobs:
         github-token: $GITHUB_TOKEN
         local-dir: pub-dir
     - stage: deploy
-      install:
-        - rvm use 2.6.0 --install --fuzzy
-        - gem install bundler
       script:
         - ./deploy-scripts/deploy.sh
