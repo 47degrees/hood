@@ -18,6 +18,7 @@ jobs:
     - stage: deploy
       install:
         - rvm use 2.6.0 --install --fuzzy
+        - gem install bundler
         - gem update --system
         # - gem install jekyll -v 4.0.0
       script:
