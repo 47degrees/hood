@@ -20,7 +20,7 @@ jobs:
         - rvm use 2.6.0 --install --fuzzy
         - gem install bundler
       script:
-        - ./deploy-scripts/deploy.sh
+        # - ./deploy-scripts/deploy.sh
       after_success:
         - bundle install --gemfile docs/Gemfile --path vendor/bundle && BUNDLE_GEMFILE=./docs/Gemfile bundle exec jekyll build -s docs -b /hood -d pub-dir
       deploy:
