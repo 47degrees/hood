@@ -8,7 +8,7 @@
           <h2>{{ item.title }}</h2>
           <p>{{ item.description }}</p>
           <button type="button" class="btn btn-primary btn-sm">
-            <a href="{{ item.url }}">Learn More</a>
+            <a href="{{ item.url | relative_url}}">Learn More</a>
           </button>
         </div>
       </div>

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Upload
-permalink: /docs/upload/
+permalink: docs/upload/
 
 ---
 
