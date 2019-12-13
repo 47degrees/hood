@@ -1,11 +1,11 @@
 ---
 layout: docs
-title: Benchmarks
-permalink: /docs/benchmarks/
+title: More benchmarks
+permalink: docs/more-benchmarks/
 
 ---
 
-# Benchmarks h1
+# Benchmarks 2 h1
 ## Compile h2
 ### Compile h3
 #### Compile h4

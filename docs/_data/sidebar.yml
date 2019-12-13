@@ -1,25 +1,18 @@
 options:
 
   - title: Quick Start
-    url: /docs/
+    url: docs/
 
   - title: Benchmarks
-
     nested_options:
-
         - title: Benchmarks
-          url: /docs/benchmarks/
+          url: docs/benchmarks/
+
+        - title: More Benchmarks
+          url: docs/more-benchmarks/
 
   - title: Continuous integration
-
-    nested_options:
-
-      - title: Continuous integration
-        url: /docs/ci/
+    url: docs/ci/
 
   - title: Upload
-
-    nested_options:
-
-      - title: Upload
-        url: /docs/upload/
+    url: docs/upload/

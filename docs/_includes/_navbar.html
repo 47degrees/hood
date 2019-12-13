@@ -1,6 +1,6 @@
  <nav class="navbar navbar-expand-lg navbar-light bg-white">
    <div class="container">
-     <a class="navbar-brand" href="/">
+     <a class="navbar-brand" href="{{ '/' | relative_url }}">
        <img src="{{ 'img/navbar-brand.svg' | relative_url }}" alt="{{ site.title }}">
      </a>
      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,8 +11,8 @@
        <ul class="navbar-nav">
          {% for item in site.data.menu.nav %}
          <li class="nav-item active">
-           <a class="nav-link" href="{{ site.baseurl }}{{ item.url }}">
-             <span>{{ item.title}}</span>
+           <a class="nav-link" href="{{ item.url | relative_url }}">
+             <span>{{ item.title }}</span>
            </a>
          </li>
          {% endfor %}

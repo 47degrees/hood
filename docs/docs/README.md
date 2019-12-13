@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Quick Start
-permalink: /docs/
+permalink: docs/
 ---
 
 # Quick Start h1
