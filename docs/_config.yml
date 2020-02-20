@@ -7,6 +7,8 @@ description: Hood is a plugin to compare benchmarks and set the result as a Gith
 author: 47 Degrees
 keywords: functional-programming, gradle, kotlin, arrow, scala, sbt, plugin, benchmark, comparison, continuous-integration, github
 #-------------------------
+sidebar-title: Gradle-hood
+#-------------------------
 url: https://www.47deg.com
 author_url: https://www.47deg.com
 #-------------------------

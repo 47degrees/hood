@@ -1,6 +1,17 @@
 // Sidebar menu
 // -----------------------------------------------
 // -----------------------------------------------
+.sidebar-title {
+  z-index: 30;
+  white-space: nowrap;
+  position: absolute;
+  left: 78px;
+  top: 35px;
+  font-weight: 600;
+  color: #263238;
+  font-size: 18px;
+}
+
 .sidebar-menu-item {
   a {
     &:hover {
