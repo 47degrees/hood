@@ -20,7 +20,7 @@ import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-open class UploadBenchmark : DefaultTask() {
+open class UploadBenchmarks : DefaultTask() {
 
   @get:InputFiles
   var benchmarkFiles: List<File> =
@@ -69,7 +69,7 @@ open class UploadBenchmark : DefaultTask() {
   }
 
   @TaskAction
-  fun uploadBenchmark(): Unit =
+  fun uploadBenchmarks(): Unit =
     repositoryOwner.toOption().map2(repositoryName.toOption()) { (owner, repo) ->
       fx {
         val (ghToken: String) = token.toOption().getOrRaiseError { GradleException("Error getting Github token") }

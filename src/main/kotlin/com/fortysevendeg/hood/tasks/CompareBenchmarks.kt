@@ -5,7 +5,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
 import java.io.File
 
-open class CompareBenchmark : DefaultTask() {
+open class CompareBenchmarks : DefaultTask() {
 
   //Benchmarks paths
   @get:InputFile
@@ -50,7 +50,7 @@ open class CompareBenchmark : DefaultTask() {
   var exclude: String? = project.objects.property(String::class.java).orNull
 
   @TaskAction
-  fun compareBenchmark(): Unit =
+  fun compareBenchmarks(): Unit =
     HoodComparison.compare(
       previousBenchmarkPath,
       currentBenchmarkPath,
