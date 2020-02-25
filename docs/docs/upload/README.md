@@ -5,25 +5,28 @@ permalink: docs/upload/
 
 ---
 
-# Upload h1
-## Integration h2
-### Integration h3
-#### Integration h4
-##### Integration h5
-###### Integration h6
+## Upload benchmarks
 
-Lorem ipsum dolor sit amet, [consectetur adipiscing](#) elit. Nam lacinia auctor nunc, in commodo ante faucibus ut. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc vel neque ut nisi sodales aliquet. Ut nunc velit, feugiat et elit eget, lobortis sodales est. Integer turpis tellus, semper nec neque ut, elementum mollis metus. Ut `faucibus lorem` felis porta lorem vehicula accumsan. Duis sed tempor enim, ac porttitor mi. Maecenas non sollicitudin quam. Nam mollis scelerisque sapien eu viverra. Etiam tempor bibendum eros, a faucibus tellus ullamcorper a. Aliquam id lorem est. Vivamus in ipsum condimentum, vulputate nisl et, rutrum tellus.
+**Hood** allow you to upload automatically the benchmarks 
+you want to maintain updated in your code thought commits during the CI.
 
-- item 1
-- item 2
-- item 3
-- item 4
-
-```swift
-func impureAdd(x: Int, y: Int) -> Int {
-    print("Received (\(x), \(y))")
-    return x + y
+The task `uploadBenchmarks` has the following parameters:
+ - **benchmarkFiles**: The list of benchmark files you want to upload. By default is an `empty list`.
+ - **uploadDirectory**: The path for the folder where you want to keep them, from project root directory. By default: `benchmarks`.
+ - **commitMessage**: The message for the task commit uploading the benchmark. By default: `Upload benchmark`.
+ - **token**: the `Github` access token.
+ - **repositoryOwner**: The repository owner.
+ - **repositoryName**: The repository name.
+ - **branch**: The branch where you want to upload those benchmarks. By default: `master`.
+ 
+ ### Gradle configuration example
+ 
+ ```groovy
+uploadBenchmark {
+    benchmarkFiles = [file("$rootDir/build/reports/master_benchmark.json"), file("$rootDir/build/reports/libraries_benchmark.json")]
+    token = System.getenv("GITHUB_ACCESS_TOKEN")
+    repositoryOwner = "47deg"
+    repositoryName = "hood"
+    commitMessage = "[ci skip] - Upload benchmark"
 }
-
-let impureSquare = impureAdd(x: 2, y: 5) * impureAdd(x: 2, y: 5)
 ```
