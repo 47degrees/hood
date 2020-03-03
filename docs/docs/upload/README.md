@@ -22,11 +22,21 @@ The task `uploadBenchmarks` has the following parameters:
  ### Gradle configuration example
  
  ```groovy
-uploadBenchmark {
-    benchmarkFiles = [file("$rootDir/build/reports/master_benchmark.json"), file("$rootDir/build/reports/libraries_benchmark.json")]
-    token = System.getenv("GITHUB_ACCESS_TOKEN")
-    repositoryOwner = "47deg"
-    repositoryName = "hood"
-    commitMessage = "[ci skip] - Upload benchmark"
+uploadBenchmarks {
+  benchmarkFiles = [file("$rootDir/build/reports/master_benchmark.json"), file("$rootDir/build/reports/libraries_benchmark.json")]
+  token = System.getenv("GITHUB_ACCESS_TOKEN")
+  repositoryOwner = "47deg"
+  repositoryName = "hood"
+  commitMessage = "[ci skip] - Upload benchmark"
+}
+```
+
+```kotlin
+tasks.uploadBenchmarks {
+  benchmarkFiles = listOf(file("$rootDir/build/reports/master_benchmark.json"), file("$rootDir/build/reports/libraries_benchmark.json"))
+  token = System.getenv("GITHUB_ACCESS_TOKEN")
+  repositoryOwner = "47deg"
+  repositoryName = "hood"
+  commitMessage = "[ci skip] - Upload benchmark"
 }
 ```

@@ -38,10 +38,19 @@ Both task can send the result to a file, just need to fulfill the following para
 ## Configuration example
 
 ```groovy
-compareBenchmark {
-    previousBenchmarkPath = file("$rootDir/benchmarks/master_benchmark.json")
-    currentBenchmarkPath = [file("$rootDir/build/reports/hood_benchmark.json")]
-    outputFormat = "json"
-    benchmarkThreshold = ["Parsing": 500.00]
+compareBenchmarks {
+  previousBenchmarkPath = file("$rootDir/benchmarks/master_benchmark.json")
+  currentBenchmarkPath = [file("$rootDir/build/reports/hood_benchmark.json")]
+  outputFormat = "json"
+  benchmarkThreshold = ["Parsing": 500.00]
+}
+```
+
+```kotlin
+tasks.compareBenchmarks {
+  previousBenchmarkPath = file("$rootDir/benchmarks/master_benchmark.json")
+  currentBenchmarkPath = listOf(file("$rootDir/build/reports/hood_benchmark.json"))
+  outputFormat = "json"
+  benchmarkThreshold = mapOf("Parsing" to 500.00)
 }
 ```

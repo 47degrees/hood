@@ -48,17 +48,34 @@ Both task can send the result to a file, just need to fulfill the following para
 ### Configuration example
 
 ```groovy
-compareBenchmarkCI {
-    previousBenchmarkPath = file("$rootDir/hood_master/build/reports/master_benchmark.json")
-    currentBenchmarkPath = [file("$rootDir/build/reports/hood_benchmark.json")]
-    outputToFile = true
-    outputFormat = "json"
-    benchmarkThreshold = ["Parsing": 250.00, "Decodingfromraw": 250]
-    token = System.getenv("GITHUB_ACCESS_TOKEN")
-    repositoryOwner = "47deg"
-    repositoryName = "hood"
-    pullRequestSha = System.getenv("TRAVIS_PULL_REQUEST_SHA")
-    pullRequestNumber = (System.getenv("TRAVIS_PULL_REQUEST") != "false") ? System.getenv("TRAVIS_PULL_REQUEST")?.toInteger() : -1
-    statusTargetUrl = System.getenv("TRAVIS_JOB_WEB_URL") ? URI.create(System.getenv("TRAVIS_JOB_WEB_URL")) : null
+compareBenchmarksCI {
+  previousBenchmarkPath = file("$rootDir/hood_master/build/reports/master_benchmark.json")
+  currentBenchmarkPath = [file("$rootDir/build/reports/hood_benchmark.json")]
+  outputToFile = true
+  outputFormat = "json"
+  benchmarkThreshold = ["Parsing": 250.00, "Decodingfromraw": 250.00]
+  token = System.getenv("GITHUB_ACCESS_TOKEN")
+  repositoryOwner = "47deg"
+  repositoryName = "hood"
+  pullRequestSha = System.getenv("TRAVIS_PULL_REQUEST_SHA")
+  pullRequestNumber = (System.getenv("TRAVIS_PULL_REQUEST") != "false") ? System.getenv("TRAVIS_PULL_REQUEST")?.toInteger() : -1
+  statusTargetUrl = System.getenv("TRAVIS_JOB_WEB_URL") ? URI.create(System.getenv("TRAVIS_JOB_WEB_URL")) : null
+}
+```
+
+```kotlin
+tasks.compareBenchmarksCI {
+  previousBenchmarkPath = file("$rootDir/hood_master/build/reports/master_benchmark.json")
+  currentBenchmarkPath = listOf(file("$rootDir/build/reports/hood_benchmark.json"))
+  outputToFile = true
+  outputFormat = "json"
+  benchmarkThreshold = mapOf("Parsing" to 250.00, "Decodingfromraw" to 250.00)
+  token = System.getenv("GITHUB_ACCESS_TOKEN")
+  repositoryOwner = "47deg"
+  repositoryName = "hood"
+  pullRequestSha = System.getenv("TRAVIS_PULL_REQUEST_SHA")
+  pullRequestNumber =
+    if (System.getenv("TRAVIS_PULL_REQUEST") != "false") System.getenv("TRAVIS_PULL_REQUEST").toInt() else -1
+  statusTargetUrl = (System.getenv("TRAVIS_JOB_WEB_URL") ?: URI.create(System.getenv("TRAVIS_JOB_WEB_URL"))) as URI?
 }
 ```
