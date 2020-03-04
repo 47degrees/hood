@@ -18,9 +18,9 @@ and an extra task `uploadBenchmarks` to upload Benchmarks files and keep them up
 
 ## Adding the Hood dependency
 
-To add the Hood plugin dependency on Gradle you can use:
+To add the Hood plugin dependency on Gradle, you can use:
 
-### Declarative syntax(specially recommended for the Kotlin DSL)
+### Declarative syntax(especially recommended for the Kotlin DSL)
 
 ```groovy
 plugins {
@@ -56,7 +56,7 @@ pluginManagement {
 
 ### Imperative syntax
 
-To use plugin through imperative syntax you need to add first the dependency on the `buildscript`:
+To use plugin through imperative syntax, you need to first add the dependency on the `buildscript`:
 
 ```groovy
 buildscript {
@@ -94,7 +94,7 @@ apply(plugin = "com.47deg.hood")
 
 ## The visualizer companion
 
-**Hood** has a companion called [Robeen](https://github.com/47deg/robeen) to show the benchmark comparison on a visual way.
+**Hood** has a companion called [Robeen](https://github.com/47deg/robeen) to show the benchmark comparison in a visual way.
 
 ## Projects using Hood
  
