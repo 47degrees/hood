@@ -7,16 +7,16 @@ permalink: docs/ci/
 
 # Compare Benchmarks with CI
 
-**Hood** gives you the possibility to integrate the benchmark comparison into your `CI`
+**Hood** gives you the ability to integrate the benchmark comparison into your `CI`
  and integrate the result into a `Github` pull request.
 
-The `compareBenchmarksCI` task have the common parameters with the `compareBenchmarks` task:
+The `compareBenchmarksCI` task has parameters in common with the `compareBenchmarks` task:
  - **previousBenchmarkPath**: File with previous or master benchmark location. By default: `master.csv`.
- - **currentBenchmarkPath**: List of files with current or pull request benchmark location. By default is an `empty list`.
- - **keyColumnName**: Column name to distinct each benchmark on the comparison. By default: `Benchmark`.
- - **compareColumnName**: Column name of the column to compare (the values must to be a `Double`). By default: `Score`.
+ - **currentBenchmarkPath**: List of files with current or pull request benchmark location. By default: an `empty list`.
+ - **keyColumnName**: Column name to distinguish each benchmark on the comparison. By default: `Benchmark`.
+ - **compareColumnName**: Column name of the column to compare (the values must be a `Double`). By default: `Score`.
  - **thresholdColumnName**: Column name to get the threshold per benchmark. By default: `Score Error (99.9%)`.
- - **generalThreshold**: Common threshold to all benchmarks overriding the value coming from `thresholdColumnName`. Optional.
+ - **generalThreshold**: Common threshold for all benchmarks overriding the value coming from `thresholdColumnName`. Optional.
  - **benchmarkThreshold**: `Map` with a custom threshold per benchmark key overriding the value coming from `thresholdColumnName` or `generalThreshold`. Optional.
  - **include**: Regular expression to include only the benchmarks with a matching key. Optional.
  - **exclude**: Regular expression to exclude the benchmarks using its key. Optional.
@@ -24,7 +24,7 @@ The `compareBenchmarksCI` task have the common parameters with the `compareBench
 The `include/exclude` feature and `benchmarkThreshold` param use the cleaned key from benchmarks. 
 This means the key for `hood.comparing` will be `Comparing` with the capitalization.
 
-And also needs some extra parameters for the `CI` integration:
+These extra parameters are necessary for the `CI` integration:
  - **token**: The `Github` access token.
  - **repositoryOwner**: The repository owner.
  - **repositoryName**: The repository name.
@@ -32,18 +32,18 @@ And also needs some extra parameters for the `CI` integration:
  - **pullRequestNumber**: The number of the Pull Request. The environment variable `TRAVIS_PULL_REQUEST` on Travis CI.
  - **statusTargetUrl**: The URL to the CI job. The environment variable `TRAVIS_JOB_WEB_URL` on Travis CI. Optional.
 
-***Note***: Currently **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available. 
-***Note 2***: If the `CI` integration is not available because one the requested fields above is not defined, 
-  the task `compareBenchmarksCI` will be executed on the same way as `compareBenchmarks`.
+***Note***: Currently, **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available. 
+***Note 2***: If the `CI` integration is not available because one of the requested fields above is not defined, 
+  the task `compareBenchmarksCI` will be executed in the same way as `compareBenchmarks`.
 
 ### Send output to a file
 
-Both task can send the result to a file, just need to fulfill the following parameters:
- - **outputToFile**: If send the output to a file. By default: `false`.
+Both tasks can send the result to a file; they just need to fulfill the following parameters:
+ - **outputToFile**: Sends the output to a file. By default: `false`.
  - **outputPath**: The path to the output file. By default: `./hood/comparison`.
- - **outputFormat**: The output file format, we support two formats `MD` and `JSON`. By default: `MD`.
+ - **outputFormat**: The output file format; we support two formats `MD` and `JSON`. By default: `MD`.
 
-***Note***: To print a `JSON` output file, all the benchmarks must to be in `JSON` format. `CSV` benchmarks will be ignored.
+***Note***: To print a `JSON` output file, all the benchmarks must be in `JSON` format. `CSV` benchmarks will be ignored.
 
 ### Configuration example
 
