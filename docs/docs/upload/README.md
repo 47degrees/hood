@@ -7,11 +7,11 @@ permalink: docs/upload/
 
 ## Upload benchmarks
 
-**Hood** allow you to upload automatically the benchmarks 
-you want to maintain updated in your code thought commits during the CI.
+**Hood** allows you to automatically upload the benchmarks 
+you want to keep updated in your code thought commits during the CI.
 
 The task `uploadBenchmarks` has the following parameters:
- - **benchmarkFiles**: The list of benchmark files you want to upload. By default is an `empty list`.
+ - **benchmarkFiles**: The list of benchmark files you want to upload. By default: an `empty list`.
  - **uploadDirectory**: The path for the folder where you want to keep them, from project root directory. By default: `benchmarks`.
  - **commitMessage**: The message for the task commit uploading the benchmark. By default: `Upload benchmark`.
  - **token**: the `Github` access token.
