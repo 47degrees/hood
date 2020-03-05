@@ -148,25 +148,22 @@ object Comparator {
     val currentBenchmarksAfterFilter: Map<String, List<Benchmark>> =
       currentBenchmarks.mapValues { it.value.filterBenchmarkIE(includeRegex, excludeRegex) }
 
-    //All the keys on master must to be on the branch benchmarks
-    val isConsistent =
-      previousBenchmarksAfterFilter.second.map { it.getKey() }.forAll { prevKey ->
-        currentBenchmarks.values.toList().forAll { list ->
-          list.map { it.getKey() }.exists { it == prevKey }
-        }
+    val currentKeys = currentBenchmarksAfterFilter.values.toList().flatMap { list -> list.map { it.getKey() } }
+
+    val inconsistencies = previousBenchmarksAfterFilter.second.map { it.getKey() }.minus(currentKeys)
+
+    println("[WARN] Found inconsistencies between benchmarks, only common keys will be compared.\n  Inconsistencies: $inconsistencies")
+
+    previousBenchmarksAfterFilter.second.flatMap { prev ->
+      val threshold = selectThreshold(prev, maybeGeneralThreshold, maybeBenchmarkThreshold)
+      val previousModified =
+        prev.withName(previousBenchmarksAfterFilter.first).withThreshold(threshold)
+
+      getCompareResults(currentBenchmarksAfterFilter, prev, threshold).map {
+        buildBenchmarkComparison(prev.getKey(), previousModified, it)
       }
+    }.right()
 
-    if (isConsistent)
-      previousBenchmarksAfterFilter.second.flatMap { prev ->
-        val threshold = selectThreshold(prev, maybeGeneralThreshold, maybeBenchmarkThreshold)
-        val previousModified =
-          prev.withName(previousBenchmarksAfterFilter.first).withThreshold(threshold)
-
-        getCompareResults(currentBenchmarksAfterFilter, prev, threshold).map {
-          buildBenchmarkComparison(prev.getKey(), previousModified, it)
-        }
-      }.right()
-    else BenchmarkComparisonError(BenchmarkInconsistencyError).left()
   }.fix().handleError {
     BenchmarkComparisonError(it).left()
   }
