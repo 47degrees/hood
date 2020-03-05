@@ -28,7 +28,7 @@ This means the key for `hood.comparing` will be `Comparing` with the capitalizat
 
 ## Send output to a file
 
-Both task can send the result to a file with the following parameters:
+The task can send the result to a file with the following parameters:
  - **outputToFile**: Sends the output to a file. By default: `false`.
  - **outputPath**: The path to the output file. By default: `./hood/comparison`.
  - **outputFormat**: The output file format; we support two formats: `MD` and `JSON`. By default: `MD`.

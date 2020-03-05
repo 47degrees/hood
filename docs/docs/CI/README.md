@@ -38,7 +38,7 @@ These extra parameters are necessary for the `CI` integration:
 
 ### Send output to a file
 
-Both tasks can send the result to a file; they just need to fulfill the following parameters:
+The task can send the result to a file with the following parameters:
  - **outputToFile**: Sends the output to a file. By default: `false`.
  - **outputPath**: The path to the output file. By default: `./hood/comparison`.
  - **outputFormat**: The output file format; we support two formats `MD` and `JSON`. By default: `MD`.
