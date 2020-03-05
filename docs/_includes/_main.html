@@ -7,9 +7,9 @@
         <div class="feature-content">
           <h2>{{ item.title }}</h2>
           <p>{{ item.description }}</p>
-          <button type="button" class="btn btn-primary btn-sm">
-            <a href="{{ item.url | relative_url}}">Learn More</a>
-          </button>
+          <a href="{{ item.url | relative_url}}" class="btn btn-primary btn-sm">
+            Learn More
+          </a>
         </div>
       </div>
       {% endfor %}

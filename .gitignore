@@ -27,3 +27,5 @@ _site
 ## Ruby environment normalization
 .bundle/
 vendor/
+
+pub-dir
