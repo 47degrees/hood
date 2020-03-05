@@ -12,7 +12,7 @@ import org.gradle.api.tasks.*
 import java.io.File
 import java.net.URI
 
-open class CompareBenchmarkCI : DefaultTask() {
+open class CompareBenchmarksCI : DefaultTask() {
 
   //Benchmarks paths
   @get:InputFile
@@ -77,7 +77,7 @@ open class CompareBenchmarkCI : DefaultTask() {
   var statusTargetUrl: URI? = project.objects.property(URI::class.java).orNull
 
   @TaskAction
-  fun compareBenchmarkCI() =
+  fun compareBenchmarksCI() =
     Option.applicative().map(
       token.toOption(),
       repositoryOwner.toOption(),
