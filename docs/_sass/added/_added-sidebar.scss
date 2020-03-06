@@ -4,12 +4,10 @@
 .sidebar-title {
   z-index: 30;
   white-space: nowrap;
-  position: absolute;
-  left: 78px;
-  top: 35px;
   font-weight: 600;
   color: #263238;
   font-size: 18px;
+  padding-left: 10px;
 }
 
 .sidebar-menu-item {
@@ -20,5 +18,13 @@
   }
   .active {
     border-left: solid 4px #81d8b0;
+  }
+}
+
+.sidebar-brand {
+  a {
+    &:hover {
+      text-decoration: none;
+    }
   }
 }

@@ -1,9 +1,15 @@
 nav:
     - title: Documentation
-      url: docs
+      build_tools:
+        - name: Gradle-hood
+          link: docs
+        - name: SBT-hood
+          link: https://47deg.github.io/sbt-hood/
+
 
     - title: Github
-      url: https://github.com/47deg/hood
-
-    - title: License
-      url: https://github.com/47deg/hood/blob/master/LICENSE
+      build_tools:
+        - name: Gradle-hood
+          link: https://github.com/47deg/hood
+        - name: SBT-hood
+          link: https://github.com/47deg/sbt-hood
