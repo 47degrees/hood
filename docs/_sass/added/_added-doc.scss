@@ -7,7 +7,7 @@ $sidebar-menu-margin: $sidebar-menu-width - ($sidebar-menu-width * 2);
 $sidebar-background: rgba($primary, 0.06);
 $sidebar-brand-background: rgba($primary, 0.12);
 $site-doc-padding: 2rem;
-$doc-header-margin: 2rem;
+$doc-header-margin: 4rem;
 
 
 
@@ -80,8 +80,15 @@ $doc-header-margin: 2rem;
     .doc-header {
         margin-bottom: $doc-header-margin;
     }
-    //.doc-content {}
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin: 2rem 0;
+    }
 }
 
 #wrapper {
