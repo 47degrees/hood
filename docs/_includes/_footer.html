@@ -1,17 +1,10 @@
-<main id="site-footer">
+<footer id="site-footer">
   <div class="container">
     <div class="row">
       <div class="col-md-4">
         <p>Hood is designed and developed by <a href="{{ site.github | relative_url }}" target="_blank" rel="noopener noreferrer">{{ site.name }}</a>
           with support from <a href="{{ site.author_url | relative_url }}" target="_blank" rel="noopener noreferrer">{{ site.author }}</a></p>
       </div>
-      <div class="col-md-8">
-        <ul class="footer-menu">
-          {% for item in site.data.menu.nav %}
-          <li class="footer-menu-item"><a href="{{ item.url | relative_url }}">{{ item.title }}</a></li>
-          {% endfor %}
-        </ul>
-      </div>
     </div>
   </div>
-</main>
+</footer>
