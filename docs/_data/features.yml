@@ -2,14 +2,26 @@ content:
     - title: Benchmarks
       description: Compares benchmarks between branches and detects performace downgrade
       icon: img/main-icon-benchmarks.svg
-      url: docs/benchmarks/
+      build_tools:
+        - name: Gradle
+          link: docs/benchmarks/
+        - name: SBT
+          link: https://47deg.github.io/sbt-hood/
 
     - title: CI
       description: Include the comparison in your IQ and show the result in your PR
       icon: img/main-icon-ci.svg
-      url: docs/ci/
+      build_tools:
+        - name: Gradle
+          link: docs/ci/
+        - name: SBT
+          link: https://47deg.github.io/sbt-hood/github-integration/#github-integration
 
     - title: Upload
       description: Update the benchmarks of a branch and keep it always up to date
       icon: img/main-icon-upload.svg
-      url: docs/upload/
+      build_tools:
+        - name: Gradle
+          link: docs/upload/
+        - name: SBT
+          link: https://47deg.github.io/sbt-hood/github-integration/#uploading-benchmark-reports-to-github

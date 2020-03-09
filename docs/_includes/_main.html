@@ -7,9 +7,13 @@
         <div class="feature-content">
           <h2>{{ item.title }}</h2>
           <p>{{ item.description }}</p>
-          <a href="{{ item.url | relative_url}}" class="btn btn-primary btn-sm">
-            Learn More
-          </a>
+          <div>
+            {% for build_tool in item.build_tools %}
+            <a href="{{ build_tool.link }}" title="{{ build_tool.name | capitalize }}" class="btn btn-primary btn-sm">
+              {{ build_tool.name | capitalize }}
+            </a>
+            {% endfor %}
+          </div>
         </div>
       </div>
       {% endfor %}
