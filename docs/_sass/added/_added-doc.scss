@@ -79,6 +79,28 @@ $doc-header-margin: 4rem;
 
     .doc-header {
         margin-bottom: $doc-header-margin;
+
+        .nav {
+          li {
+
+            span {
+              display: inline-flex;
+              flex-direction: row-reverse;
+              font-size: 14px;
+            }
+
+            a {
+              color: $body-color;
+              padding: 0 16px;
+              text-decoration: none;
+            }
+
+            .label {
+              margin: 0 8px;
+              font-weight: bold;
+            }
+          }
+        }
     }
 
     h1,

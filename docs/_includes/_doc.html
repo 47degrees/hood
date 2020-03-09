@@ -1,9 +1,25 @@
 <main id="site-doc">
   <div class="doc-header">
-    <div class="container-fluid">
+    <div class="container-fluid d-flex justify-content-between">
       <a href="#" id="sidebar-toggle">
         <img src="{{ 'img/toggle-icon.svg' | relative_url }}" alt="menu">
       </a>
+      <ul class="nav justify-content-end">
+        <li id="gh-eyes-item" class="hidden-xs">
+          <a href="{{ site.github | relative_url }}" target="_blank" rel="noopener noreferrer">
+            <i class="fa fa-eye">
+            </i>
+            <span>Watchers<span id="eyes" class="label label-default"></span></span>
+        </a>
+          </li>
+          <li id="gh-stars-item" class="hidden-xs">
+            <a href="{{ site.github | relative_url }}" target="_blank" rel="noopener noreferrer">
+              <i class="fa fa-star-o">
+              </i>
+              <span>Stars<span id="stars" class="label label-default" ></span></span>
+          </a>
+          </li>
+        </ul>
     </div>
   </div>
   <div class="doc-content">
