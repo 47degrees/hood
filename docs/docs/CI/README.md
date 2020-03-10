@@ -36,7 +36,7 @@ These extra parameters are necessary for the `CI` integration:
 ***Note 2***: If the `CI` integration is not available because one of the requested fields above is not defined,
   the task `compareBenchmarksCI` will be executed in the same way as `compareBenchmarks`.
 
-### Send output to a file
+## Send output to a file
 
 The task can send the result to a file with the following parameters:
  - **outputToFile**: Sends the output to a file. By default: `false`.
@@ -45,7 +45,7 @@ The task can send the result to a file with the following parameters:
 
 ***Note***: To print a `JSON` output file, all the benchmarks must be in `JSON` format. `CSV` benchmarks will be ignored.
 
-### Configuration example
+## Configuration example
 
 ```groovy
 //Groovy
