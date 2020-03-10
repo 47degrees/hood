@@ -6,7 +6,7 @@ content:
         - name: Gradle
           link: docs/benchmarks/
         - name: SBT
-          link: https://47deg.github.io/sbt-hood/
+          link:
 
     - title: CI
       description: Include the comparison in your IQ and show the result in your PR
@@ -15,7 +15,7 @@ content:
         - name: Gradle
           link: docs/ci/
         - name: SBT
-          link: https://47deg.github.io/sbt-hood/github-integration/#github-integration
+          link: github-integration/#github-integration
 
     - title: Upload
       description: Update the benchmarks of a branch and keep it always up to date
@@ -24,4 +24,4 @@ content:
         - name: Gradle
           link: docs/upload/
         - name: SBT
-          link: https://47deg.github.io/sbt-hood/github-integration/#uploading-benchmark-reports-to-github
+          link: github-integration/#uploading-benchmark-reports-to-github

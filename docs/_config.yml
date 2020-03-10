@@ -12,7 +12,11 @@ sidebar-title: Gradle-Hood
 url: https://www.47deg.com
 author_url: https://www.47deg.com
 #-------------------------
-github: https://github.com/47deg/hood
+github: https://github.com
+owner: 47deg
+repo: hood
+sbt-repo: sbt-hood
+license: hood/blob/master/LICENSE
 #-------------------------
 markdown: kramdown
 sass:

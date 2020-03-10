@@ -1,13 +1,19 @@
+{% capture repo_url %}
+{{ site.github | append: "/" }}{{ site.owner | append: "/" }}{{ site.repo | append: "/" }}
+{% endcapture %}
+{% capture sbt_repo_url %}
+{{ site.github | append: "/" }}{{ site.owner | append: "/" }}{{ site.sbt-repo | append: "/" }}
+{% endcapture %}
 <div class="jumbotron">
   <div class="container">
     <div class="row">
       <div class="col-lg-6">
         <h1>Hood</h1>
         <p class="lead">A plugin to compare benchmarks and set the result as a Github status and comment on each Pull Request</p>
-        <a href="{{ 'docs' | relative_url }}" class="btn btn-primary btn-lg">
+        <a href="{{ repo_url }}" class="btn btn-primary btn-lg">
           gradle
         </a>
-        <a href="https://47deg.github.io/sbt-hood/" class="btn btn-primary btn-lg">
+        <a href="{{ sbt_repo_url }}" class="btn btn-primary btn-lg">
           sbt
         </a>
       </div>

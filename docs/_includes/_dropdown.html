@@ -2,10 +2,25 @@
   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <span>{{ include.item.title }}</span>
   </a>
-
+  {% if include.item.title contains "Github" %}
   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
     {% for build_tool in include.item.build_tools %}
-    <a class="dropdown-item" title="{{ build_tool.name | capitalize }}" href="{{ build_tool.link }}">{{ build_tool.name | capitalize }}</a>
+    {% capture repo_url %}
+    {{ site.github | append: "/" }}{{ site.owner | append: "/" }}{{ build_tool.link | append: "/" }}
+    {% endcapture %}
+    <a class="dropdown-item" title="{{ build_tool.name | capitalize }}" href="{{ repo_url }}">{{ build_tool.name | capitalize }}</a>
     {% endfor %}
   </div>
+  {% else %}
+  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    {% for build_tool in include.item.build_tools %}
+    {% capture sbt_doc_url %}
+      https://{{ site.owner | append: "." }}github.io/{{ build_tool.link | append: "/" }}
+    {% endcapture %}
+    <a class="dropdown-item" title="{{ build_tool.name | capitalize }}"
+    {% if build_tool.name contains "SBT" %} href="{{ sbt_doc_url }}" {% else %} href="{{ build_tool.link }}" {% endif%}>
+    {{ build_tool.name | capitalize }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
 </li>

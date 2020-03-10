@@ -6,14 +6,17 @@
       </a>
       <ul class="nav justify-content-end">
         <li id="gh-eyes-item" class="hidden-xs">
-          <a href="{{ site.github | relative_url }}" target="_blank" rel="noopener noreferrer">
+          {% capture repo_url %}
+          {{ site.github | append: "/" }}{{ site.owner | append: "/" }}{{ site.repo | append: "/" }}
+          {% endcapture %}
+          <a href="{{ repo_url  }}" target="_blank" rel="noopener noreferrer">
             <i class="fa fa-eye">
             </i>
             <span>Watchers<span id="eyes" class="label label-default"></span></span>
         </a>
           </li>
           <li id="gh-stars-item" class="hidden-xs">
-            <a href="{{ site.github | relative_url }}" target="_blank" rel="noopener noreferrer">
+            <a href="{{ repo_url }}" target="_blank" rel="noopener noreferrer">
               <i class="fa fa-star-o">
               </i>
               <span>Stars<span id="stars" class="label label-default" ></span></span>

@@ -12,8 +12,11 @@
          {% for item in site.data.menu.nav %}
          {% include _dropdown.html item=item %}
          {% endfor %}
+         {% capture license_url %}
+           {{ site.github | append: "/" }}{{ site.owner | append: "/" }}{{ site.license | append: "/" }}
+         {% endcapture %}
          <li class="nav-item active">
-         <a class="nav-link" href="https://github.com/47deg/hood/blob/master/LICENSE"><span>License</span></a>
+         <a class="nav-link" href="{{ license_url }}"><span>License</span></a>
          </li>
        </ul>
      </div>

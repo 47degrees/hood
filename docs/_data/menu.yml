@@ -4,12 +4,12 @@ nav:
         - name: Gradle-hood
           link: docs
         - name: SBT-hood
-          link: https://47deg.github.io/sbt-hood/
+          link: sbt-hood/
 
 
     - title: Github
       build_tools:
         - name: Gradle-hood
-          link: https://github.com/47deg/hood
+          link: hood
         - name: SBT-hood
-          link: https://github.com/47deg/sbt-hood
+          link: sbt-hood

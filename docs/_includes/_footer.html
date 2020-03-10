@@ -2,8 +2,11 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4">
-        <p>Hood is designed and developed by <a href="{{ site.github | relative_url }}" target="_blank" rel="noopener noreferrer">{{ site.name }}</a>
-          with support from <a href="{{ site.author_url | relative_url }}" target="_blank" rel="noopener noreferrer">{{ site.author }}</a></p>
+        {% capture repo_url %}
+          {{ site.github | append: "/" }}{{ site.owner | append: "/" }}{{ site.repo | append: "/" }}
+        {% endcapture %}
+        <p>Hood is designed and developed by <a href="{{ repo_url }}" target="_blank" rel="noopener noreferrer">{{ site.name }}</a>
+          with support from <a href="{{ site.author_url }}" target="_blank" rel="noopener noreferrer">{{ site.author }}</a></p>
       </div>
     </div>
   </div>
