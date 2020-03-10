@@ -4,7 +4,7 @@ content:
       icon: img/main-icon-benchmarks.svg
       build_tools:
         - name: Gradle
-          link: docs/benchmarks/
+          link: gradle/benchmarks/
         - name: SBT
           link:
 
@@ -13,7 +13,7 @@ content:
       icon: img/main-icon-ci.svg
       build_tools:
         - name: Gradle
-          link: docs/ci/
+          link: gradle/ci/
         - name: SBT
           link: github-integration/#github-integration
 
@@ -22,6 +22,6 @@ content:
       icon: img/main-icon-upload.svg
       build_tools:
         - name: Gradle
-          link: docs/upload/
+          link: gradle/upload/
         - name: SBT
           link: github-integration/#uploading-benchmark-reports-to-github

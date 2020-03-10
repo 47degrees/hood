@@ -2,9 +2,9 @@ nav:
     - title: Documentation
       build_tools:
         - name: Gradle-hood
-          link: docs
+          link: gradle
         - name: SBT-hood
-          link: sbt-hood/
+          link: sbt-hood
 
 
     - title: Github
