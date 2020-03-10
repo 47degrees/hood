@@ -10,12 +10,14 @@
      <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
        <ul class="navbar-nav">
          {% for item in site.data.menu.nav %}
-         <li class="nav-item active">
-           <a class="nav-link" href="{{ item.url | relative_url }}">
-             <span>{{ item.title }}</span>
-           </a>
-         </li>
+         {% include _dropdown.html item=item %}
          {% endfor %}
+         {% capture license_url %}
+           {{ site.github | append: "/" }}{{ site.owner | append: "/" }}{{ site.license | append: "/" }}
+         {% endcapture %}
+         <li class="nav-item active">
+         <a class="nav-link" href="{{ license_url }}"><span>License</span></a>
+         </li>
        </ul>
      </div>
    </div>

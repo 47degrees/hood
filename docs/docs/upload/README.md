@@ -1,13 +1,13 @@
 ---
 layout: docs
 title: Upload
-permalink: docs/upload/
+permalink: gradle/upload/
 
 ---
 
-## Upload benchmarks
+# Upload benchmarks
 
-**Hood** allows you to automatically upload the benchmarks 
+**Hood** allows you to automatically upload the benchmarks
 you want to keep updated in your code thought commits during the CI.
 
 The task `uploadBenchmarks` has the following parameters:
@@ -18,10 +18,11 @@ The task `uploadBenchmarks` has the following parameters:
  - **repositoryOwner**: The repository owner.
  - **repositoryName**: The repository name.
  - **branch**: The branch where you want to upload those benchmarks. By default: `master`.
- 
- ### Gradle configuration example
- 
+
+## Configuration example
+
  ```groovy
+//Groovy
 uploadBenchmarks {
   benchmarkFiles = [file("$rootDir/build/reports/master_benchmark.json"), file("$rootDir/build/reports/libraries_benchmark.json")]
   token = System.getenv("GITHUB_ACCESS_TOKEN")
@@ -32,6 +33,7 @@ uploadBenchmarks {
 ```
 
 ```kotlin
+//Kotlin
 tasks.uploadBenchmarks {
   benchmarkFiles = listOf(file("$rootDir/build/reports/master_benchmark.json"), file("$rootDir/build/reports/libraries_benchmark.json"))
   token = System.getenv("GITHUB_ACCESS_TOKEN")

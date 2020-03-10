@@ -7,7 +7,7 @@ $sidebar-menu-margin: $sidebar-menu-width - ($sidebar-menu-width * 2);
 $sidebar-background: rgba($primary, 0.06);
 $sidebar-brand-background: rgba($primary, 0.12);
 $site-doc-padding: 2rem;
-$doc-header-margin: 2rem;
+$doc-header-margin: 4rem;
 
 
 
@@ -79,9 +79,38 @@ $doc-header-margin: 2rem;
 
     .doc-header {
         margin-bottom: $doc-header-margin;
-    }
-    //.doc-content {}
 
+        .nav {
+          li {
+
+            span {
+              display: inline-flex;
+              flex-direction: row-reverse;
+              font-size: 14px;
+            }
+
+            a {
+              color: $body-color;
+              padding: 0 16px;
+              text-decoration: none;
+            }
+
+            .label {
+              margin: 0 8px;
+              font-weight: bold;
+            }
+          }
+        }
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin: 2rem 0;
+    }
 }
 
 #wrapper {

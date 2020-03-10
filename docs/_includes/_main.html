@@ -7,9 +7,17 @@
         <div class="feature-content">
           <h2>{{ item.title }}</h2>
           <p>{{ item.description }}</p>
-          <button type="button" class="btn btn-primary btn-sm">
-            <a href="{{ item.url | relative_url}}">Learn More</a>
-          </button>
+          <div>
+            {% for build_tool in item.build_tools %}
+            {% capture sbt_doc_url %}
+              https://{{ site.owner | append: "." }}github.io/{{ site.sbt-repo | append: "/" }}{{ build_tool.link }}
+            {% endcapture %}
+            <a {% if build_tool.name contains "SBT" %} href="{{ sbt_doc_url }}" {% else %} href="{{ build_tool.link }}" {% endif%}
+            title="{{ build_tool.name | capitalize }}" class="btn btn-primary btn-sm">
+              {{ build_tool.name | capitalize }}
+            </a>
+            {% endfor %}
+          </div>
         </div>
       </div>
       {% endfor %}

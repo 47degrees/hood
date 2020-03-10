@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Benchmarks
-permalink: docs/benchmarks/
+permalink: gradle/benchmarks/
 
 ---
 
@@ -20,11 +20,11 @@ The `compareBenchmarks` tasks have the following parameters:
  - **benchmarkThreshold**: `Map` with a custom threshold per benchmark key overriding the value coming from `thresholdColumnName` or `generalThreshold`. Optional.
  - **include**: Regular expression to include only the benchmarks with a matching key. Optional.
  - **exclude**: Regular expression to exclude the benchmarks using its key. Optional.
- 
-The `include/exclude` feature and `benchmarkThreshold` param use the cleaned key from benchmarks. 
+
+The `include/exclude` feature and `benchmarkThreshold` param use the cleaned key from benchmarks.
 This means the key for `hood.comparing` will be `Comparing` with the capitalization.
 
-***Note***: Currently **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available. 
+***Note***: Currently **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available.
 
 ## Send output to a file
 
@@ -38,6 +38,7 @@ The task can send the result to a file with the following parameters:
 ## Configuration example
 
 ```groovy
+//Groovy
 compareBenchmarks {
   previousBenchmarkPath = file("$rootDir/benchmarks/master_benchmark.json")
   currentBenchmarkPath = [file("$rootDir/build/reports/hood_benchmark.json")]
@@ -47,6 +48,7 @@ compareBenchmarks {
 ```
 
 ```kotlin
+//Kotlin
 tasks.compareBenchmarks {
   previousBenchmarkPath = file("$rootDir/benchmarks/master_benchmark.json")
   currentBenchmarkPath = listOf(file("$rootDir/build/reports/hood_benchmark.json"))

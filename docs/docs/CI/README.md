@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Continuous integration
-permalink: docs/ci/
+permalink: gradle/ci/
 
 ---
 
@@ -20,8 +20,8 @@ The `compareBenchmarksCI` task has parameters in common with the `compareBenchma
  - **benchmarkThreshold**: `Map` with a custom threshold per benchmark key overriding the value coming from `thresholdColumnName` or `generalThreshold`. Optional.
  - **include**: Regular expression to include only the benchmarks with a matching key. Optional.
  - **exclude**: Regular expression to exclude the benchmarks using its key. Optional.
- 
-The `include/exclude` feature and `benchmarkThreshold` param use the cleaned key from benchmarks. 
+
+The `include/exclude` feature and `benchmarkThreshold` param use the cleaned key from benchmarks.
 This means the key for `hood.comparing` will be `Comparing` with the capitalization.
 
 These extra parameters are necessary for the `CI` integration:
@@ -32,11 +32,11 @@ These extra parameters are necessary for the `CI` integration:
  - **pullRequestNumber**: The number of the Pull Request. The environment variable `TRAVIS_PULL_REQUEST` on Travis CI.
  - **statusTargetUrl**: The URL to the CI job. The environment variable `TRAVIS_JOB_WEB_URL` on Travis CI. Optional.
 
-***Note***: Currently, **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available. 
-***Note 2***: If the `CI` integration is not available because one of the requested fields above is not defined, 
+***Note***: Currently, **Hood** only supports `CSV` and `JSON` based benchmarks with cross comparison available.
+***Note 2***: If the `CI` integration is not available because one of the requested fields above is not defined,
   the task `compareBenchmarksCI` will be executed in the same way as `compareBenchmarks`.
 
-### Send output to a file
+## Send output to a file
 
 The task can send the result to a file with the following parameters:
  - **outputToFile**: Sends the output to a file. By default: `false`.
@@ -45,9 +45,10 @@ The task can send the result to a file with the following parameters:
 
 ***Note***: To print a `JSON` output file, all the benchmarks must be in `JSON` format. `CSV` benchmarks will be ignored.
 
-### Configuration example
+## Configuration example
 
 ```groovy
+//Groovy
 compareBenchmarksCI {
   previousBenchmarkPath = file("$rootDir/hood_master/build/reports/master_benchmark.json")
   currentBenchmarkPath = [file("$rootDir/build/reports/hood_benchmark.json")]
@@ -64,6 +65,7 @@ compareBenchmarksCI {
 ```
 
 ```kotlin
+//Kotlin
 tasks.compareBenchmarksCI {
   previousBenchmarkPath = file("$rootDir/hood_master/build/reports/master_benchmark.json")
   currentBenchmarkPath = listOf(file("$rootDir/build/reports/hood_benchmark.json"))

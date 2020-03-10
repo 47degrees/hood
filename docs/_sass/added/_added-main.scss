@@ -36,6 +36,11 @@ $image-margin-bottom: 1.2rem;
               justify-content: space-between;
               align-items: center;
               height: 66%;
+
+              .btn-sm {
+                min-width: 83px;
+                margin-left: 4px;
+              }
             }
         }
     }

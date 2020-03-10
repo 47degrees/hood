@@ -5,10 +5,10 @@
   .nav-item {
     .nav-link {
       span {
-        padding-bottom: 6px;
+        padding-bottom: 7px;
 
         &:hover {
-          border-bottom: 3px solid #25bc77;
+          border-bottom: 3px solid $primary;
         }
       }
     }

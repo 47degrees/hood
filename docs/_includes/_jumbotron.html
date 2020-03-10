@@ -1,15 +1,18 @@
+{% capture sbt_doc_url %}
+  https://{{ site.owner | append: "." }}github.io/{{ site.sbt-repo | append: "/" }}
+{% endcapture %}
 <div class="jumbotron">
   <div class="container">
     <div class="row">
       <div class="col-lg-6">
         <h1>Hood</h1>
         <p class="lead">A plugin to compare benchmarks and set the result as a Github status and comment on each Pull Request</p>
-        <button type="button" class="btn btn-primary btn-lg">
-          <a href="{{ 'docs' | relative_url }}">gradle</a>
-        </button>
-        <button type="button" class="btn btn-primary btn-lg">
-          <a href="https://47deg.github.io/sbt-hood/">sbt</a>
-        </button>
+        <a href="{{ 'gradle' | relative_url }}" class="btn btn-primary btn-lg">
+          gradle
+        </a>
+        <a href="{{ sbt_doc_url }}" class="btn btn-primary btn-lg">
+          sbt
+        </a>
       </div>
       <div class="col-lg-6">
         <img class="jumbotron-image" src="{{ 'img/jumbotron-image.svg' | relative_url }}" alt="{{ item.title }}">

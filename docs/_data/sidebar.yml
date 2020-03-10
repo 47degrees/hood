@@ -1,18 +1,13 @@
 options:
 
   - title: Quick Start
-    url: docs/
+    url: gradle/
 
   - title: Benchmarks
-    nested_options:
-        - title: Benchmarks
-          url: docs/benchmarks/
-
-        - title: More Benchmarks
-          url: docs/more-benchmarks/
+    url: gradle/benchmarks/
 
   - title: Continuous integration
-    url: docs/ci/
+    url: gradle/ci/
 
   - title: Upload
-    url: docs/upload/
+    url: gradle/upload/
