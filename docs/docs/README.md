@@ -23,12 +23,14 @@ To add the Hood plugin dependency on Gradle, you can use:
 #### Declarative syntax (especially recommended for the Kotlin DSL)
 
 ```groovy
+//Groovy
 plugins {
   id "com.47deg.hood" version "0.8.0"
 }
 ```
 
 ```kotlin
+//Kotlin
 plugins {
   id("com.47deg.hood") version "0.8.0"
 }
@@ -37,6 +39,7 @@ plugins {
 Don't forget to add the `pluginManagement` block at the top of your `settings.gradle/.kts` if you are not able to find it:
 
 ```groovy
+//Groovy
 pluginManagement {
   repositories {
     maven { url "https://dl.bintray.com/47deg/hood" }
@@ -46,6 +49,7 @@ pluginManagement {
 ```
 
 ```kotlin
+//Kotlin
 pluginManagement {
   repositories {
     maven("https://dl.bintray.com/47deg/hood")
@@ -59,6 +63,7 @@ pluginManagement {
 To use plugin through imperative syntax, you need to first add the dependency on the `buildscript`:
 
 ```groovy
+//Groovy
 buildscript {
   repositories {
     maven { url "https://dl.bintray.com/47deg/hood" }
@@ -71,6 +76,7 @@ buildscript {
 ```
 
 ```kotlin
+//Kotlin
 buildscript {
   repositories {
     maven("https://dl.bintray.com/47deg/hood")
@@ -85,10 +91,12 @@ buildscript {
 and then you will be able to add it with `apply`:
 
 ```groovy
+//Groovy
 apply plugin: "com.47deg.hood"
 ```
 
 ```kotlin
+//Kotlin
 apply(plugin = "com.47deg.hood")
 ```
 

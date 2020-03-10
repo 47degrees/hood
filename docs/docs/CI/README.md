@@ -48,6 +48,7 @@ The task can send the result to a file with the following parameters:
 ### Configuration example
 
 ```groovy
+//Groovy
 compareBenchmarksCI {
   previousBenchmarkPath = file("$rootDir/hood_master/build/reports/master_benchmark.json")
   currentBenchmarkPath = [file("$rootDir/build/reports/hood_benchmark.json")]
@@ -64,6 +65,7 @@ compareBenchmarksCI {
 ```
 
 ```kotlin
+//Kotlin
 tasks.compareBenchmarksCI {
   previousBenchmarkPath = file("$rootDir/hood_master/build/reports/master_benchmark.json")
   currentBenchmarkPath = listOf(file("$rootDir/build/reports/hood_benchmark.json"))
