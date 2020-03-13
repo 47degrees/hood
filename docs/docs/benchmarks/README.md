@@ -39,7 +39,6 @@ The task can send the result to a file with the following parameters:
 
 <fortyseven-codetab data-languages='["Groovy", "Kotlin"]' markdown="block">
 ```groovy
-//Groovy
 compareBenchmarks {
   previousBenchmarkPath = file("$rootDir/benchmarks/master_benchmark.json")
   currentBenchmarkPath = [file("$rootDir/build/reports/hood_benchmark.json")]
@@ -49,7 +48,6 @@ compareBenchmarks {
 ```
 
 ```kotlin
-//Kotlin
 tasks.compareBenchmarks {
   previousBenchmarkPath = file("$rootDir/benchmarks/master_benchmark.json")
   currentBenchmarkPath = listOf(file("$rootDir/build/reports/hood_benchmark.json"))
