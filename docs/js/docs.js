@@ -4,7 +4,7 @@
  */
 async function loadGitHubStats() {
 
-  const ghAPI = 'https://api.github.com/repos/47deg/hood';
+  const ghAPI = 'https://api.github.com/repos/47degrees/hood';
   const ghDataResponse = await fetch(ghAPI);
   const ghData = await ghDataResponse.json();
   const watchersElement = document.querySelector("#eyes");

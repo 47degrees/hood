@@ -89,6 +89,6 @@ bintray {
     name = project.name
     userOrg = POM_DEVELOPER_ID
     licenses = ["Apache-2.0"]
-    vcsUrl = "https://github.com/47deg/hood.git"
+    vcsUrl = "https://github.com/47degrees/hood.git"
   }
 }

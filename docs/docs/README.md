@@ -102,8 +102,8 @@ apply(plugin = "com.47deg.hood")
 
 ## The visualizer companion
 
-**Hood** has a companion called [Robeen](https://github.com/47deg/robeen) to show the benchmark comparison in a visual way.
+**Hood** has a companion called [Robeen](https://github.com/47degrees/robeen) to show the benchmark comparison in a visual way.
 
 ## Projects using Hood
 
- - [Helios](https://47deg.github.io/helios/)
+ - [Helios](https://47degrees.github.io/helios/)
