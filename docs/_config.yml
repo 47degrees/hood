@@ -13,7 +13,7 @@ url: https://www.47deg.com
 author_url: https://www.47deg.com
 #-------------------------
 github: https://github.com
-owner: 47deg
+owner: 47degrees
 repo: hood
 sbt-repo: sbt-hood
 license: hood/blob/master/LICENSE

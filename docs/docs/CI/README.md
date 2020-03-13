@@ -56,7 +56,7 @@ compareBenchmarksCI {
   outputFormat = "json"
   benchmarkThreshold = ["Parsing": 250.00, "Decodingfromraw": 250.00]
   token = System.getenv("GITHUB_ACCESS_TOKEN")
-  repositoryOwner = "47deg"
+  repositoryOwner = "47degrees"
   repositoryName = "hood"
   pullRequestSha = System.getenv("TRAVIS_PULL_REQUEST_SHA")
   pullRequestNumber = (System.getenv("TRAVIS_PULL_REQUEST") != "false") ? System.getenv("TRAVIS_PULL_REQUEST")?.toInteger() : -1
@@ -72,7 +72,7 @@ tasks.compareBenchmarksCI {
   outputFormat = "json"
   benchmarkThreshold = mapOf("Parsing" to 250.00, "Decodingfromraw" to 250.00)
   token = System.getenv("GITHUB_ACCESS_TOKEN")
-  repositoryOwner = "47deg"
+  repositoryOwner = "47degrees"
   repositoryName = "hood"
   pullRequestSha = System.getenv("TRAVIS_PULL_REQUEST_SHA")
   pullRequestNumber =
