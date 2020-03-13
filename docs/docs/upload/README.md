@@ -21,6 +21,7 @@ The task `uploadBenchmarks` has the following parameters:
 
 ## Configuration example
 
+<fortyseven-codetab data-languages='["Groovy", "Kotlin"]' markdown="block">
  ```groovy
 //Groovy
 uploadBenchmarks {
@@ -42,3 +43,4 @@ tasks.uploadBenchmarks {
   commitMessage = "[ci skip] - Upload benchmark"
 }
 ```
+</fortyseven-codetab>

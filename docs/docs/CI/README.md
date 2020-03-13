@@ -47,6 +47,7 @@ The task can send the result to a file with the following parameters:
 
 ## Configuration example
 
+<fortyseven-codetab data-languages='["Groovy", "Kotlin"]' markdown="block">
 ```groovy
 //Groovy
 compareBenchmarksCI {
@@ -81,3 +82,4 @@ tasks.compareBenchmarksCI {
   statusTargetUrl = (System.getenv("TRAVIS_JOB_WEB_URL") ?: URI.create(System.getenv("TRAVIS_JOB_WEB_URL"))) as URI?
 }
 ```
+</fortyseven-codetab>

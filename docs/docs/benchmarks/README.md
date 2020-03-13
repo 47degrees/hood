@@ -37,6 +37,7 @@ The task can send the result to a file with the following parameters:
 
 ## Configuration example
 
+<fortyseven-codetab data-languages='["Groovy", "Kotlin"]' markdown="block">
 ```groovy
 //Groovy
 compareBenchmarks {
@@ -56,3 +57,4 @@ tasks.compareBenchmarks {
   benchmarkThreshold = mapOf("Parsing" to 500.00)
 }
 ```
+</fortyseven-codetab>
