@@ -21,8 +21,8 @@ The task `uploadBenchmarks` has the following parameters:
 
 ## Configuration example
 
+<fortyseven-codetab data-languages='["Groovy", "Kotlin"]' markdown="block">
  ```groovy
-//Groovy
 uploadBenchmarks {
   benchmarkFiles = [file("$rootDir/build/reports/master_benchmark.json"), file("$rootDir/build/reports/libraries_benchmark.json")]
   token = System.getenv("GITHUB_ACCESS_TOKEN")
@@ -33,7 +33,6 @@ uploadBenchmarks {
 ```
 
 ```kotlin
-//Kotlin
 tasks.uploadBenchmarks {
   benchmarkFiles = listOf(file("$rootDir/build/reports/master_benchmark.json"), file("$rootDir/build/reports/libraries_benchmark.json"))
   token = System.getenv("GITHUB_ACCESS_TOKEN")
@@ -42,3 +41,4 @@ tasks.uploadBenchmarks {
   commitMessage = "[ci skip] - Upload benchmark"
 }
 ```
+</fortyseven-codetab>
