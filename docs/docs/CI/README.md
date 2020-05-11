@@ -10,7 +10,7 @@ permalink: gradle/ci/
 **Hood** gives you the ability to integrate the benchmark comparison into your `CI`
  and integrate the result into a `Github` pull request.
 
-It provides `compareBenchmarksCI` Gradle task which compares 2 reports from a benchmark and then it creates a new comment with the comparison result in the pull request. For instance, [look at this comment](https://github.com/47degrees/helios/pull/137#issuecomment-597753181). If new commits are added to the same pull request, the comment will be updated with the new comparison result.
+It provides `compareBenchmarksCI` Gradle task which compares compare a benchmark with a series of benchmarks and then it creates a new comment with the comparison result in the pull request. For instance, [look at this comment](https://github.com/47degrees/helios/pull/137#issuecomment-597753181). If new commits are added to the same pull request, the comment will be updated with the new comparison result. It also adds an status to the pull request.
 
 The `compareBenchmarksCI` task has parameters in common with the `compareBenchmarks` task:
  - **previousBenchmarkPath**: File with previous or master benchmark location. By default: `master.csv`.
