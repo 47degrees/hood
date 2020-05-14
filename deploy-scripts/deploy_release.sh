@@ -16,7 +16,6 @@ elif [ "$TRAVIS_BRANCH" != "$BRANCH" ]; then
 elif ! [[ "$VERSION_NAME" =~ $VERSION_PATTERN ]]; then
   fail "Failed release deployment: wrong version. Expected '$VERSION_NAME' to have pattern 'X.Y.Z'"
 else
-  ./gradlew publishPluginToMavenLocal
   ./gradlew bintrayUpload
   ./gradlew -Dgradle.publish.key=$GRADLE_PUBLISH_KEY -Dgradle.publish.secret=$GRADLE_PUBLISH_SECRET publishPlugins
   echo "Release '$VERSION_NAME' deployed!"
