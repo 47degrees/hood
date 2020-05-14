@@ -13,6 +13,5 @@ function fail {
 }
 
 SLUG="47degrees/hood"
-JDK="oraclejdk8"
 BRANCH="master"
 VERSION_NAME=$(getProperty "version")
