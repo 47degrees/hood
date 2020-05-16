@@ -22,38 +22,18 @@ To add the Hood plugin dependency on Gradle, you can use:
 
 #### Declarative syntax (especially recommended for the Kotlin DSL)
 
+This syntax is possible because Hood is available in [Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.47deg.hood):
+
 <fortyseven-codetab data-languages='["Groovy", "Kotlin"]' markdown="block">
 ```groovy
 plugins {
-  id "com.47deg.hood" version "0.8.0"
+  id "com.47deg.hood" version "0.8.1"
 }
 ```
 
 ```kotlin
 plugins {
-  id("com.47deg.hood") version "0.8.0"
-}
-```
-</fortyseven-codetab>
-
-Don't forget to add the `pluginManagement` block at the top of your `settings.gradle/.kts` if you are not able to find it:
-
-<fortyseven-codetab data-languages='["Groovy", "Kotlin"]' markdown="block">
-```groovy
-pluginManagement {
-  repositories {
-    maven { url "https://dl.bintray.com/47deg/hood" }
-    gradlePluginPortal()
-  }
-}
-```
-
-```kotlin
-pluginManagement {
-  repositories {
-    maven("https://dl.bintray.com/47deg/hood")
-    gradlePluginPortal()
-  }
+  id("com.47deg.hood") version "0.8.1"
 }
 ```
 </fortyseven-codetab>
@@ -66,11 +46,11 @@ To use plugin through imperative syntax, you need to first add the dependency on
 ```groovy
 buildscript {
   repositories {
-    maven { url "https://dl.bintray.com/47deg/hood" }
+     url "https://plugins.gradle.org/m2/"
   }
 
   dependencies {
-    classpath "com.47deg:hood:0.8.0"
+    classpath "com.47deg:hood:0.8.1"
   }
 }
 ```
@@ -78,11 +58,51 @@ buildscript {
 ```kotlin
 buildscript {
   repositories {
-    maven("https://dl.bintray.com/47deg/hood")
+    maven("https://plugins.gradle.org/m2/")
   }
 
   dependencies {
-    classpath("com.47deg:hood:0.8.0")
+    classpath("com.47deg:hood:0.8.1")
+  }
+}
+```
+</fortyseven-codetab>
+
+and then you will be able to add it with `apply`:
+
+<fortyseven-codetab data-languages='["Groovy", "Kotlin"]' markdown="block">
+```groovy
+apply plugin: "com.47deg.hood"
+```
+
+```kotlin
+apply(plugin = "com.47deg.hood")
+```
+</fortyseven-codetab>
+
+In case of using a SNAPSHOT version, the dependency should use a different repository:
+
+<fortyseven-codetab data-languages='["Groovy", "Kotlin"]' markdown="block">
+```groovy
+buildscript {
+  repositories {
+     url "https://oss.jfrog.org/artifactory/oss-snapshot-local/"
+  }
+
+  dependencies {
+    classpath "com.47deg:hood:0.8.2-SNAPSHOT"
+  }
+}
+```
+
+```kotlin
+buildscript {
+  repositories {
+    maven("https://oss.jfrog.org/artifactory/oss-snapshot-local/")
+  }
+
+  dependencies {
+    classpath("com.47deg:hood:0.8.2-SNAPSHOT")
   }
 }
 ```
