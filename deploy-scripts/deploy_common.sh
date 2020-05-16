@@ -12,7 +12,6 @@ function fail {
     exit -1
 }
 
-
 SLUG="47degrees/hood"
 BRANCH="master"
 RELEASE_VERSION=$(getProperty "release_version")
