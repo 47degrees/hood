@@ -12,7 +12,6 @@ plugins {
   id "maven-publish"
   id "com.gradle.plugin-publish" version "0.11.0"
   id "org.jetbrains.kotlin.jvm" version "1.3.71"
-  id "com.jfrog.bintray" version "1.8.5"
   id "com.jfrog.artifactory" version "4.15.2"
 }
 
@@ -94,19 +93,4 @@ artifactory {
             publications 'HoodPublication'
         }
     }
-}
-
-bintray {
-  publish = true
-  user = findPropertyOrEnv("BINTRAY_USER") ?: "no.bintray.user"
-  key = findPropertyOrEnv("BINTRAY_API_KEY") ?: "no.bintray.api.key"
-  publications = ["HoodPublication"]
-  configurations = ["archives"]
-  pkg {
-    repo = "hood"
-    name = project.name
-    userOrg = POM_DEVELOPER_ID
-    licenses = ["Apache-2.0"]
-    vcsUrl = "https://github.com/47degrees/hood.git"
-  }
 }
