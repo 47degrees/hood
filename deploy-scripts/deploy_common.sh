@@ -16,7 +16,7 @@ SLUG="47degrees/hood"
 BRANCH="master"
 
 #
-# If release_version isn't published in Gradle Plugin Portal, version value is replaced by release_version value
+# If 'release_version' isn't published in Gradle Plugin Portal, 'version' value is replaced by 'release_version' value
 #
 RELEASE_VERSION=$(getProperty "release_version")
 LATEST_PUBLISHED_VERSION=$(curl https://plugins.gradle.org/m2/com/47deg/hood/maven-metadata.xml | grep latest | cut -d'>' -f2 | cut -d'<' -f1)
