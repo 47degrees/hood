@@ -12,7 +12,6 @@ plugins {
   id "maven-publish"
   id "com.gradle.plugin-publish" version "0.11.0"
   id "org.jetbrains.kotlin.jvm" version "1.3.71"
-  id "com.jfrog.artifactory" version "4.15.2"
 }
 
 repositories {
@@ -81,16 +80,23 @@ def findPropertyOrEnv(String key) {
   [project.properties[key], System.getenv(key)].find { it != null }
 }
 
-artifactory {
-    contextUrl = 'https://oss.jfrog.org'
-    publish {
-        repository {
-            repoKey = 'oss-snapshot-local'
-            username = findPropertyOrEnv("BINTRAY_USER") ?: "no.bintray.user"
-            password = findPropertyOrEnv("BINTRAY_API_KEY") ?: "no.bintray.api.key"
+publishing {
+    publications {
+        myPlatform(MavenPublication) {
+            groupId = group
+            artifactId = POM_ARTIFACT_ID
+            version = version
+
+            from components.java
         }
-        defaults {
-            publications 'HoodPublication'
+    }
+    repositories {
+        maven {
+            credentials {
+                username findPropertyOrEnv("BINTRAY_USER") ?: "no.bintray.user"
+                password findPropertyOrEnv("BINTRAY_API_KEY") ?: "no.bintray.api.key"
+            }
+            url = "https://oss.jfrog.org/artifactory/oss-snapshot-local"
         }
     }
 }
