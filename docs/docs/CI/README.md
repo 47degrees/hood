@@ -52,11 +52,14 @@ The task can send the result to a file with the following parameters:
 
 ### For GitHub Actions
 
-There isnt't an environment variable for the pull request number when writing this documentation. Please, check [the default environment variables list](https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables#default-environment-variables) in case that environment variable already exists. Meanwhile here a trick to get it before calling the Gradle task in the GitHub Action:
+It's necessary to provide new environment variables:
 
 ```
-export PULL_REQUEST_NUMBER=$(echo $GITHUB_REF | cut -d/ -f3)
-./gradlew :<module>:compareBenchmarksCI
+- name: Run benchmark comparison
+  env:
+      GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+  run: ./gradlew :<module>:compareBenchmarksCI
 ```
 
 An example of the configuration for the `compareBenchmarksCI` task:
