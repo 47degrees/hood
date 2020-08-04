@@ -1,29 +1,3 @@
-
-def getReleaseRepositoryUrl() {
-  return findProperty("RELEASE_REPOSITORY_URL") ?: "https://api.bintray.com/maven/47deg/hood/hood"
-}
-
-def getSnapshotRepositoryUrl() {
-  return findProperty("SNAPSHOT_REPOSITORY_URL") ?: "https://oss.jfrog.org/artifactory/oss-snapshot-local"
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-  archiveClassifier = "sources"
-  from sourceSets.main.allSource,
-      "build/generated/source/kapt/main",
-      "build/generated/source/kapt/debug",
-      "build/generated/source/kapt/release",
-      "build/generated/source/kaptKotlin/main",
-      "build/generated/source/kaptKotlin/debug",
-      "build/generated/source/kaptKotlin/release",
-      "build/tmp/kapt/main/kotlinGenerated"
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-  archiveClassifier = "javadoc"
-  from javadoc.destinationDir
-}
-
 publishing {
   publications {
     HoodPublication(MavenPublication) {
@@ -64,9 +38,7 @@ publishing {
   }
   repositories {
     maven {
-      def releasesRepoUrl = getReleaseRepositoryUrl()
-      def snapshotsRepoUrl = getSnapshotRepositoryUrl()
-      url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+      url = findProperty("SNAPSHOT_REPOSITORY_URL") ?: "https://oss.jfrog.org/artifactory/oss-snapshot-local"
     }
   }
 }

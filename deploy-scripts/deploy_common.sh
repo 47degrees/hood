@@ -21,7 +21,10 @@ BRANCH="master"
 RELEASE_VERSION=$(getProperty "release_version")
 LATEST_PUBLISHED_VERSION=$(curl https://plugins.gradle.org/m2/com/47deg/hood/maven-metadata.xml | grep latest | cut -d'>' -f2 | cut -d'<' -f1)
 if [ "$RELEASE_VERSION" != "$LATEST_PUBLISHED_VERSION" ]; then
-    sed -i "s/version.*/version=$RELEASE_VERSION/g" gradle.properties
+    sed -i "s/version=.*/version=$RELEASE_VERSION/g" gradle.properties
+    echo 'apply from: rootProject.file("gradle/gradle-publish-plugin.gradle")' >> build.gradle
+else
+    echo 'apply from: rootProject.file("gradle/gradle-mvn-push.gradle")' >> build.gradle
 fi
 
 VERSION_NAME=$(getProperty "version")
