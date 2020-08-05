@@ -12,9 +12,7 @@ import arrow.effects.handleErrorWith
 import com.fortysevendeg.hood.github.GhInfo
 import com.fortysevendeg.hood.github.GithubCommentIntegration
 import com.fortysevendeg.hood.github.GithubCommon
-import com.fortysevendeg.hood.models.BadPerformanceBenchmarkError
-import com.fortysevendeg.hood.models.BenchmarkComparison
-import com.fortysevendeg.hood.models.BenchmarkComparisonError
+import com.fortysevendeg.hood.models.*
 import java.io.File
 import java.net.URI
 
@@ -128,7 +126,7 @@ object HoodComparison {
       )
 
   }.fix().handleErrorWith { ex ->
-    GithubCommentIntegration.setFailedStatus(
+    if (ex is BenchmarkError) GithubCommentIntegration.setFailedStatus(
       info,
       commitSha,
       ex.localizedMessage,
@@ -136,6 +134,22 @@ object HoodComparison {
     ).flatMap {
       @Suppress("RemoveExplicitTypeArguments")
       IO.raiseError<Unit>(ex)
+    } else {
+      println("Unexpected error during CI comparison, moving to standard comparison: ${ex.localizedMessage}")
+      compare(
+        previousBenchmarkPath,
+        currentBenchmarkPath,
+        keyColumnName,
+        compareColumnName,
+        thresholdColumnName,
+        outputToFile,
+        outputPath,
+        outputFormat,
+        generalThreshold,
+        benchmarkThreshold,
+        include,
+        exclude
+      )
     }
   }
 
