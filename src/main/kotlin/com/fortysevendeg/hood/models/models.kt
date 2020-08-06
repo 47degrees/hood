@@ -88,11 +88,13 @@ data class BenchmarkComparison(
   val threshold: Double
 )
 
+sealed class BenchmarkError(msg: String): Throwable(msg)
+
 object BenchmarkInconsistencyError :
-  Throwable("Benchmarks have different formats and cannot be compared")
+  BenchmarkError("Benchmarks have different formats and cannot be compared")
 
 data class BadPerformanceBenchmarkError(val failures: List<BenchmarkComparison>) :
-  Throwable("Benchmarks shows a bad performance on the comparisons: ${failures.joinToString { it.key }}")
+  BenchmarkError("Benchmarks shows a bad performance on the comparisons: ${failures.joinToString { it.key }}")
 
 data class BenchmarkComparisonError(val error: Throwable) {
   fun symbol(): String = "☠"
