@@ -52,51 +52,19 @@ test {
   useJUnitPlatform()
 }
 
-apply from: rootProject.file("gradle/gradle-mvn-push.gradle")
-
-gradlePlugin {
-  plugins {
-    hood {
-      id = "com.47deg.hood"
-      implementationClass = "com.fortysevendeg.hood.HoodPlugin"
-    }
-  }
+task sourcesJar(type: Jar, dependsOn: classes) {
+  archiveClassifier = "sources"
+  from sourceSets.main.allSource,
+      "build/generated/source/kapt/main",
+      "build/generated/source/kapt/debug",
+      "build/generated/source/kapt/release",
+      "build/generated/source/kaptKotlin/main",
+      "build/generated/source/kaptKotlin/debug",
+      "build/generated/source/kaptKotlin/release",
+      "build/tmp/kapt/main/kotlinGenerated"
 }
 
-pluginBundle {
-  website = "https://47degrees.github.io/hood/"
-  vcsUrl = "https://github.com/47degrees/hood"
-  description = "The plugin to manage benchmarks on your CI"
-  tags = ["kotlin", "arrow", "hood", "plugin", "benchmark", "comparison"]
-
-  plugins {
-    hood {
-      displayName = "Hood Gradle Plugin"
-    }
-  }
-}
-
-def findPropertyOrEnv(String key) {
-  [project.properties[key], System.getenv(key)].find { it != null }
-}
-
-publishing {
-    publications {
-        myPlatform(MavenPublication) {
-            groupId = group
-            artifactId = POM_ARTIFACT_ID
-            version = version
-
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            credentials {
-                username findPropertyOrEnv("BINTRAY_USER") ?: "no.bintray.user"
-                password findPropertyOrEnv("BINTRAY_API_KEY") ?: "no.bintray.api.key"
-            }
-            url = "https://oss.jfrog.org/artifactory/oss-snapshot-local"
-        }
-    }
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  archiveClassifier = "javadoc"
+  from javadoc.destinationDir
 }

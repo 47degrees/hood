@@ -1,0 +1,26 @@
+publishPlugins {
+    dependsOn 'sourcesJar'
+    dependsOn 'javadocJar'
+}
+
+gradlePlugin {
+  plugins {
+    hood {
+      id = "com.47deg.hood"
+      implementationClass = "com.fortysevendeg.hood.HoodPlugin"
+    }
+  }
+}
+
+pluginBundle {
+  website = "https://47degrees.github.io/hood/"
+  vcsUrl = "https://github.com/47degrees/hood"
+  description = "The plugin to manage benchmarks on your CI"
+  tags = ["kotlin", "arrow", "hood", "plugin", "benchmark", "comparison"]
+
+  plugins {
+    hood {
+      displayName = "Hood Gradle Plugin"
+    }
+  }
+}
