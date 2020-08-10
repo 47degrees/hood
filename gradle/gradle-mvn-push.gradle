@@ -1,3 +1,7 @@
+def findPropertyOrEnv(String key) {
+  [project.properties[key], System.getenv(key)].find { it != null }
+}
+
 publishing {
   publications {
     HoodPublication(MavenPublication) {
@@ -38,6 +42,10 @@ publishing {
   }
   repositories {
     maven {
+      credentials {
+          username findPropertyOrEnv("BINTRAY_USER") ?: "no.bintray.user"
+          password findPropertyOrEnv("BINTRAY_API_KEY") ?: "no.bintray.api.key"
+      }
       url = findProperty("SNAPSHOT_REPOSITORY_URL") ?: "https://oss.jfrog.org/artifactory/oss-snapshot-local"
     }
   }
