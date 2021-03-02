@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2192px" height="1108px" viewBox="0 0 2192 1108" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <title>jumbotron-pattern</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="jumbotron-pattern" transform="translate(-208.000000, -620.000000)">
+            <polygon id="path" fill="#82E6B9" opacity="0.109047619" points="0 0 2400 0 0 2400"></polygon>
+            <polygon id="path" fill="#82E6B9" opacity="0.101236979" points="1637 592 197 592 197 2032"></polygon>
+            <polygon id="path" fill="#25BC77" opacity="0.101888021" points="1623 40 183 40 183 1480"></polygon>
+        </g>
+    </g>
+</svg>

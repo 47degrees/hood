@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hood</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hood is a plugin to compare benchmarks and set the result as a Github status and comment on each Pull Request.">
+  <meta name="keywords" content="functional-programming, gradle, kotlin, arrow, scala, sbt, plugin, benchmark, comparison, continuous-integration, github">
+
+  <meta property="og:image" content="/hood/img/poster.png" />
+  <meta property="og:title" content="Hood" />
+  <meta property="og:site_name" content="Hood" />
+  <meta property="og:url" content="https://47degrees.github.io/hood/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="Hood is a plugin to compare benchmarks and set the result as a Github status and comment on each Pull Request." />
+  <meta property="og:keywords" content="functional-programming, gradle, kotlin, arrow, scala, sbt, plugin, benchmark, comparison, continuous-integration, github" />
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/hood/img/favicon.png">
+  <!-- Main css -->
+  <link rel="stylesheet" type="text/css" href="/hood/css/styles.css">
+  <!-- JS -->
+  <script src="/hood/js/docs.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous" defer></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous" defer></script>
+
+  <!-- Font-awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" Content-Type="text/css" crossorigin="anonymous" rel="stylesheet">
+
+  <script type="module" src="https://unpkg.com/@47deg/codetab/dist/codetab/codetab.esm.js"></script>
+  <script nomodule defer src="https://unpkg.com/@47deg/codetab/dist/codetab/codetab.js"></script>
+
+  <script src="/hood/js/highlight.pack.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+</head>
+
+
+<body id="documentation">
+  <div id="wrapper">
+    <div id="site-sidebar">
+  <div class="sidebar-brand">
+    <a href="/hood/">
+      <img src="/hood/img/sidebar-brand.svg" alt="Hood">
+      <span class="sidebar-title">Gradle-Hood</span>
+    </a>
+  </div>
+  <ul class="sidebar-menu">
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+    
+
+    <li class="sidebar-menu-item">
+      <a class="" href="/hood/gradle/"
+        data-toggle="" aria-expanded="false">Quick Start
+        
+      </a>
+      
+    </li>
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+    
+
+    <li class="sidebar-menu-item">
+      <a class="selected" href="/hood/gradle/benchmarks/"
+        data-toggle="" aria-expanded="false">Benchmarks
+        
+      </a>
+      
+    </li>
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+    
+
+    <li class="sidebar-menu-item">
+      <a class="" href="/hood/gradle/ci/"
+        data-toggle="" aria-expanded="false">Continuous integration
+        
+      </a>
+      
+    </li>
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+    
+
+    <li class="sidebar-menu-item">
+      <a class="" href="/hood/gradle/upload/"
+        data-toggle="" aria-expanded="false">Upload
+        
+      </a>
+      
+    </li>
+    
+  </ul>
+</div>
+
+    <main id="site-doc">
+  <div class="doc-header">
+    <div class="container-fluid d-flex justify-content-between">
+      <a href="#" id="sidebar-toggle">
+        <img src="/hood/img/toggle-icon.svg" alt="menu">
+      </a>
+      <ul class="nav justify-content-end">
+        <li id="gh-eyes-item" class="hidden-xs">
+          
+          <a href="
+          https://github.com/47degrees/hood/
+          " target="_blank" rel="noopener noreferrer">
+            <i class="fa fa-eye">
+            </i>
+            <span>Watchers<span id="eyes" class="label label-default"></span></span>
+        </a>
+          </li>
+          <li id="gh-stars-item" class="hidden-xs">
+            <a href="
+          https://github.com/47degrees/hood/
+          " target="_blank" rel="noopener noreferrer">
+              <i class="fa fa-star-o">
+              </i>
+              <span>Stars<span id="stars" class="label label-default" ></span></span>
+          </a>
+          </li>
+        </ul>
+    </div>
+  </div>
+  <div class="doc-content">
+    <div class="container-fluid">
+      <h1 id="compare-benchmarks">Compare Benchmarks</h1>
+
+<p>The <strong>Hood</strong> basic task allows you to compare a set of benchmarks with the reference one,
+ printing the result to the console and failing if one of the benchmarks has downgraded values.</p>
+
+<p>The <code class="highlighter-rouge">compareBenchmarks</code> tasks have the following parameters:</p>
+<ul>
+  <li><strong>previousBenchmarkPath</strong>: File with previous or master benchmark location. By default: <code class="highlighter-rouge">master.csv</code>.</li>
+  <li><strong>currentBenchmarkPath</strong>: List of files with current or pull request benchmark location. By default: an <code class="highlighter-rouge">empty list</code>.</li>
+  <li><strong>keyColumnName</strong>: Column name to distinguish each benchmark on the comparison. By default: <code class="highlighter-rouge">Benchmark</code>.</li>
+  <li><strong>compareColumnName</strong>: Column name of the column to compare (the values must to be a <code class="highlighter-rouge">Double</code>). By default: <code class="highlighter-rouge">Score</code>.</li>
+  <li><strong>thresholdColumnName</strong>: Column name to get the threshold per benchmark. By default: <code class="highlighter-rouge">Score Error (99.9%)</code>.</li>
+  <li><strong>generalThreshold</strong>: Common threshold to all benchmarks overriding the value coming from <code class="highlighter-rouge">thresholdColumnName</code>. Optional.</li>
+  <li><strong>benchmarkThreshold</strong>: <code class="highlighter-rouge">Map</code> with a custom threshold per benchmark key overriding the value coming from <code class="highlighter-rouge">thresholdColumnName</code> or <code class="highlighter-rouge">generalThreshold</code>. Optional.</li>
+  <li><strong>include</strong>: Regular expression to include only the benchmarks with a matching key. Optional.</li>
+  <li><strong>exclude</strong>: Regular expression to exclude the benchmarks using its key. Optional.</li>
+</ul>
+
+<p>The <code class="highlighter-rouge">include/exclude</code> feature and <code class="highlighter-rouge">benchmarkThreshold</code> param use the cleaned key from benchmarks.
+This means the key for <code class="highlighter-rouge">hood.comparing</code> will be <code class="highlighter-rouge">Comparing</code> with the capitalization.</p>
+
+<p><strong><em>Note</em></strong>: Currently <strong>Hood</strong> only supports <code class="highlighter-rouge">CSV</code> and <code class="highlighter-rouge">JSON</code> based benchmarks with cross comparison available.</p>
+
+<h2 id="send-output-to-a-file">Send output to a file</h2>
+
+<p>The task can send the result to a file with the following parameters:</p>
+<ul>
+  <li><strong>outputToFile</strong>: Sends the output to a file. By default: <code class="highlighter-rouge">false</code>.</li>
+  <li><strong>outputPath</strong>: The path to the output file. By default: <code class="highlighter-rouge">./hood/comparison</code>.</li>
+  <li><strong>outputFormat</strong>: The output file format; we support two formats: <code class="highlighter-rouge">MD</code> and <code class="highlighter-rouge">JSON</code>. By default: <code class="highlighter-rouge">MD</code>.</li>
+</ul>
+
+<p><strong><em>Note</em></strong>: To print a <code class="highlighter-rouge">JSON</code> output file, all the benchmarks must be in <code class="highlighter-rouge">JSON</code> format. <code class="highlighter-rouge">CSV</code> benchmarks will be ignored.</p>
+
+<h2 id="configuration-example">Configuration example</h2>
+
+<fortyseven-codetab data-languages="[&quot;Groovy&quot;, &quot;Kotlin&quot;]">
+  <div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">compareBenchmarks</span> <span class="o">{</span>
+  <span class="n">previousBenchmarkPath</span> <span class="o">=</span> <span class="n">file</span><span class="o">(</span><span class="s2">"$rootDir/benchmarks/master_benchmark.json"</span><span class="o">)</span>
+  <span class="n">currentBenchmarkPath</span> <span class="o">=</span> <span class="o">[</span><span class="n">file</span><span class="o">(</span><span class="s2">"$rootDir/build/reports/hood_benchmark.json"</span><span class="o">)]</span>
+  <span class="n">outputFormat</span> <span class="o">=</span> <span class="s2">"json"</span>
+  <span class="n">benchmarkThreshold</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"Parsing"</span><span class="o">:</span> <span class="mf">500.00</span><span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div>  </div>
+
+  <div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tasks</span><span class="p">.</span><span class="nf">compareBenchmarks</span> <span class="p">{</span>
+  <span class="n">previousBenchmarkPath</span> <span class="p">=</span> <span class="nf">file</span><span class="p">(</span><span class="s">"$rootDir/benchmarks/master_benchmark.json"</span><span class="p">)</span>
+  <span class="n">currentBenchmarkPath</span> <span class="p">=</span> <span class="nf">listOf</span><span class="p">(</span><span class="nf">file</span><span class="p">(</span><span class="s">"$rootDir/build/reports/hood_benchmark.json"</span><span class="p">))</span>
+  <span class="n">outputFormat</span> <span class="p">=</span> <span class="s">"json"</span>
+  <span class="n">benchmarkThreshold</span> <span class="p">=</span> <span class="nf">mapOf</span><span class="p">(</span><span class="s">"Parsing"</span> <span class="n">to</span> <span class="m">500.00</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>  </div>
+</fortyseven-codetab>
+
+    </div>
+  </div>
+</main>
+
+  </div>
+  <script>
+  /**
+   * Toggle an specific class to the received DOM element.
+   * @param {string}	elemSelector The query selector specifying the target element.
+   * @param {string}	[activeClass='active'] The class to be applied/removed.
+   */
+  function toggleClass(elemSelector, activeClass = "active") {
+    const elem = document.querySelector(elemSelector);
+    if (elem) {
+      elem.classList.toggle(activeClass);
+    }
+  }
+
+  /**
+   * This will make the specified elements click event to show/hide the menu sidebar.
+   */
+  function activateToggle() {
+    const menuToggles = document.querySelectorAll("#sidebar-toggle");
+    if (menuToggles) {
+      [...menuToggles].map(elem => {
+        elem.onclick = e => {
+          e.preventDefault();
+          toggleClass("#wrapper", "toggled");
+        };
+      });
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    activateToggle();
+  });
+  </script>
+</body>
+</html>
