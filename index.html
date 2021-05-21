@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hood</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hood is a plugin to compare benchmarks and set the result as a Github status and comment on each Pull Request.">
+  <meta name="keywords" content="functional-programming, gradle, kotlin, arrow, scala, sbt, plugin, benchmark, comparison, continuous-integration, github">
+
+  <meta property="og:image" content="/hood/img/poster.png" />
+  <meta property="og:title" content="Hood" />
+  <meta property="og:site_name" content="Hood" />
+  <meta property="og:url" content="https://47degrees.github.io/hood/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="Hood is a plugin to compare benchmarks and set the result as a Github status and comment on each Pull Request." />
+  <meta property="og:keywords" content="functional-programming, gradle, kotlin, arrow, scala, sbt, plugin, benchmark, comparison, continuous-integration, github" />
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/hood/img/favicon.png">
+  <!-- Main css -->
+  <link rel="stylesheet" type="text/css" href="/hood/css/styles.css">
+  <!-- JS -->
+  <script src="/hood/js/docs.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous" defer></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous" defer></script>
+
+  <!-- Font-awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" Content-Type="text/css" crossorigin="anonymous" rel="stylesheet">
+
+  <script type="module" src="https://unpkg.com/@47deg/codetab/dist/codetab/codetab.esm.js"></script>
+  <script nomodule defer src="https://unpkg.com/@47deg/codetab/dist/codetab/codetab.js"></script>
+
+  <script src="/hood/js/highlight.pack.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+</head>
+
+
+<body>
+   <nav class="navbar navbar-expand-lg navbar-light bg-white">
+   <div class="container">
+     <a class="navbar-brand" href="/hood/">
+       <img src="/hood/img/navbar-brand.svg" alt="Hood">
+     </a>
+     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+       <span class="navbar-toggler-icon"></span>
+     </button>
+
+     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+       <ul class="navbar-nav">
+         
+         <li class="nav-item dropdown active">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <span>Documentation</span>
+  </a>
+  
+  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    
+    
+    <a class="dropdown-item" title="Gradle-hood"
+     href="gradle" >
+    Gradle-hood</a>
+    
+    
+    <a class="dropdown-item" title="Sbt-hood"
+     href="
+      https://47degrees.github.io/sbt-hood/
+    " >
+    Sbt-hood</a>
+    
+  </div>
+  
+</li>
+
+         
+         <li class="nav-item dropdown active">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <span>Github</span>
+  </a>
+  
+  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    
+    
+    <a class="dropdown-item" title="Gradle-hood" href="
+    https://github.com/47degrees/hood/
+    ">Gradle-hood</a>
+    
+    
+    <a class="dropdown-item" title="Sbt-hood" href="
+    https://github.com/47degrees/sbt-hood/
+    ">Sbt-hood</a>
+    
+  </div>
+  
+</li>
+
+         
+         
+         <li class="nav-item active">
+         <a class="nav-link" href="
+           https://github.com/47degrees/hood/blob/master/LICENSE/
+         "><span>License</span></a>
+         </li>
+       </ul>
+     </div>
+   </div>
+ </nav>
+
+  
+<div class="jumbotron">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <h1>Hood</h1>
+        <p class="lead">A plugin to compare benchmarks and set the result as a Github status and comment on each Pull Request</p>
+        <a href="/hood/gradle" class="btn btn-primary btn-lg">
+          gradle
+        </a>
+        <a href="
+  https://47degrees.github.io/sbt-hood/
+" class="btn btn-primary btn-lg">
+          sbt
+        </a>
+      </div>
+      <div class="col-lg-6">
+        <img class="jumbotron-image" src="/hood/img/jumbotron-image.svg" alt="">
+      </div>
+    </div>
+  </div>
+</div>
+
+  <main id="site-main">
+  <div class="container">
+    <div class="row main-features">
+      
+      <div class="col-md-4 main-features-item">
+        <img src="/hood/img/main-icon-benchmarks.svg " alt="Benchmarks">
+        <div class="feature-content">
+          <h2>Benchmarks</h2>
+          <p>Compares benchmarks between branches and detects performace downgrade</p>
+          <div>
+            
+            
+            <a  href="gradle/benchmarks/" 
+            title="Gradle" class="btn btn-primary btn-sm">
+              Gradle
+            </a>
+            
+            
+            <a  href="
+              https://47degrees.github.io/sbt-hood/
+            " 
+            title="Sbt" class="btn btn-primary btn-sm">
+              Sbt
+            </a>
+            
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 main-features-item">
+        <img src="/hood/img/main-icon-ci.svg " alt="CI">
+        <div class="feature-content">
+          <h2>CI</h2>
+          <p>Include the comparison in your IQ and show the result in your PR</p>
+          <div>
+            
+            
+            <a  href="gradle/ci/" 
+            title="Gradle" class="btn btn-primary btn-sm">
+              Gradle
+            </a>
+            
+            
+            <a  href="
+              https://47degrees.github.io/sbt-hood/github-integration/#github-integration
+            " 
+            title="Sbt" class="btn btn-primary btn-sm">
+              Sbt
+            </a>
+            
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 main-features-item">
+        <img src="/hood/img/main-icon-upload.svg " alt="Upload">
+        <div class="feature-content">
+          <h2>Upload</h2>
+          <p>Update the benchmarks of a branch and keep it always up to date</p>
+          <div>
+            
+            
+            <a  href="gradle/upload/" 
+            title="Gradle" class="btn btn-primary btn-sm">
+              Gradle
+            </a>
+            
+            
+            <a  href="
+              https://47degrees.github.io/sbt-hood/github-integration/#uploading-benchmark-reports-to-github
+            " 
+            title="Sbt" class="btn btn-primary btn-sm">
+              Sbt
+            </a>
+            
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</main>
+
+  <footer id="site-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        
+        <p>Hood is designed and developed by <a href="
+          https://github.com/47degrees/hood/
+        " target="_blank" rel="noopener noreferrer">Hood</a>
+          with support from <a href="https://www.47deg.com" target="_blank" rel="noopener noreferrer">47 Degrees</a></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+
+</html>

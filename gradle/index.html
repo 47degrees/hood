@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hood</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hood is a plugin to compare benchmarks and set the result as a Github status and comment on each Pull Request.">
+  <meta name="keywords" content="functional-programming, gradle, kotlin, arrow, scala, sbt, plugin, benchmark, comparison, continuous-integration, github">
+
+  <meta property="og:image" content="/hood/img/poster.png" />
+  <meta property="og:title" content="Hood" />
+  <meta property="og:site_name" content="Hood" />
+  <meta property="og:url" content="https://47degrees.github.io/hood/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="Hood is a plugin to compare benchmarks and set the result as a Github status and comment on each Pull Request." />
+  <meta property="og:keywords" content="functional-programming, gradle, kotlin, arrow, scala, sbt, plugin, benchmark, comparison, continuous-integration, github" />
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/hood/img/favicon.png">
+  <!-- Main css -->
+  <link rel="stylesheet" type="text/css" href="/hood/css/styles.css">
+  <!-- JS -->
+  <script src="/hood/js/docs.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous" defer></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous" defer></script>
+
+  <!-- Font-awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" Content-Type="text/css" crossorigin="anonymous" rel="stylesheet">
+
+  <script type="module" src="https://unpkg.com/@47deg/codetab/dist/codetab/codetab.esm.js"></script>
+  <script nomodule defer src="https://unpkg.com/@47deg/codetab/dist/codetab/codetab.js"></script>
+
+  <script src="/hood/js/highlight.pack.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+</head>
+
+
+<body id="documentation">
+  <div id="wrapper">
+    <div id="site-sidebar">
+  <div class="sidebar-brand">
+    <a href="/hood/">
+      <img src="/hood/img/sidebar-brand.svg" alt="Hood">
+      <span class="sidebar-title">Gradle-Hood</span>
+    </a>
+  </div>
+  <ul class="sidebar-menu">
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+    
+
+    <li class="sidebar-menu-item">
+      <a class="selected" href="/hood/gradle/"
+        data-toggle="" aria-expanded="false">Quick Start
+        
+      </a>
+      
+    </li>
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+    
+
+    <li class="sidebar-menu-item">
+      <a class="" href="/hood/gradle/benchmarks/"
+        data-toggle="" aria-expanded="false">Benchmarks
+        
+      </a>
+      
+    </li>
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+    
+
+    <li class="sidebar-menu-item">
+      <a class="" href="/hood/gradle/ci/"
+        data-toggle="" aria-expanded="false">Continuous integration
+        
+      </a>
+      
+    </li>
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+    
+
+    <li class="sidebar-menu-item">
+      <a class="" href="/hood/gradle/upload/"
+        data-toggle="" aria-expanded="false">Upload
+        
+      </a>
+      
+    </li>
+    
+  </ul>
+</div>
+
+    <main id="site-doc">
+  <div class="doc-header">
+    <div class="container-fluid d-flex justify-content-between">
+      <a href="#" id="sidebar-toggle">
+        <img src="/hood/img/toggle-icon.svg" alt="menu">
+      </a>
+      <ul class="nav justify-content-end">
+        <li id="gh-eyes-item" class="hidden-xs">
+          
+          <a href="
+          https://github.com/47degrees/hood/
+          " target="_blank" rel="noopener noreferrer">
+            <i class="fa fa-eye">
+            </i>
+            <span>Watchers<span id="eyes" class="label label-default"></span></span>
+        </a>
+          </li>
+          <li id="gh-stars-item" class="hidden-xs">
+            <a href="
+          https://github.com/47degrees/hood/
+          " target="_blank" rel="noopener noreferrer">
+              <i class="fa fa-star-o">
+              </i>
+              <span>Stars<span id="stars" class="label label-default" ></span></span>
+          </a>
+          </li>
+        </ul>
+    </div>
+  </div>
+  <div class="doc-content">
+    <div class="container-fluid">
+      <h1 id="hood">Hood</h1>
+
+<p><strong>Hood</strong> is a <code class="highlighter-rouge">Gradle</code> plugin to compare benchmarks and set the result as a <code class="highlighter-rouge">Github</code> status for a <code class="highlighter-rouge">Pull Request</code>.
+<strong>Hood</strong> is built on <a href="https://arrow-kt.io/">Arrow</a>, a Functional companion to Kotlin’s Standard Library.</p>
+
+<h2 id="tasks">Tasks</h2>
+
+<p><strong>Hood</strong> has two tasks to compare benchmarks:</p>
+<ul>
+  <li><code class="highlighter-rouge">compareBenchmarks</code>: Compare two or more benchmarks and print the result.</li>
+  <li><code class="highlighter-rouge">compareBenchmarksCI</code>: Compare two or more benchmarks and upload a <code class="highlighter-rouge">Github</code> status for a <code class="highlighter-rouge">Pull Request</code>.</li>
+</ul>
+
+<p>and an extra task <code class="highlighter-rouge">uploadBenchmarks</code> to upload Benchmarks files and keep them up to date.</p>
+
+<h2 id="adding-the-hood-dependency">Adding the Hood dependency</h2>
+
+<p>To add the Hood plugin dependency on Gradle, you can use:</p>
+
+<h4 id="declarative-syntax-especially-recommended-for-the-kotlin-dsl">Declarative syntax (especially recommended for the Kotlin DSL)</h4>
+
+<fortyseven-codetab data-languages="[&quot;Groovy&quot;, &quot;Kotlin&quot;]">
+  <div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plugins</span> <span class="o">{</span>
+  <span class="n">id</span> <span class="s2">"com.47deg.hood"</span> <span class="n">version</span> <span class="s2">"0.8.0"</span>
+<span class="o">}</span>
+</code></pre></div>  </div>
+
+  <div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">plugins</span> <span class="p">{</span>
+  <span class="nf">id</span><span class="p">(</span><span class="s">"com.47deg.hood"</span><span class="p">)</span> <span class="n">version</span> <span class="s">"0.8.0"</span>
+<span class="p">}</span>
+</code></pre></div>  </div>
+</fortyseven-codetab>
+
+<p>Don’t forget to add the <code class="highlighter-rouge">pluginManagement</code> block at the top of your <code class="highlighter-rouge">settings.gradle/.kts</code> if you are not able to find it:</p>
+
+<fortyseven-codetab data-languages="[&quot;Groovy&quot;, &quot;Kotlin&quot;]">
+  <div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pluginManagement</span> <span class="o">{</span>
+  <span class="n">repositories</span> <span class="o">{</span>
+    <span class="n">maven</span> <span class="o">{</span> <span class="n">url</span> <span class="s2">"https://dl.bintray.com/47deg/hood"</span> <span class="o">}</span>
+    <span class="n">gradlePluginPortal</span><span class="o">()</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>  </div>
+
+  <div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">pluginManagement</span> <span class="p">{</span>
+  <span class="nf">repositories</span> <span class="p">{</span>
+    <span class="nf">maven</span><span class="p">(</span><span class="s">"https://dl.bintray.com/47deg/hood"</span><span class="p">)</span>
+    <span class="nf">gradlePluginPortal</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>  </div>
+</fortyseven-codetab>
+
+<h4 id="imperative-syntax">Imperative syntax</h4>
+
+<p>To use plugin through imperative syntax, you need to first add the dependency on the <code class="highlighter-rouge">buildscript</code>:</p>
+
+<fortyseven-codetab data-languages="[&quot;Groovy&quot;, &quot;Kotlin&quot;]">
+  <div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">buildscript</span> <span class="o">{</span>
+  <span class="n">repositories</span> <span class="o">{</span>
+    <span class="n">maven</span> <span class="o">{</span> <span class="n">url</span> <span class="s2">"https://dl.bintray.com/47deg/hood"</span> <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="n">dependencies</span> <span class="o">{</span>
+    <span class="n">classpath</span> <span class="s2">"com.47deg:hood:0.8.0"</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>  </div>
+
+  <div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">buildscript</span> <span class="p">{</span>
+  <span class="nf">repositories</span> <span class="p">{</span>
+    <span class="nf">maven</span><span class="p">(</span><span class="s">"https://dl.bintray.com/47deg/hood"</span><span class="p">)</span>
+  <span class="p">}</span>
+
+  <span class="nf">dependencies</span> <span class="p">{</span>
+    <span class="nf">classpath</span><span class="p">(</span><span class="s">"com.47deg:hood:0.8.0"</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>  </div>
+</fortyseven-codetab>
+
+<p>and then you will be able to add it with <code class="highlighter-rouge">apply</code>:</p>
+
+<fortyseven-codetab data-languages="[&quot;Groovy&quot;, &quot;Kotlin&quot;]">
+  <div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s2">"com.47deg.hood"</span>
+</code></pre></div>  </div>
+
+  <div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">apply</span><span class="p">(</span><span class="n">plugin</span> <span class="p">=</span> <span class="s">"com.47deg.hood"</span><span class="p">)</span>
+</code></pre></div>  </div>
+</fortyseven-codetab>
+
+<h2 id="the-visualizer-companion">The visualizer companion</h2>
+
+<p><strong>Hood</strong> has a companion called <a href="https://github.com/47degrees/robeen">Robeen</a> to show the benchmark comparison in a visual way.</p>
+
+<h2 id="projects-using-hood">Projects using Hood</h2>
+
+<ul>
+  <li><a href="https://47degrees.github.io/helios/">Helios</a></li>
+</ul>
+
+    </div>
+  </div>
+</main>
+
+  </div>
+  <script>
+  /**
+   * Toggle an specific class to the received DOM element.
+   * @param {string}	elemSelector The query selector specifying the target element.
+   * @param {string}	[activeClass='active'] The class to be applied/removed.
+   */
+  function toggleClass(elemSelector, activeClass = "active") {
+    const elem = document.querySelector(elemSelector);
+    if (elem) {
+      elem.classList.toggle(activeClass);
+    }
+  }
+
+  /**
+   * This will make the specified elements click event to show/hide the menu sidebar.
+   */
+  function activateToggle() {
+    const menuToggles = document.querySelectorAll("#sidebar-toggle");
+    if (menuToggles) {
+      [...menuToggles].map(elem => {
+        elem.onclick = e => {
+          e.preventDefault();
+          toggleClass("#wrapper", "toggled");
+        };
+      });
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    activateToggle();
+  });
+  </script>
+</body>
+</html>

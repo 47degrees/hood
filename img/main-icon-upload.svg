@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <title>main-icon-upload</title>
+    <desc>Created with Sketch.</desc>
+    <g id="main-icon-upload" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="path" fill="#82E6B9" opacity="0.24" points="0 0 80 0 0 80"></polygon>
+        <polygon id="path" fill="#82E6B9" points="45 21 5 21 5 61"></polygon>
+        <polygon id="path" fill="#25BC77" points="45 5 5 5 5 45"></polygon>
+        <polyline id="path" stroke="#212D3A" stroke-width="4" transform="translate(40.000000, 48.000000) rotate(-180.000000) translate(-40.000000, -48.000000) " points="28 52 28 44 52 44 52 52"></polyline>
+        <polygon id="path" fill="#212D3A" points="40 26 46 32 34 32"></polygon>
+        <line x1="40" y1="31.3227539" x2="40" y2="46.3227539" id="path" stroke="#212D3A" stroke-width="4"></line>
+    </g>
+</svg>
