@@ -4,7 +4,7 @@ name: Hood
 #-------------------------
 description: Hood is a plugin to compare benchmarks and set the result as a Github status and comment on each Pull Request.
 #-------------------------
-author: 47 Degrees
+author: Xebia Functional
 keywords: functional-programming, gradle, kotlin, arrow, scala, sbt, plugin, benchmark, comparison, continuous-integration, github
 #-------------------------
 sidebar-title: Gradle-Hood
